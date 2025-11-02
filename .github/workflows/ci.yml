@@ -1,4 +1,4 @@
-name: CI - Test Python APIs with PostgreSQL
+name: CI - Test Database Integration and MAPS API
 
 on:
   push:
