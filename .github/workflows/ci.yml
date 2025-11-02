@@ -40,17 +40,9 @@ jobs:
           cd backend
           pip install -r requirements.txt
 
-      - name: Set up test environment variables
+      - name: Create database tables
         run: |
-          tee backend/.env.test > /dev/null << 'EOF'
-          DB_HOST=localhost
-          DB_USER=${{ secrets.DB_USER }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          DB_NAME=${{ secrets.DB_NAME }}
-          DB_PORT=5432
-          GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}
-          ENVIRONMENT=test
-          EOF
+          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -f backend/migrations/init_db.sql
 
       - name: Run unit tests
         run: |

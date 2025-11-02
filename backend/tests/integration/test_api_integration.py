@@ -26,7 +26,7 @@ class TestAPIIntegration:
         data = response.get_json()
         assert data['message'] == 'Item added successfully'
     
-    def test_top_items(self, client):
+    def test_all_items(self, client):
         response = client.get('/api/items')
         assert response.status_code == 200
         data = response.get_json()
@@ -55,7 +55,7 @@ class TestAPIIntegration:
         assert response.status_code == 400
         assert 'Label must be 0, 1, or 2' in response.get_json()['error']
     
-    def test_top_reviews(self, client):
+    def test_all_reviews(self, client):
         response = client.get('/api/reviews')
         assert response.status_code == 200
         data = response.get_json()
