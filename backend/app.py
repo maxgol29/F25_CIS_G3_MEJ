@@ -12,20 +12,6 @@ def create_app():
     def root():
         return jsonify({'message': 'Places API Server Running'}), 200
     
-    @app.route('/api/health', methods=['GET'])
-    def health_check():
-        return jsonify({'message': 'healthy'}), 200
-
-
-    @app.route('/api/items', methods=['GET'])
-    def get_items():
-        return api_bp.view_functions['places.get_items']()
-
-
-    @app.route('/api/reviews', methods=['GET'])
-    def get_reviews():
-        return api_bp.view_functions['places.get_reviews']()
-    
     @app.teardown_appcontext
     def teardown_db(exception):
         db.close()
