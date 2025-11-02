@@ -42,7 +42,13 @@ jobs:
 
       - name: Create database tables
         run: |
-          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -f backend/migrations/init_db.sql
+          chmod +x backend/migrations/init_db.sh
+          ./backend/migrations/init_db.sh
+        env:
+          DB_HOST: localhost
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
 
       - name: Run unit tests
         run: |
