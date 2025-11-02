@@ -2,7 +2,7 @@ name: CI - Test Python APIs with PostgreSQL
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev, protect-with-action ]
   pull_request:
     branches: [ main, dev ]
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: Set up test environment variables
         run: |
-          cat > backend/.env.test << EOF
+          tee backend/.env.test > /dev/null << 'EOF'
           DB_HOST=localhost
           DB_USER=${{ secrets.DB_USER }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
