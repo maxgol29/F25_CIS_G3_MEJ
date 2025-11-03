@@ -206,13 +206,13 @@ class Database:
 
     #Address-related database operations
 
-    def add_address(self, street, city, state, zip_code):
+    def add_address(self, street, city, state, zip):
         self._ensure_connection()
         cursor = self.conn.cursor()
         try:
             cursor.execute(
                 'INSERT INTO "Address" (street, city, state, zip) VALUES (%s, %s, %s, %s)',
-                (street, city, state, zip_code)
+                (street, city, state, zip)
             )
             self.conn.commit()
             print("Address added successfully")
