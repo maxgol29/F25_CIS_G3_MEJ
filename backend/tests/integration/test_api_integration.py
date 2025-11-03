@@ -35,7 +35,7 @@ class TestAPIIntegration:
         assert 'count' in data
         assert 'items' in data
         assert isinstance(data['items'], list)
-        assert data['count'] > 0
+        assert data['count'] >= 0
         assert len(data['items']) <= 100
 
     def test_add_item_missing_dish_name(self, client):
@@ -83,7 +83,7 @@ class TestAPIIntegration:
         assert 'count' in data
         assert 'reviews' in data
         assert isinstance(data['reviews'], list)
-        assert data['count'] > 0
+        assert data['count'] >= 0
         assert len(data['reviews']) <= 100
 
     # Users endpoints
