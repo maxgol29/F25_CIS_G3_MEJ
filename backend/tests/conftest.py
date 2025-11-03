@@ -29,7 +29,7 @@ def cleanup_user():
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
-        cursor.execute('DELETE FROM "User" WHERE email = %s', ('testuser@example.com',))
+        cursor.execute('DELETE FROM "User" WHERE "email" = %s', ('testuser@example.com',))
         db.conn.commit()
     except Exception as e:
         print(f"Error cleaning up test user: {e}")
@@ -42,7 +42,7 @@ def cleanup_item():
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
-        cursor.execute('DELETE FROM "Item" WHERE dish_name = %s', ('Pasta Carbonara',))
+        cursor.execute('DELETE FROM "Item" WHERE "dish_name" = %s', ('Pasta Carbonara',))
         db.conn.commit()
     except Exception as e:
         print(f"Error cleaning up test item: {e}")
@@ -56,7 +56,7 @@ def cleanup_review():
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
-        cursor.execute('DELETE FROM "Review" WHERE review_text = %s', ('Great food and service!',))
+        cursor.execute('DELETE FROM "Review" WHERE "review_text" = %s', ('Great food and service!',))
         db.conn.commit()
     except Exception as e:
         print(f"Error cleaning up test review: {e}")
@@ -69,7 +69,7 @@ def  cleanup_business():
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
-        cursor.execute('DELETE FROM "Business" WHERE name = %s', ('Test Business',))
+        cursor.execute('DELETE FROM "Business" WHERE "name" = %s', ('Test Business',))
         db.conn.commit()
     except Exception as e:
         print(f"Error cleaning up test business: {e}")
@@ -82,7 +82,7 @@ def cleanup_promo_code():
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
-        cursor.execute('DELETE FROM "Promo_Code" WHERE name = %s', ('SAVE20'))
+        cursor.execute('DELETE FROM "Promo_Code" WHERE "name" = %s', ('SAVE20',))
         db.conn.commit()
     except Exception as e:
         print(f"Error cleaning up test promo code: {e}")
@@ -95,7 +95,7 @@ def cleanup_address():
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
-        cursor.execute('DELETE FROM "Address" WHERE street = %s', ('123 Test St',))
+        cursor.execute('DELETE FROM "Address" WHERE "street" = %s', ('123 Test St',))
         db.conn.commit()
     except Exception as e:
         print(f"Error cleaning up test address: {e}")
@@ -108,7 +108,7 @@ def cleanup_role():
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
-        cursor.execute('DELETE FROM "Role" WHERE name = %s', ('Test Role',))
+        cursor.execute('DELETE FROM "Role" WHERE "name" = %s', ('Test Role',))
         db.conn.commit()
     except Exception as e:
         print(f"Error cleaning up test role: {e}")

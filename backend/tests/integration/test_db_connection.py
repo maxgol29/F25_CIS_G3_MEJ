@@ -65,15 +65,6 @@ class TestDatabaseConnection:
                        )
         """)
 
-        role_table_exists = cursor.fetchone()[0]
-
-        cursor.execute("""
-                      SELECT EXISTS (
-                           SELECT FROM information_schema.tables
-                           WHERE table_name = 'Address'
-                       )
-        """)
-
         address_table_exists = cursor.fetchone()[0]
 
 

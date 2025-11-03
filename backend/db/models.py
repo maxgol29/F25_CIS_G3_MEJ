@@ -1,4 +1,3 @@
-from unicodedata import category
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from config import config
@@ -274,6 +273,6 @@ class Database:
             raise
         finally:
             cursor.close()
-            
+
 
 db = Database()
