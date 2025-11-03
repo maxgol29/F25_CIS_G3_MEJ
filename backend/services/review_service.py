@@ -1,8 +1,8 @@
 from db.models import db
 
 class ReviewService:
-    def get_all_reviews(self):
-        return db.get_all_reviews()
+    def get_all_reviews(self, limit=None):
+        return db.get_all_reviews(limit)
 
     def create_review(self, review_text, label):
         if label not in ['0', '1', '2']:
