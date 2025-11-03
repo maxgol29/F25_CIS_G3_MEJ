@@ -3,12 +3,13 @@ CREATE TABLE IF NOT EXISTS "Item" (
     promoID INTEGER REFERENCES "Promo_Code"(id) ON DELETE SET NULL,
     businessID INTEGER REFERENCES "Business"(id) ON DELETE SET NULL,
     "image_url" TEXT,
-    "dish_name" TEXT,
+    "dish_name" TEXT NOT NULL,
     "food_type" TEXT,
     "ingredients" JSONB,
     "portion_size" JSONB,
     "nutritional_profile" JSONB,
-    "cooking_method" TEXT
+    "cooking_method" TEXT,
+    "price" FLOAT
 );
 
 CREATE TABLE IF NOT EXISTS "Review" (
@@ -24,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "User" (
     addressID INTEGER REFERENCES "Address"(id) ON DELETE SET NULL,
     paymentID INTEGER REFERENCES "Payment"(id) ON DELETE SET NULL,
     "email" VARCHAR(255) UNIQUE NOT NULL,
-    "first_name" VARCHAR(100) NOT NULL,
+    "first_name" VARCHAR(100),
     "last_name" VARCHAR(100) NOT NULL,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "phone" VARCHAR(20),
@@ -71,6 +72,8 @@ CREATE TABLE IF NOT EXISTS "Promo_Code" (
     "description" TEXT
 );
 
+
+
 CREATE TABLE IF NOT EXISTS "Payment" (
     id SERIAL PRIMARY KEY,
     "type" VARCHAR(100) NOT NULL,
@@ -91,3 +94,6 @@ CREATE TABLE IF NOT EXISTS "PromoType" (
     "item" VARCHAR(100) NOT NULL,
     "name" VARCHAR(100) NOT NULL
 );
+
+
+

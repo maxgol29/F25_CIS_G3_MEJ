@@ -1,11 +1,18 @@
 from flask import Blueprint, request, jsonify
+from services.address_service import address_service
+from services.promo_code_service import promo_code_service
+from services.business_service import business_service
 from services.places_service import places_service
 from services.review_service import review_service
 from services.item_service import item_service
+from services.user_service import user_service
+from services.role_service import role_service
 
 
-api_bp = Blueprint('places', __name__)
+api_bp = Blueprint('api', __name__)
 
+
+#health check endpoint
 @api_bp.route('/health', methods=['GET'])
 def health_check():
     return jsonify({'status': 'healthy'}), 200
@@ -28,17 +35,22 @@ def get_nearby_restaurants():
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
 
+#items endpoints
 @api_bp.route('/items', methods=['GET'])
 def get_items():
     try:
-        result = item_service.get_all_items()
+        limit = request.args.get('limit', type=int)
+        result = item_service.get_all_items(limit=limit)
         return jsonify({
             'count': len(result),
             'items': [dict(item) for item in result]
         }), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+     
+
 
 @api_bp.route('/items', methods=['POST'])
 def add_item():
@@ -65,10 +77,14 @@ def add_item():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+#reviews endpoints
+
 @api_bp.route('/reviews', methods=['GET'])
 def get_reviews():
     try:
-        result = review_service.get_all_reviews()
+        limit = request.args.get('limit', type=int)
+        result = review_service.get_all_reviews(limit=limit)
         return jsonify({
             'count': len(result),
             'reviews': [dict(review) for review in result]
@@ -97,3 +113,173 @@ def add_review():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+#user endpoints
+
+@api_bp.route('/users', methods=['GET'])
+def get_users():
+    try:
+        limit = request.args.get('limit', type=int)
+        result = user_service.get_all_users(limit=limit)
+        return jsonify({
+            'count': len(result),
+            'users': [dict(user) for user in result]
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+
+@api_bp.route('/users', methods=['POST'])
+def add_user():
+    try:
+        data = request.get_json()
+
+        if not data or 'last_name' not in data or 'email' not in data:
+            return jsonify({'error': 'Missing last_name or email'}), 400
+
+        user_service.create_user(
+            last_name=data.get('last_name'),
+            email=data.get('email')
+        )
+
+        return jsonify({'message': 'User added successfully'}), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+#business endpoints
+
+@api_bp.route('/businesses', methods=['GET'])
+def get_businesses():
+    try:
+        limit = request.args.get('limit', type=int)
+        result = business_service.get_all_businesses(limit=limit)
+        return jsonify({
+            'count': len(result),
+            'businesses': [dict(business) for business in result]
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/businesses', methods=['POST'])
+def add_business():
+    try:
+        data = request.get_json()
+
+        if not data or 'name' not in data or 'type' not in data or 'location' not in data:
+            return jsonify({'error': 'Missing name, type, location, or phone'}), 400
+
+        business_service.create_business(
+            name=data.get('name'),
+            type=data.get('type'),
+            location=data.get('location')
+        )
+
+        return jsonify({'message': 'Business added successfully'}), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+#promo code endpoints
+
+@api_bp.route('/promo_codes', methods=['GET'])
+def get_promo_codes():
+    try:
+        limit = request.args.get('limit', type=int)
+        result = promo_code_service.get_all_promo_codes(limit=limit)
+        return jsonify({
+            'count': len(result),
+            'promo_codes': [dict(promo_code) for promo_code in result]
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@api_bp.route('/promo_codes', methods=['POST'])
+def add_promo_code():
+    try:
+        data = request.get_json()
+
+        if not data or 'name' not in data or 'description' not in data:
+            return jsonify({'error': 'Missing name or description'}), 400
+
+        promo_code_service.create_promo_code(
+            name=data.get('name'),
+            description=data.get('description')
+        )
+
+        return jsonify({'message': 'Promo code added successfully'}), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+#address endpoints
+
+@api_bp.route('/addresses', methods=['GET'])
+def get_addresses():
+    try:
+        limit = request.args.get('limit', type=int)
+        result = address_service.get_all_addresses(limit=limit)
+        return jsonify({
+            'count': len(result),
+            'addresses': [dict(address) for address in result]
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_bp.route('/addresses', methods=['POST'])
+def add_address():
+    try:
+        data = request.get_json()
+
+        if not data or 'street' not in data:
+            return jsonify({'error': 'Missing street'}), 400
+
+        address_service.create_address(
+            street=data.get('street'),
+            city=data.get('city'),
+            state=data.get('state'),
+            zip=data.get('zip')
+        )
+
+        return jsonify({'message': 'Address added successfully'}), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+#role endpoints
+
+@api_bp.route('/roles', methods=['GET'])
+def get_roles():
+    try:
+        limit = request.args.get('limit', type=int)
+        result = role_service.get_all_roles(limit=limit)
+        return jsonify({
+            'count': len(result),
+            'roles': [dict(role) for role in result]
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@api_bp.route('/roles', methods=['POST'])
+def add_role():
+    try:
+        data = request.get_json()
+
+        if not data or 'name' not in data:
+            return jsonify({'error': 'Missing name'}), 400
+
+        role_service.create_role(
+            name=data.get('name')
+        )
+
+        return jsonify({'message': 'Role added successfully'}), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
