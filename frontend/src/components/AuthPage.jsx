@@ -11,7 +11,7 @@ const AuthPage = ({ onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
 
-  const API_BASE_URL = 'http://localhost:5000/api'; // Update with your Flask backend URL
+  const API_BASE_URL = 'http://localhost:5000/api'; 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +52,6 @@ const AuthPage = ({ onLoginSuccess }) => {
 
     try {
       if (isSignUp) {
-        // Sign up: POST to create new user
         const response = await fetch(`${API_BASE_URL}/users`, {
           method: 'POST',
           headers: {
@@ -75,7 +74,6 @@ const AuthPage = ({ onLoginSuccess }) => {
           onLoginSuccess(formData);
         }, 1500);
       } else {
-        // Login: GET users and verify credentials
         const response = await fetch(`${API_BASE_URL}/users`, {
           method: 'GET'
         });

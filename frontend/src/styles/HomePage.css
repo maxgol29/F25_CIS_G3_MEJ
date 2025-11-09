@@ -18,8 +18,8 @@
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 90%;
-  max-width: 1000px;
-  height: 500px;
+  max-width: 1800px;
+  height: 70vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,14 +61,14 @@
 
 @media (max-width: 768px) {
   .home-content {
-    height: 400px;
+    height: 600px;
     width: 95%;
   }
 }
 
 @media (max-width: 480px) {
   .home-content {
-    height: 300px;
+    height: 500px;
     width: 95%;
   }
 
