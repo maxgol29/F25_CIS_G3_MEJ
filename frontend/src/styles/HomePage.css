@@ -17,10 +17,12 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  padding: 50px 40px;
-  width: 100%;
-  max-width: 500px;
-  text-align: center;
+  width: 90%;
+  max-width: 1000px;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   animation: slideUp 0.5s ease-out;
 }
 
@@ -35,33 +37,6 @@
   }
 }
 
-.welcome-section h1 {
-  color: #333;
-  font-size: 32px;
-  margin: 0 0 10px 0;
-  font-weight: 600;
-}
-
-.user-email {
-  color: #666;
-  font-size: 16px;
-  margin: 0 0 30px 0;
-}
-
-.home-message {
-  background-color: #f0f4ff;
-  padding: 20px;
-  border-radius: 8px;
-  margin: 30px 0;
-  border-left: 4px solid #60696b;
-}
-
-.home-message p {
-  color: #333;
-  font-size: 16px;
-  margin: 0;
-}
-
 .logout-button {
   padding: 12px 30px;
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
@@ -72,26 +47,33 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 20px;
   letter-spacing: 0.5px;
 }
 
 .logout-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px #666;
+  box-shadow: 0 10px 25px rgba #cecece;
 }
 
 .logout-button:active {
   transform: translateY(0);
 }
 
+@media (max-width: 768px) {
+  .home-content {
+    height: 400px;
+    width: 95%;
+  }
+}
+
 @media (max-width: 480px) {
   .home-content {
-    padding: 30px 20px;
-    margin: 20px;
+    height: 300px;
+    width: 95%;
   }
 
-  .welcome-section h1 {
-    font-size: 24px;
+  .logout-button {
+    padding: 10px 24px;
+    font-size: 14px;
   }
 }
