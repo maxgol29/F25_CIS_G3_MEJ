@@ -4,8 +4,8 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill, Font, Alignment
 from openpyxl.utils import get_column_letter
 
-INPUT_FILE = r""
-OUTPUT_FILE = r"" 
+INPUT_FILE = r"C:\Users\User\Downloads\Capstone - Team items.tsv"
+OUTPUT_FILE = r"C:\Users\User\Downloads\Capstone - Team items Report.xlsx"
 
 weeks_config = [
     {"week": "Week 1", "milestone": "Foundation", "start": "2025-10-27", "end": "2025-11-02"},
@@ -135,9 +135,9 @@ summary = (
     .reset_index()
 )
 
-milestone_totals = summary.groupby("Milestone")["Points"].sum().reset_index(name="TotalPoints")
+milestone_totals = summary.groupby("Milestone")["Points"].sum().reset_index(name="TotalPoints").astype({"TotalPoints": int})
 summary = summary.merge(milestone_totals, on="Milestone")
-summary["Percent"] = (summary["Points"] / summary["TotalPoints"] * 100)
+summary["Percent"] = (summary["Points"] / summary["TotalPoints"] * 100).astype(int)
 
 pivot = summary.pivot_table(
     index="Milestone",
