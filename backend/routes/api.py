@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_cors import CORS
 from services.address_service import address_service
 from services.promo_code_service import promo_code_service
 from services.business_service import business_service
@@ -10,7 +11,7 @@ from services.role_service import role_service
 
 
 api_bp = Blueprint('api', __name__)
-
+CORS(api_bp)
 
 #health check endpoint
 @api_bp.route('/health', methods=['GET'])
