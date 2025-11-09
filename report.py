@@ -148,7 +148,7 @@ pivot = summary.pivot_table(
 )
 
 pivot = pivot.round(2)  
-pivot["Total Points"] = milestone_totals.set_index("Milestone")["TotalPoints"].round(2)
+pivot["Total Points"] = milestone_totals.set_index("Milestone")["TotalPoints"]
 
 percentages = (
     summary.pivot_table(
