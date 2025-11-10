@@ -4,14 +4,11 @@ import '../styles/AuthPage.css';
 const AuthPage = ({ onLoginSuccess }) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
-    // Login fields
     email: '',
     password: '',
-    // Sign up fields
     first_name: '',
     last_name: '',
     phone: '',
-    // Address fields
     street: '',
     building_number: '',
     apartment_number: '',
@@ -24,7 +21,7 @@ const AuthPage = ({ onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
 
-  const API_BASE_URL = 'http://localhost:5000/api'; // Update with your Flask backend URL
+  const API_BASE_URL = 'http://localhost:5000/api'; 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -135,23 +132,17 @@ const AuthPage = ({ onLoginSuccess }) => {
           })
         });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Sign up failed');
-        }
+        const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Sign up failed');
+      }
 
-        setSuccess('Account created successfully! Logging in...');
-        setTimeout(() => {
-          const userData = {
-            id: formData.email,
-            first_name: formData.first_name,
-            last_name: formData.last_name,
-            email: formData.email
-          };
-          onLoginSuccess(userData);
-        }, 1500);
+      setSuccess('Account created successfully! Logging in...');
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setTimeout(() => {
+        onLoginSuccess(data.user);
+      }, 1500);
       } else {
-        // Login
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
           method: 'POST',
           headers: {
@@ -212,7 +203,6 @@ const AuthPage = ({ onLoginSuccess }) => {
         <form onSubmit={handleSubmit} className="auth-form">
           {!isSignUp ? (
             <>
-              {/* Login Form */}
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
@@ -241,7 +231,6 @@ const AuthPage = ({ onLoginSuccess }) => {
             </>
           ) : (
             <>
-              {/* Sign Up Form */}
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="first_name">First Name *</label>

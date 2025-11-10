@@ -22,7 +22,6 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
           'Content-Type': 'application/json'
         }
       });
-
       if (!response.ok) {
         throw new Error('Failed to fetch user details');
       }
