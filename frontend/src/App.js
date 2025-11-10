@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import AuthPage from './components/AuthPage';
-import HomePage from './components/HomePage';
+import AuthPage from '../src/components/AuthPage';
+import HomePage from '../src/components/HomePage';
+import ProfilePage from '../src/components/ProfilePage';
 import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
-  // Check if user is already logged in (from localStorage)
+  const [currentPage, setCurrentPage] = useState('home');
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
@@ -25,20 +25,33 @@ function App() {
   const handleLoginSuccess = (userData) => {
     setUser(userData);
     setIsLoggedIn(true);
-    // Store user info in localStorage for persistence
+    setCurrentPage('home');
     localStorage.setItem('currentUser', JSON.stringify(userData));
   };
 
   const handleLogout = () => {
     setUser(null);
     setIsLoggedIn(false);
+    setCurrentPage('home');
     localStorage.removeItem('currentUser');
+  };
+
+  const handleNavigate = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
+
+  const renderPage = () => {
+    if (currentPage === 'profile') {
+      return <ProfilePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+    }
+    return <HomePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
   };
 
   return (
     <div className="App">
       {isLoggedIn && user ? (
-        <HomePage user={user} onLogout={handleLogout} />
+        renderPage()
       ) : (
         <AuthPage onLoginSuccess={handleLoginSuccess} />
       )}
