@@ -8,6 +8,7 @@ from services.review_service import review_service
 from services.item_service import item_service
 from services.user_service import user_service
 from services.role_service import role_service
+from services.auth_user_service import auth_user_service
 
 
 api_bp = Blueprint('api', __name__)
@@ -149,6 +150,17 @@ def add_user():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+@api_bp.route('/users/<int:user_id>', methods=['GET'])
+def get_user_by_id(user_id):
+    try:
+        user = user_service.get_user_details(user_id)
+        return jsonify(user), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        print(f"Error fetching user by ID: {e}")
+        return jsonify({'error': 'Failed to fetch user details'}), 500
+    
 #business endpoints
 
 @api_bp.route('/businesses', methods=['GET'])
@@ -283,4 +295,40 @@ def add_role():
         return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+# new APIs for authentication can be added here
+    
+auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+
+@auth_bp.route('/signup', methods=['POST'])
+def signup():
+    try:
+        data = request.get_json()
+        user = auth_user_service.signup(
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            email=data.get('email'),
+            phone=data.get('phone'),
+            password=data.get('password'),
+            address=data.get('address', {})
+        )
+        return jsonify({'message': 'User created successfully', 'user': user}), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        print(f"Signup error: {e}")
+        return jsonify({'error': 'Signup failed'}), 500
+
+
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        user = auth_user_service.login(data.get('email'), data.get('password'))
+        return jsonify({'message': 'Login successful', 'user': user}), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 401
+    except Exception as e:
+        print(f"Login error: {e}")
+        return jsonify({'error': 'Login failed'}), 500
     

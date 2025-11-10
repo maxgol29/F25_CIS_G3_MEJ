@@ -1,13 +1,16 @@
 from flask import Flask, jsonify
 from db.models import db
-from routes.api import api_bp
+from routes.api import api_bp, auth_bp
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
+    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}}, allow_headers=["Content-Type", "Authorization"])
     db.connect()
 
     app.register_blueprint(api_bp, url_prefix='/api')
-    
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+
     @app.route('/', methods=['GET'])
     def root():
         return jsonify({'message': 'Places API Server Running'}), 200
