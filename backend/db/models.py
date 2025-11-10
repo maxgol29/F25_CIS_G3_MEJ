@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import config
 
 class Database:
@@ -274,5 +275,96 @@ class Database:
         finally:
             cursor.close()
 
+# auth-related database operations
+
+ 
+    def signup(self, first_name, last_name, email, phone, password, address):
+        self._ensure_connection()
+        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        try:
+            cursor.execute('SELECT id FROM "User" WHERE email = %s', (email,))
+            if cursor.fetchone():
+                raise ValueError("Email already exists")
+            cursor.execute('''
+                INSERT INTO "Address" 
+                (street, building_number, apartment_number, zip_code, city, state, country, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                RETURNING id
+            ''', (
+                address['street'],
+                address.get('building_number'),
+                address.get('apartment_number'),
+                address['zip_code'],
+                address['city'],
+                address.get('state'),
+                address['country']
+            ))
+            address_id = cursor.fetchone()['id']
+            cursor.execute('''
+                INSERT INTO "User" 
+                (first_name, last_name, email, phone, is_active, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                RETURNING id, first_name, last_name, email, phone
+            ''', (first_name, last_name, email, phone))
+            user = cursor.fetchone()
+            cursor.execute('''
+                INSERT INTO "User_Address" (userID, addressID, address_type)
+                VALUES (%s, %s, 'home')
+            ''', (user['id'], address_id))
+            password_hash = generate_password_hash(password)
+            cursor.execute('''
+                INSERT INTO "User_Auth" 
+                (userID, password_hash, created_at, updated_at)
+                VALUES (%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            ''', (user['id'], password_hash))
+
+            self.conn.commit()
+            return user
+        except Exception as e:
+            self.conn.rollback()
+            raise e
+        finally:
+            cursor.close()
+
+    def login(self, email, password):
+        self._ensure_connection()
+        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        try:
+            cursor.execute('''
+                SELECT u.id, u.first_name, u.last_name, u.email, ua.password_hash
+                FROM "User" u
+                INNER JOIN "User_Auth" ua ON u.id = ua.userID
+                WHERE u.email = %s AND u.is_active = TRUE
+            ''', (email,))
+            user = cursor.fetchone()
+            if not user or not check_password_hash(user['password_hash'], password):
+                raise ValueError("Invalid email or password")
+
+            cursor.execute('UPDATE "User_Auth" SET last_login = CURRENT_TIMESTAMP WHERE userID = %s', (user['id'],))
+            self.conn.commit()
+            return {k: user[k] for k in ('id', 'first_name', 'last_name', 'email')}
+        finally:
+            cursor.close()
+
+    def get_user_details(self, user_id):
+        self._ensure_connection()
+        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        try:
+            cursor.execute('''
+                SELECT 
+                    u.id, u.first_name, u.last_name, u.email, u.phone,
+                    a.street, a.building_number, a.apartment_number,
+                    a.zip_code, a.city, a.state, a.country
+                FROM "User" u
+                LEFT JOIN "User_Address" ua ON u.id = ua.userID AND ua.address_type = 'home'
+                LEFT JOIN "Address" a ON ua.addressID = a.id
+                WHERE u.id = %s AND u.is_active = TRUE
+            ''', (user_id,))
+            data = cursor.fetchone()
+            if not data:
+                raise ValueError("User not found")
+            return data
+        finally:
+            cursor.close()
 
 db = Database()
