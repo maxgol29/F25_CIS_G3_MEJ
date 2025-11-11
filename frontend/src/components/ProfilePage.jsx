@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import NavBar from './NavBar';
 import '../styles/ProfilePage.css';
 
@@ -9,33 +9,31 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
 
   const API_BASE_URL = 'http://localhost:5000/api';
 
-  useEffect(() => {
-    fetchUserDetails();
-  }, [user]);
-
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}/users/${user.id}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
-      if (!response.ok) {
-        throw new Error('Failed to fetch user details');
-      }
+
+      if (!response.ok) throw new Error('Failed to fetch user details');
 
       const data = await response.json();
       setUserDetails(data);
       setError('');
     } catch (err) {
       setError(err.message || 'Failed to load user information');
-      setUserDetails(user);
     } finally {
       setLoading(false);
     }
-  };
+  }, [user.id, API_BASE_URL]);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchUserDetails();
+    }
+  }, [user?.id, fetchUserDetails]);
 
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
@@ -55,11 +53,10 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
   return (
     <div className="profile-page">
       <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
-      
+
       <div className="profile-container">
         <div className="profile-header">
-          <h1>My Profile</h1>
-          <p className="profile-subtitle">View and manage your account information</p>
+          <h1>Profile</h1>
         </div>
 
         {error && <div className="error-message">{error}</div>}
@@ -67,9 +64,7 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
         <div className="profile-content">
           {/* Personal Information */}
           <section className="profile-section">
-            <div className="section-header">
-              <h2>Personal Information</h2>
-            </div>
+            <h2>Personal Information</h2>
             <div className="info-grid">
               <div className="info-item">
                 <label>First Name</label>
@@ -91,34 +86,28 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
           </section>
 
           {/* Address Information */}
-          {userDetails?.address && (
+          {userDetails?.street && (
             <section className="profile-section">
-              <div className="section-header">
-                <h2>Address</h2>
-              </div>
-              <div className="address-content">
-                <div className="address-block">
-                  <p className="street">
-                    {userDetails.address.street}
-                    {userDetails.address.building_number && ` ${userDetails.address.building_number}`}
-                    {userDetails.address.apartment_number && ` Apt ${userDetails.address.apartment_number}`}
-                  </p>
-                  <p className="city-state">
-                    {userDetails.address.city}
-                    {userDetails.address.state && `, ${userDetails.address.state}`}
-                    {userDetails.address.zip_code && ` ${userDetails.address.zip_code}`}
-                  </p>
-                  <p className="country">{userDetails.address.country}</p>
-                </div>
+              <h2>Address</h2>
+              <div className="address-block">
+                <p className="street">
+                  {userDetails.street}
+                  {userDetails.building_number && ` ${userDetails.building_number}`}
+                  {userDetails.apartment_number && ` Apt ${userDetails.apartment_number}`}
+                </p>
+                <p className="city-state">
+                  {userDetails.city}
+                  {userDetails.state && `, ${userDetails.state}`}
+                  {userDetails.zip_code && ` ${userDetails.zip_code}`}
+                </p>
+                <p className="country">{userDetails.country}</p>
               </div>
             </section>
           )}
 
           {/* Account Actions */}
           <section className="profile-section">
-            <div className="section-header">
-              <h2>Account</h2>
-            </div>
+            <h2>Account</h2>
             <div className="actions">
               <button className="action-button secondary">Edit Profile</button>
               <button className="action-button secondary">Change Password</button>
@@ -134,3 +123,4 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
 };
 
 export default ProfilePage;
+

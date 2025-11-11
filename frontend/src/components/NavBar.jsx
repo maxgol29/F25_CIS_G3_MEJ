@@ -1,3 +1,4 @@
+import React from 'react';
 import '../styles/NavBar.css';
 
 const NavBar = ({ user, onLogoClick, onNavigate }) => {
@@ -10,9 +11,12 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
+        {/* Logo */}
         <div className="navbar-logo" onClick={onLogoClick}>
           localPromo
         </div>
+
+        {/* Navigation Links */}
         <ul className="nav-menu">
           <li className="nav-item">
             <button 
@@ -47,6 +51,8 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
             </button>
           </li>
         </ul>
+
+        {/* User Welcome */}
         <div className="navbar-user">
           Welcome, {user.last_name}
         </div>
