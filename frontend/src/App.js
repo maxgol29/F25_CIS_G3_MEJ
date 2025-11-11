@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import AuthPage from '../src/components/AuthPage';
 import HomePage from '../src/components/HomePage';
 import ProfilePage from '../src/components/ProfilePage';
+import MapPage from '../src/components/Mappage';
 import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
+
+  // Check if user is already logged in (from localStorage)
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
@@ -26,6 +29,7 @@ function App() {
     setUser(userData);
     setIsLoggedIn(true);
     setCurrentPage('home');
+    // Store user info in localStorage for persistence
     localStorage.setItem('currentUser', JSON.stringify(userData));
   };
 
@@ -42,10 +46,15 @@ function App() {
   };
 
   const renderPage = () => {
-    if (currentPage === 'profile') {
-      return <ProfilePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+    switch (currentPage) {
+      case 'profile':
+        return <ProfilePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'map':
+        return <MapPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'home':
+      default:
+        return <HomePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
     }
-    return <HomePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
   };
 
   return (
