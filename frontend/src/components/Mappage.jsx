@@ -47,6 +47,22 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     disableDoubleClickZoom: true
   };
 
+  const saveRestaurantsToDatabase = useCallback(async (restaurantsList) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/restaurants/save-from-places`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ restaurants: restaurantsList })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+      }
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  }, [API_BASE_URL]);
+
   const fetchNearbyRestaurants = useCallback((lat, lng) => {
     if (!window.google?.maps?.places) return;
 
@@ -61,11 +77,30 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     service.nearbySearch(request, (results, status) => {
       if (status === window.google.maps.places.PlacesServiceStatus.OK && results) {
         const sorted = results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-        setRestaurants(sorted);
+
+        const detailsService = new window.google.maps.places.PlacesService(document.createElement('div'));
+        const detailPromises = sorted.map(place => 
+          new Promise(resolve => {
+            detailsService.getDetails({ placeId: place.place_id, fields: [
+              'name', 'place_id', 'international_phone_number', 'website', 'opening_hours', 
+              'rating', 'user_ratings_total', 'types', 'geometry'
+            ]}, (detail, detailStatus) => {
+              if (detailStatus === window.google.maps.places.PlacesServiceStatus.OK) resolve(detail);
+              else resolve(place); // fallback
+            });
+          })
+        );
+
+        Promise.all(detailPromises).then(fullPlaces => {
+          setRestaurants(fullPlaces);
+          saveRestaurantsToDatabase(fullPlaces);
+          setLoadingRestaurants(false);
+        });
+      } else {
+        setLoadingRestaurants(false);
       }
-      setLoadingRestaurants(false);
     });
-  }, [RADIUS_METERS]);
+  }, [RADIUS_METERS, saveRestaurantsToDatabase]);
 
   const geocodeAddress = useCallback((data) => {
     if (!window.google?.maps) return;

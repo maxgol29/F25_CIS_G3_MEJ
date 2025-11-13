@@ -9,4 +9,13 @@ class BusinessService:
             raise ValueError('Missing name, type, or location')
         return db.add_business(name, type, location)
 
+    def save_businesses_from_places(self, businesses):
+        if not businesses:
+            raise ValueError("No businesses provided")
+
+        if not isinstance(businesses, list):
+            raise ValueError("Businesses must be a list")
+
+        return db.save_businesses_from_places(businesses)
+
 business_service = BusinessService()

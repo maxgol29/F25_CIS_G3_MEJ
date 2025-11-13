@@ -332,3 +332,33 @@ def login():
         print(f"Login error: {e}")
         return jsonify({'error': 'Login failed'}), 500
     
+# Restaurants adding to db
+
+restaurants_bp = Blueprint('restaurants', __name__, url_prefix='/api/restaurants')
+
+@restaurants_bp.route('/save-from-places', methods=['POST'])
+def save_business_from_places():
+    try:
+        data = request.get_json()
+        businesses = data.get('restaurants', []) if data else []
+
+        result = business_service.save_businesses_from_places(businesses)
+        
+        return jsonify({
+            'message': 'Businesses processed',
+            'saved': result['saved'],
+            'skipped': result['skipped'],
+            'errors': result['errors']
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': 'Failed to save businesses',
+            'details': str(e)
+        }), 500
+
+    
