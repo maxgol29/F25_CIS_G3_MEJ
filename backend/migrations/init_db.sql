@@ -29,6 +29,28 @@ CREATE TABLE IF NOT EXISTS "Address" (
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS "Promo_Type" (
+    id SERIAL PRIMARY KEY,
+    "name" VARCHAR(100) NOT NULL UNIQUE,
+    "description" TEXT,
+    "discount_percentage" FLOAT NOT NULL CHECK ("discount_percentage" > 0 AND "discount_percentage" <= 100),
+    "discount_fixed_amount" FLOAT,
+    "applies_to_category" VARCHAR(100),
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "User" (
+    id SERIAL PRIMARY KEY,
+    roleID INTEGER REFERENCES "Role"(id) ON DELETE SET NULL,
+    "email" VARCHAR(255) UNIQUE NOT NULL,
+    "phone" VARCHAR(20),
+    "first_name" VARCHAR(100) NOT NULL,
+    "last_name" VARCHAR(100) NOT NULL,
+    "is_active" BOOLEAN DEFAULT TRUE,
+    "is_email_verified" BOOLEAN DEFAULT FALSE,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE IF NOT EXISTS "Payment_Method" (
     id SERIAL PRIMARY KEY,
@@ -44,64 +66,6 @@ CREATE TABLE IF NOT EXISTS "Payment_Method" (
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-
-CREATE TABLE IF NOT EXISTS "Review" (
-    id SERIAL PRIMARY KEY,
-    userID INTEGER REFERENCES "User"(id) ON DELETE CASCADE NOT NULL,
-    businessID INTEGER REFERENCES "Business"(id) ON DELETE CASCADE NOT NULL,
-    "rating" FLOAT CHECK ("rating" >= 1 AND "rating" <= 5),
-    "review_text" TEXT,
-    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(userID, businessID)
-);
-
-CREATE TABLE IF NOT EXISTS "Promo_Type" (
-    id SERIAL PRIMARY KEY,
-    "name" VARCHAR(100) NOT NULL UNIQUE,
-    "description" TEXT,
-    "discount_percentage" FLOAT NOT NULL CHECK ("discount_percentage" > 0 AND "discount_percentage" <= 100),
-    "discount_fixed_amount" FLOAT,
-    "applies_to_category" VARCHAR(100),
-    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS "Promo_Code" (
-    id SERIAL PRIMARY KEY,
-    typeID INTEGER REFERENCES "Promo_Type"(id) ON DELETE CASCADE NOT NULL,
-    businessID INTEGER REFERENCES "Business"(id) ON DELETE CASCADE NOT NULL,
-    "code" VARCHAR(50) NOT NULL UNIQUE,
-    "description" TEXT,
-    "expiration_date" TIMESTAMP,
-    "max_uses" INTEGER,
-    "current_uses" INTEGER DEFAULT 0,
-    "is_active" BOOLEAN DEFAULT TRUE,
-    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-CREATE TABLE IF NOT EXISTS "User" (
-    id SERIAL PRIMARY KEY,
-    roleID INTEGER REFERENCES "Role"(id) ON DELETE SET NULL,
-    "email" VARCHAR(255) UNIQUE NOT NULL,
-    "phone" VARCHAR(20),
-    "first_name" VARCHAR(100) NOT NULL,
-    "last_name" VARCHAR(100) NOT NULL,
-    "is_active" BOOLEAN DEFAULT TRUE,
-    "is_email_verified" BOOLEAN DEFAULT FALSE,
-    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS "User_Address" (
-    userID INTEGER REFERENCES "User"(id) ON DELETE CASCADE NOT NULL,
-    addressID INTEGER REFERENCES "Address"(id) ON DELETE CASCADE NOT NULL,
-    "address_type" VARCHAR(50) CHECK ("address_type" IN ('home', 'work', 'billing', 'shipping')),
-    PRIMARY KEY (userID, addressID)
-);
-
 
 CREATE TABLE IF NOT EXISTS "Business" (
     id SERIAL PRIMARY KEY,
@@ -122,6 +86,40 @@ CREATE TABLE IF NOT EXISTS "Business" (
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS "Review" (
+    id SERIAL PRIMARY KEY,
+    userID INTEGER REFERENCES "User"(id) ON DELETE CASCADE NOT NULL,
+    businessID INTEGER REFERENCES "Business"(id) ON DELETE CASCADE NOT NULL,
+    "rating" FLOAT CHECK ("rating" >= 1 AND "rating" <= 5),
+    "review_text" TEXT,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(userID, businessID)
+);
+
+
+CREATE TABLE IF NOT EXISTS "Promo_Code" (
+    id SERIAL PRIMARY KEY,
+    typeID INTEGER REFERENCES "Promo_Type"(id) ON DELETE CASCADE NOT NULL,
+    businessID INTEGER REFERENCES "Business"(id) ON DELETE CASCADE NOT NULL,
+    "code" VARCHAR(50) NOT NULL UNIQUE,
+    "description" TEXT,
+    "expiration_date" TIMESTAMP,
+    "max_uses" INTEGER,
+    "current_uses" INTEGER DEFAULT 0,
+    "is_active" BOOLEAN DEFAULT TRUE,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "User_Address" (
+    userID INTEGER REFERENCES "User"(id) ON DELETE CASCADE NOT NULL,
+    addressID INTEGER REFERENCES "Address"(id) ON DELETE CASCADE NOT NULL,
+    "address_type" VARCHAR(50) CHECK ("address_type" IN ('home', 'work', 'billing', 'shipping')),
+    PRIMARY KEY (userID, addressID)
+);
+
 
 
 CREATE TABLE IF NOT EXISTS "Item" (

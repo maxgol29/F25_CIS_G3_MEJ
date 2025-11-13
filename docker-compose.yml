@@ -1,22 +1,18 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:17-alpine
     container_name: postgres_db
     environment:
-    #Needs to be changed
-      POSTGRES_USER: admin
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: myapp_db
-      #---
+      POSTGRES_DB: localpromo
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/migrations/init_db.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -29,7 +25,7 @@ services:
       dockerfile: Dockerfile
     container_name: python_backend
     environment:
-      DATABASE_URL: postgresql://admin:password@postgres:5432/myapp_db
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/localpromo
       FLASK_ENV: development
     ports:
       - "5000:5000"
@@ -49,6 +45,7 @@ services:
     container_name: react_frontend
     environment:
       REACT_APP_API_URL: http://localhost:5000
+      REACT_APP_GOOGLE_PLACES_API_KEY: ${REACT_APP_GOOGLE_PLACES_API_KEY}
     ports:
       - "3000:3000"
     volumes:
