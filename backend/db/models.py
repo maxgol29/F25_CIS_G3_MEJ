@@ -1,5 +1,5 @@
 import psycopg2
-from psycopg2.extras import RealDictCursor
+from psycopg2.extras import RealDictCursor, Json
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import config
 
@@ -33,6 +33,14 @@ class Database:
     def _ensure_connection(self):
         if not self.conn:
             self.connect()
+        else:
+            try:
+                cursor = self.conn.cursor()
+                cursor.execute("SELECT 1")
+                cursor.close()
+            except (psycopg2.OperationalError, psycopg2.InterfaceError):
+                self.close()
+                self.connect()
 
     # Item-related database operations
     
@@ -367,4 +375,67 @@ class Database:
         finally:
             cursor.close()
 
+
+   # Save businesses from Google Places API
+
+    def save_businesses_from_places(self, businesses):
+        self._ensure_connection()
+        saved_count = 0
+        skipped_count = 0
+        errors = []
+
+        cursor = None
+        try:
+            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            
+            for business in businesses:
+                try:
+                    google_place_id = business.get('place_id')
+                    if not google_place_id:
+                        continue
+                    name = business.get('name')
+                    phone = business.get('international_phone_number')
+                    website = business.get('website')
+                    opening_hours = business.get('opening_hours')
+                    opening_hours_json = Json(opening_hours) if isinstance(opening_hours, (dict, list)) else None
+                    rating = business.get('rating')
+                    total_reviews = business.get('user_ratings_total', 0)
+                    types = business.get('types', [])
+                    place_type = next(
+                        (t for t in types if t in ['restaurant', 'cafe', 'bar']),
+                        types[0] if types else 'restaurant'
+                    )
+
+                    cursor.execute('''
+                        INSERT INTO "Business"
+                        (name, type, phone, website, google_place_id,
+                        opening_hours, rating, total_reviews,
+                        is_active, is_verified, created_at, updated_at)
+                        VALUES
+                        (%s, %s, %s, %s, %s,
+                        %s, %s, %s,
+                        TRUE, FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                        ON CONFLICT (google_place_id) DO NOTHING;
+                    ''', (
+                        name, place_type, phone, website, google_place_id,
+                        opening_hours_json, rating, total_reviews
+                    ))
+
+                    if cursor.rowcount > 0:
+                        saved_count += 1
+                    else:
+                        skipped_count += 1
+
+                except Exception as e:
+                    errors.append({'business': business.get('name'), 'error': str(e)})
+                    continue
+            self.conn.commit()            
+            return {'saved': saved_count, 'skipped': skipped_count, 'errors': errors}
+        except Exception as e:
+            if self.conn:
+                self.conn.rollback()
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
 db = Database()

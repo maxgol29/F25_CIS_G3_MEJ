@@ -1,15 +1,23 @@
 from flask import Flask, jsonify
 from db.models import db
-from routes.api import api_bp, auth_bp
+from routes.api import api_bp, auth_bp, restaurants_bp
 from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}}, allow_headers=["Content-Type", "Authorization"])
+    CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:3000", "http://localhost:5000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+    })
     db.connect()
 
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(restaurants_bp, url_prefix='/api/restaurants')
 
     @app.route('/', methods=['GET'])
     def root():
