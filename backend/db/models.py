@@ -438,4 +438,39 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+
+
+    def get_all_restaurants(self, limit=None):
+        self._ensure_connection()
+        cursor = None
+        try:
+            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            
+            query = '''
+                SELECT 
+                    id, name, type, google_place_id, rating, 
+                    total_reviews, opening_hours, phone, website,
+                    is_active, created_at
+                FROM "Business"
+                WHERE is_active = TRUE
+                ORDER BY rating DESC, total_reviews DESC
+            '''  
+            if limit:
+                query += f' LIMIT {limit}'
+            
+            cursor.execute(query)
+            restaurants = cursor.fetchall()
+            
+            return [dict(r) for r in restaurants] if restaurants else []
+        except Exception as e:
+            if self.conn:
+                try:
+                    self.conn.rollback()
+                except:
+                    pass  
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+
 db = Database()

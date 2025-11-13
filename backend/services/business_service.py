@@ -17,5 +17,13 @@ class BusinessService:
             raise ValueError("Businesses must be a list")
 
         return db.save_businesses_from_places(businesses)
+    
+    def get_all_restaurants_service(self, limit=None):
+        restaurants = db.get_all_restaurants(limit)
+        
+        if not restaurants:
+            raise ValueError("No restaurants found in database")
+        
+        return db.get_all_restaurants(limit)
 
 business_service = BusinessService()

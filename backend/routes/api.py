@@ -361,4 +361,20 @@ def save_business_from_places():
             'details': str(e)
         }), 500
 
-    
+@restaurants_bp.route('/get-all', methods=['GET'])
+def get_all_restaurants():
+    try:
+        limit = request.args.get('limit', default=None, type=int)
+        restaurants = business_service.get_all_restaurants_service(limit)
+        
+        return jsonify({
+            'count': len(restaurants),
+            'restaurants': restaurants
+        }), 200
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': 'Failed to fetch restaurants',
+            'details': str(e)
+        }), 500

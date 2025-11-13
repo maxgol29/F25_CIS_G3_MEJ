@@ -3,6 +3,7 @@ import AuthPage from '../src/components/AuthPage';
 import HomePage from '../src/components/HomePage';
 import ProfilePage from '../src/components/ProfilePage';
 import MapPage from '../src/components/Mappage';
+import BrowsePage from '../src/components/BrowsePage';
 import './App.css';
 
 function App() {
@@ -54,6 +55,8 @@ function App() {
       case 'home':
       default:
         return <HomePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'browse':
+        return <BrowsePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
     }
   };
 
