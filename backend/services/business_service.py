@@ -20,10 +20,6 @@ class BusinessService:
     
     def get_all_restaurants_service(self, limit=None):
         restaurants = db.get_all_restaurants(limit)
-        
-        if not restaurants:
-            raise ValueError("No restaurants found in database")
-        
         return restaurants
 
     def get_items_by_business_id(self, business_id):
