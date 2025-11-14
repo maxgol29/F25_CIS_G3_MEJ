@@ -63,14 +63,30 @@ class Database:
         finally:
             cursor.close()
 
-    def get_all_items(self, limit=None):
+    def get_all_items(self, limit=None, business_id=None, google_place_id=None, category=None):
         self._ensure_connection()
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)
         try:
-            query = "SELECT * FROM \"Item\""
+            # Base query selects items; optionally join Business when filtering by google_place_id
+            if google_place_id:
+                query = 'SELECT i.* FROM "Item" i LEFT JOIN "Business" b ON i.businessID = b.id WHERE b.google_place_id = %s'
+                params = [google_place_id]
+            else:
+                query = 'SELECT i.* FROM "Item" i WHERE 1=1'
+                params = []
+
+            if business_id:
+                query += ' AND i.businessID = %s'
+                params.append(business_id)
+
+            if category:
+                query += ' AND i.category = %s'
+                params.append(category)
+
             if limit:
-                query += f" LIMIT {limit}"
-            cursor.execute(query)
+                query += f' LIMIT {limit}'
+
+            cursor.execute(query, tuple(params) if params else None)
             return cursor.fetchall()
         finally:
             cursor.close()

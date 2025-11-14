@@ -13,6 +13,11 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [loadingRestaurants, setLoadingRestaurants] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [loadingItems, setLoadingItems] = useState(false);
   const mapRef = useRef(null);
 
   const API_BASE_URL = 'http://localhost:5000/api';
@@ -83,7 +88,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
           new Promise(resolve => {
             detailsService.getDetails({ placeId: place.place_id, fields: [
               'name', 'place_id', 'international_phone_number', 'website', 'opening_hours', 
-              'rating', 'user_ratings_total', 'types', 'geometry'
+              'rating', 'user_ratings_total', 'types', 'geometry', 'photos', 'vicinity'
             ]}, (detail, detailStatus) => {
               if (detailStatus === window.google.maps.places.PlacesServiceStatus.OK) resolve(detail);
               else resolve(place); // fallback
@@ -168,6 +173,16 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     }
   }, [user?.id, fetchUserAddress, addressFetched]);
 
+  useEffect(() => {
+    if (selectedRestaurant) {
+      fetchItemsForRestaurant(selectedRestaurant);
+    } else {
+      setItems([]);
+      setCategories([]);
+      setSelectedCategory('');
+    }
+  }, [selectedRestaurant, fetchItemsForRestaurant]);
+
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
   };
@@ -176,6 +191,27 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     setSelectedRestaurant(restaurant);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const fetchItemsForRestaurant = useCallback(async (restaurant) => {
+    if (!restaurant?.place_id) return;
+    try {
+      setLoadingItems(true);
+      const res = await fetch(`${API_BASE_URL}/items?google_place_id=${restaurant.place_id}`);
+      if (!res.ok) throw new Error('Failed to fetch items');
+      const data = await res.json();
+      const fetchedItems = data.items || [];
+      setItems(fetchedItems);
+      const cats = Array.from(new Set(fetchedItems.map(i => i.category).filter(Boolean)));
+      setCategories(cats);
+      setSelectedCategory('');
+    } catch (err) {
+      console.error('Error fetching items:', err);
+      setItems([]);
+      setCategories([]);
+    } finally {
+      setLoadingItems(false);
+    }
+  }, [API_BASE_URL]);
 
   const mapContainerStyle = {
     width: '100%',
@@ -299,43 +335,112 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
 
       {restaurants.length > 0 && (
         <div className="fullscreen-restaurants-section">
-          <div className="restaurants-header">
-            <h2> Restaurants ({restaurants.length})</h2>
+          <div className="restaurants-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ margin: 0 }}> Restaurants ({restaurants.length})</h2>
+            <div style={{ width: 300 }}>
+              <input
+                type="text"
+                placeholder="Search businesses..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ width: '100%', padding: '6px 8px', borderRadius: 6, border: '1px solid #ddd' }}
+              />
+            </div>
           </div>
 
           {loadingRestaurants ? (
             <div className="loading-restaurants">Loading restaurants...</div>
           ) : (
-            <div className="restaurants-grid">
-              {restaurants.map((restaurant, index) => (
-                <div
-                  key={index}
-                  className={`restaurant-card ${selectedRestaurant?.place_id === restaurant.place_id ? 'active' : ''}`}
-                  onClick={() => handleRestaurantClick(restaurant)}
-                >
-                  <div className="restaurant-name">{restaurant.name}</div>
-                  <div className="restaurant-rating">
-                    {restaurant.rating ? (
-                      <>
-                        <span className="stars">{restaurant.rating}</span>
-                        <span className="reviews">({restaurant.user_ratings_total})</span>
-                      </>
-                    ) : (
-                      <span className="no-rating">No ratings yet</span>
-                    )}
+            <>
+              <div className="restaurants-grid">
+                {restaurants
+                  .filter(r => !searchQuery || (r.name && r.name.toLowerCase().includes(searchQuery.toLowerCase())))
+                  .map((restaurant, index) => (
+                    <div
+                      key={index}
+                      className={`restaurant-card ${selectedRestaurant?.place_id === restaurant.place_id ? 'active' : ''}`}
+                      onClick={() => handleRestaurantClick(restaurant)}
+                    >
+                      <div className="restaurant-image">
+                        {restaurant.photos && restaurant.photos.length > 0 ? (
+                          <img
+                            alt={restaurant.name}
+                            src={restaurant.photos[0].getUrl ? restaurant.photos[0].getUrl({ maxWidth: 200 }) : ''}
+                            style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: 6 }}
+                          />
+                        ) : (
+                          <div style={{ width: '100%', height: '120px', background: '#eee', borderRadius: 6 }} />
+                        )}
+                      </div>
+                      <div className="restaurant-name">{restaurant.name}</div>
+                      <div className="restaurant-rating">
+                        {restaurant.rating ? (
+                          <>
+                            <span className="stars">{restaurant.rating}</span>
+                            <span className="reviews">({restaurant.user_ratings_total})</span>
+                          </>
+                        ) : (
+                          <span className="no-rating">No ratings yet</span>
+                        )}
+                      </div>
+                      <div className="restaurant-status">
+                        {restaurant.opening_hours?.open_now ? (
+                          <span className="open">Open</span>
+                        ) : restaurant.opening_hours ? (
+                          <span className="closed">Closed</span>
+                        ) : (
+                          <span className="unknown">Hours unknown</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+
+              {selectedRestaurant && (
+                <div className="items-panel" style={{ padding: '12px 0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <h3 style={{ margin: 0 }}>Menu — {selectedRestaurant.name}</h3>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <label style={{ fontSize: 12 }}>Filter:</label>
+                      <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                        <option value="">All</option>
+                        {categories.map((c, i) => (
+                          <option key={i} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                  <div className="restaurant-status">
-                    {restaurant.opening_hours?.open_now ? (
-                      <span className="open">Open</span>
-                    ) : restaurant.opening_hours ? (
-                      <span className="closed">Closed</span>
-                    ) : (
-                      <span className="unknown">Hours unknown</span>
-                    )}
-                  </div>
+
+                  {loadingItems ? (
+                    <div>Loading items...</div>
+                  ) : (
+                    <div className="items-grid">
+                      {items
+                        .filter(it => !selectedCategory || it.category === selectedCategory)
+                        .map((it, idx) => (
+                          <div key={idx} className="item-card">
+                            <div className="item-image">
+                              {it.image_url ? (
+                                <img src={it.image_url} alt={it.dish_name} style={{ width: '100%', height: '110px', objectFit: 'cover', borderRadius: 6 }} />
+                              ) : (
+                                <div style={{ width: '100%', height: '110px', background: '#f6f6f6', borderRadius: 6 }} />
+                              )}
+                            </div>
+                            <div className="item-name">{it.dish_name}</div>
+                            <div className="item-meta">{it.category ? it.category : 'Uncategorized'}</div>
+                            <div className="item-price">
+                              ${it.price?.toFixed ? it.price.toFixed(2) : it.price}
+                              {it.discount_percentage && it.discount_percentage > 0 ? (
+                                <span className="promo"> {` - ${it.discount_percentage}% off`}</span>
+                              ) : null}
+                            </div>
+                          </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
       )}
