@@ -391,6 +391,32 @@ class Database:
         finally:
             cursor.close()
 
+    def update_user_password(self, user_id, new_password):
+        """Update a user's password only. Returns True if successful."""
+        self._ensure_connection()
+        cursor = self.conn.cursor()
+        try:
+            password_hash = generate_password_hash(new_password)
+            cursor.execute('''
+                UPDATE "User_Auth"
+                SET password_hash = %s, updated_at = CURRENT_TIMESTAMP
+                WHERE userID = %s
+                RETURNING userID
+            ''', (password_hash, user_id))
+            
+            result = cursor.fetchone()
+            if not result:
+                raise ValueError("User not found or password update failed")
+            
+            self.conn.commit()
+            return True
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            print(f"Error updating password: {e}")
+            raise
+        finally:
+            cursor.close()
+
 
    # Save businesses from Google Places API
 
