@@ -461,13 +461,69 @@ class Database:
             cursor.execute(query)
             restaurants = cursor.fetchall()
             
-            return [dict(r) for r in restaurants] if restaurants else []
+            result = [dict(r) for r in restaurants] if restaurants else []
+            return result
         except Exception as e:
-            if self.conn:
-                try:
-                    self.conn.rollback()
-                except:
-                    pass  
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+
+    def get_business_by_id(self, business_id):
+        self._ensure_connection()
+        cursor = None     
+        try:
+            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            
+            query = '''
+                SELECT 
+                    "id", "name", "type", google_place_id, rating, 
+                    total_reviews, opening_hours, phone, website,
+                    is_active, created_at
+                FROM "Business"
+                WHERE "id" = %s AND is_active = TRUE
+            '''
+            
+            cursor.execute(query, (business_id,))
+            business = cursor.fetchone()
+            
+            result = dict(business) if business else None
+            return result
+        except Exception as e:
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+
+    def get_items_by_business_id(self, business_id):
+        self._ensure_connection()
+        cursor = None
+        
+        try:
+            cursor = self.conn.cursor(cursor_factory=RealDictCursor) 
+            check_query = 'SELECT "id" FROM "Business" WHERE "id" = %s'
+            cursor.execute(check_query, (business_id,))
+            
+            if not cursor.fetchone():
+                return []
+            
+            query = '''
+                SELECT 
+                    id, BusinessID, dish_name, description, category,
+                    price, discount_percentage, image_url, ingredients,
+                    cooking_method, portion_size, available_quantity,
+                    is_available, created_at, updated_at
+                FROM "Item"
+                WHERE BusinessID = %s
+                ORDER BY category, dish_name
+            '''
+            
+            cursor.execute(query, (business_id,))
+            items = cursor.fetchall()
+            
+            result = [dict(item) for item in items] if items else []
+            return result
+        except Exception as e:
             raise e
         finally:
             if cursor:

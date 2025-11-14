@@ -4,14 +4,15 @@ import HomePage from '../src/components/HomePage';
 import ProfilePage from '../src/components/ProfilePage';
 import MapPage from '../src/components/Mappage';
 import BrowsePage from '../src/components/BrowsePage';
+import BusinessDetailPage from '../src/components/BusinessDetailPage';  
 import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
+  const [selectedBusinessId, setSelectedBusinessId] = useState(null);  // ✅ NEW
 
-  // Check if user is already logged in (from localStorage)
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
@@ -30,7 +31,6 @@ function App() {
     setUser(userData);
     setIsLoggedIn(true);
     setCurrentPage('home');
-    // Store user info in localStorage for persistence
     localStorage.setItem('currentUser', JSON.stringify(userData));
   };
 
@@ -41,7 +41,10 @@ function App() {
     localStorage.removeItem('currentUser');
   };
 
-  const handleNavigate = (page) => {
+  const handleNavigate = (page, businessId = null) => {
+    if (businessId) {
+      setSelectedBusinessId(businessId); 
+    }
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
@@ -52,11 +55,20 @@ function App() {
         return <ProfilePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'map':
         return <MapPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'browse':
+        return <BrowsePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'businessDetail': 
+        return (
+          <BusinessDetailPage 
+            businessId={selectedBusinessId} 
+            user={user} 
+            onLogout={handleLogout} 
+            onNavigate={handleNavigate} 
+          />
+        );
       case 'home':
       default:
         return <HomePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
-      case 'browse':
-        return <BrowsePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
     }
   };
 

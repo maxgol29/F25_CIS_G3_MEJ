@@ -378,3 +378,41 @@ def get_all_restaurants():
             'error': 'Failed to fetch restaurants',
             'details': str(e)
         }), 500
+    
+
+
+@restaurants_bp.route('/<int:business_id>', methods=['GET'])
+def get_business_details(business_id):
+    try:
+        business = business_service.get_business_by_id(business_id)
+        
+        return jsonify({
+            'success': True,
+            'business': business
+        }), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to fetch business',
+            'details': str(e)
+        }), 500
+
+
+@restaurants_bp.route('/<int:business_id>/items', methods=['GET'])
+def get_business_items(business_id):
+    try:
+        items = business_service.get_items_by_business_id(business_id)
+        
+        return jsonify({
+            'success': True,
+            'count': len(items),
+            'items': items
+        }), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to fetch items',
+            'details': str(e)
+        }), 500

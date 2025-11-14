@@ -4,7 +4,6 @@ import NavBar from './NavBar';
 
 const BrowsePage = ({ user, onNavigate, onLogout}) => {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
-
   const [businesses, setBusinesses] = useState([]);
   const [filteredBusinesses, setFilteredBusinesses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,6 +17,11 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
     try {
       const response = await fetch(`${API_BASE_URL}/restaurants/get-all`);
       const data = await response.json();
+      if (!data.restaurants || !Array.isArray(data.restaurants)) {
+        setBusinesses([]);
+        return;
+      }
+
       setBusinesses(data.restaurants || []);
     } catch (err) {
       console.error('Error fetching businesses:', err);
@@ -50,6 +54,9 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
         window.scrollTo(0, 0);
     };
 
+    const handleBusinessClick = (business) => {
+        onNavigate('businessDetail', business.id);
+    };
   return (
     <div>
         <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
@@ -126,7 +133,10 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
         {/* Businesses */}
         <div className="businesses-grid">
             {filteredBusinesses.map((business) => (
-            <div key={business.id} className="business-card">
+            <div key={business.id} 
+                onClick={() => handleBusinessClick(business)}
+                style={{ cursor: 'pointer' }} 
+                className="business-card">
                 <div className="card-header">
                 <h4>{business.name}</h4>
                 </div>

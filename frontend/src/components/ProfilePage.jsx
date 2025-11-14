@@ -123,4 +123,3 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
 };
 
 export default ProfilePage;
-
