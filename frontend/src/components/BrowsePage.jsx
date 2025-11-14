@@ -133,10 +133,20 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
         {/* Businesses */}
         <div className="businesses-grid">
             {filteredBusinesses.map((business) => (
-            <div key={business.id} 
+            <div
+                key={business.id}
                 onClick={() => handleBusinessClick(business)}
-                style={{ cursor: 'pointer' }} 
-                className="business-card">
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleBusinessClick(business);
+                    }
+                }}
+                role="button"
+                tabIndex={0}
+                style={{ cursor: 'pointer' }}
+                className="business-card"
+            >
                 <div className="card-header">
                 <h4>{business.name}</h4>
                 </div>
