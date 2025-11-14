@@ -101,13 +101,11 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
               <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
 
     <div className="detail-page">
-      {/* Header */}
       <div className="detail-header">
         <button className="back-btn" onClick={() => onNavigate('browse')}>← Back</button>
         <button className="logout-btn" onClick={onLogout}>Logout</button>
       </div>
 
-      {/* Business Info */}
       <div className="business-header">
         <h1>{business.name}</h1>
         
@@ -149,14 +147,12 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
         </div>
       </div>
 
-      {/* Menu Section */}
       <div className="menu-section">
         <div className="menu-header">
           <h2>Menu</h2>
           <span className="item-count">({filteredItems.length} items)</span>
         </div>
 
-        {/* Search Bar */}
         <div className="menu-search">
           <input
             type="text"
@@ -193,19 +189,13 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
                 <div className="items-grid">
                   {itemsByCategory[category].map((item) => (
                     <div key={item.id} className="item-card">
-                      {/* Image */}
                       {item.image_url && (
                         <div className="item-image">
                           <img src={item.image_url} alt={item.dish_name} />
                         </div>
                       )}
-
-                      {/* Info Container */}
                       <div className="item-info">
-                        {/* Always Visible: Name */}
                         <h4>{item.dish_name}</h4>
-
-                        {/* Always Visible: Price */}
                         <div className="price-section">
                           {item.discount_percentage > 0 ? (
                             <>
@@ -219,8 +209,6 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
                             <span className="final-price">${item.price.toFixed(2)}</span>
                           )}
                         </div>
-
-                        {/* Always Visible: Button */}
                         <button 
                           className="add-to-cart-btn"
                           disabled={!item.is_available}
@@ -228,10 +216,7 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
                           {item.is_available ? 'Add to Cart' : 'Unavailable'}
                         </button>
                       </div>
-
-                      {/* ✅ MOVED OUTSIDE item-info - BOTTOM OVERLAY */}
                       <div className="item-details-overlay">
-                        {/* Details */}
                         <div className="item-details">
                           {item.portion_size && <span className="detail">{item.portion_size}</span>}
                           {item.cooking_method && <span className="detail">{item.cooking_method}</span>}
@@ -240,8 +225,6 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
                           )}
                           {!item.is_available && <span className="detail unavailable">Unavailable</span>}
                         </div>
-
-                        {/* Ingredients */}
                         {item.ingredients && item.ingredients.length > 0 && (
                           <div className="ingredients">
                             <span className="ingredients-label">Ingredients:</span>
@@ -257,8 +240,6 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
                           </div>
                         )}
                       </div>
-
-                      {/* ✅ MOVED OUTSIDE item-info - DESCRIPTION OVERLAY */}
                       {item.description && (
                         <div className="description-overlay-wrapper">
                           <p>{item.description}</p>
