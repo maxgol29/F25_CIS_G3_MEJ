@@ -63,14 +63,30 @@ class Database:
         finally:
             cursor.close()
 
-    def get_all_items(self, limit=None):
+    def get_all_items(self, limit=None, business_id=None, google_place_id=None, category=None):
         self._ensure_connection()
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)
         try:
-            query = "SELECT * FROM \"Item\""
+            # Base query selects items; optionally join Business when filtering by google_place_id
+            if google_place_id:
+                query = 'SELECT i.* FROM "Item" i LEFT JOIN "Business" b ON i.businessID = b.id WHERE b.google_place_id = %s'
+                params = [google_place_id]
+            else:
+                query = 'SELECT i.* FROM "Item" i WHERE 1=1'
+                params = []
+
+            if business_id:
+                query += ' AND i.businessID = %s'
+                params.append(business_id)
+
+            if category:
+                query += ' AND i.category = %s'
+                params.append(category)
+
             if limit:
-                query += f" LIMIT {limit}"
-            cursor.execute(query)
+                query += f' LIMIT {limit}'
+
+            cursor.execute(query, tuple(params) if params else None)
             return cursor.fetchall()
         finally:
             cursor.close()
@@ -372,6 +388,32 @@ class Database:
             if not data:
                 raise ValueError("User not found")
             return data
+        finally:
+            cursor.close()
+
+    def update_user_password(self, user_id, new_password):
+        """Update a user's password only. Returns True if successful."""
+        self._ensure_connection()
+        cursor = self.conn.cursor()
+        try:
+            password_hash = generate_password_hash(new_password)
+            cursor.execute('''
+                UPDATE "User_Auth"
+                SET password_hash = %s, updated_at = CURRENT_TIMESTAMP
+                WHERE userID = %s
+                RETURNING userID
+            ''', (password_hash, user_id))
+            
+            result = cursor.fetchone()
+            if not result:
+                raise ValueError("User not found or password update failed")
+            
+            self.conn.commit()
+            return True
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            print(f"Error updating password: {e}")
+            raise
         finally:
             cursor.close()
 

@@ -44,7 +44,11 @@ def get_nearby_restaurants():
 def get_items():
     try:
         limit = request.args.get('limit', type=int)
-        result = item_service.get_all_items(limit=limit)
+        business_id = request.args.get('business_id', type=int)
+        google_place_id = request.args.get('google_place_id', type=str)
+        category = request.args.get('category', type=str)
+
+        result = item_service.get_all_items(limit=limit, business_id=business_id, google_place_id=google_place_id, category=category)
         return jsonify({
             'count': len(result),
             'items': [dict(item) for item in result]
