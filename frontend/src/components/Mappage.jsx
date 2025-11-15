@@ -13,11 +13,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [loadingRestaurants, setLoadingRestaurants] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [items, setItems] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [loadingItems, setLoadingItems] = useState(false);
+  const [databaseRestaurants, setDatabaseRestaurants] = useState([]); 
   const mapRef = useRef(null);
 
   const API_BASE_URL = 'http://localhost:5000/api';
@@ -52,6 +48,18 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     disableDoubleClickZoom: true
   };
 
+  const fetchDatabaseRestaurants = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/restaurants/get-all`);
+      if (response.ok) {
+        const data = await response.json();
+        setDatabaseRestaurants(data.restaurants || []);
+      }
+    } catch (err) {
+      console.error('Error: ', err);
+    }
+  }, [API_BASE_URL]);
+
   const saveRestaurantsToDatabase = useCallback(async (restaurantsList) => {
     try {
       const response = await fetch(`${API_BASE_URL}/restaurants/save-from-places`, {
@@ -61,12 +69,12 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
       });
 
       if (response.ok) {
-        const result = await response.json();
+        fetchDatabaseRestaurants();
       }
     } catch (err) {
       console.error('Error:', err);
     }
-  }, [API_BASE_URL]);
+  }, [API_BASE_URL, fetchDatabaseRestaurants]);
 
   const fetchNearbyRestaurants = useCallback((lat, lng) => {
     if (!window.google?.maps?.places) return;
@@ -91,7 +99,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
               'rating', 'user_ratings_total', 'types', 'geometry', 'photos', 'vicinity'
             ]}, (detail, detailStatus) => {
               if (detailStatus === window.google.maps.places.PlacesServiceStatus.OK) resolve(detail);
-              else resolve(place); // fallback
+              else resolve(place);
             });
           })
         );
@@ -170,8 +178,9 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
   useEffect(() => {
     if (user?.id && !addressFetched) {
       fetchUserAddress();
+      fetchDatabaseRestaurants();
     }
-  }, [user?.id, fetchUserAddress, addressFetched]);
+  }, [user?.id, fetchUserAddress, addressFetched, fetchDatabaseRestaurants]);
 
   useEffect(() => {
     if (selectedRestaurant) {
@@ -192,26 +201,21 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const fetchItemsForRestaurant = useCallback(async (restaurant) => {
-    if (!restaurant?.place_id) return;
-    try {
-      setLoadingItems(true);
-      const res = await fetch(`${API_BASE_URL}/items?google_place_id=${restaurant.place_id}`);
-      if (!res.ok) throw new Error('Failed to fetch items');
-      const data = await res.json();
-      const fetchedItems = data.items || [];
-      setItems(fetchedItems);
-      const cats = Array.from(new Set(fetchedItems.map(i => i.category).filter(Boolean)));
-      setCategories(cats);
-      setSelectedCategory('');
-    } catch (err) {
-      console.error('Error fetching items:', err);
-      setItems([]);
-      setCategories([]);
-    } finally {
-      setLoadingItems(false);
+  const findDatabaseRestaurantByName = (googleRestaurantName) => {
+    return databaseRestaurants.find(dbRest => 
+      dbRest.name.toLowerCase().trim() === googleRestaurantName.toLowerCase().trim()
+    );
+  };
+
+  const handleViewItems = (googleRestaurant) => {
+    const dbRestaurant = findDatabaseRestaurantByName(googleRestaurant.name);
+    
+    if (dbRestaurant && dbRestaurant.id) {
+      onNavigate('businessDetail', dbRestaurant.id);
+    } else {
+      setError(`Restaurant "${googleRestaurant.name}" not found in database. Please try again.`);
     }
-  }, [API_BASE_URL]);
+  };
 
   const mapContainerStyle = {
     width: '100%',
@@ -321,10 +325,26 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
                       </p>
                     )}
                     {selectedRestaurant.opening_hours && (
-                      <p style={{ margin: '4px 0', fontSize: '12px' }}>
+                      <p style={{ margin: '4px 0 12px 0', fontSize: '12px' }}>
                         {selectedRestaurant.opening_hours.open_now ? 'Open Now' : 'Closed'}
                       </p>
                     )}
+                    <button
+                      onClick={() => handleViewItems(selectedRestaurant)}
+                      style={{
+                        background: '#858e96',
+                        color: 'white',
+                        border: 'none',
+                        padding: '8px 16px',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        width: '100%'
+                      }}
+                    >
+                      View Items
+                    </button>
                   </div>
                 </InfoWindow>
               )}
