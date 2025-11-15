@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nearby Restaurants</title>
+</head>
+<body>
+  <h1>Nearby Restaurants</h1>
+  <ul id="restaurants"></ul>
+
+  <script>
+    async function loadRestaurants() {
+      const res = await fetch("http://localhost:3000/restaurants");
+      const data = await res.json();
+      const list = document.getElementById("restaurants");
+
+      data.forEach((place, i) => {
+        const li = document.createElement("li");
+        li.textContent = `${i + 1}. ${place.name} (${place.vicinity}) ⭐ ${place.rating || "No rating"}`;
+        list.appendChild(li);
+      });
+    }
+    loadRestaurants();
+  </script>
+</body>
+</html>
