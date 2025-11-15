@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules/
 .env
 .DS_Store
@@ -10,3 +11,7 @@ yarn-error.log
 *.local
 *.log
 package-lock.json
+=======
+backend/
+frontend/
+>>>>>>> 2cc488510dc20f68cee46506aa125582d1bb8b7f
