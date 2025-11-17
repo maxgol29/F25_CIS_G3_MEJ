@@ -13,6 +13,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [loadingRestaurants, setLoadingRestaurants] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [databaseRestaurants, setDatabaseRestaurants] = useState([]); 
   const mapRef = useRef(null);
 
@@ -47,6 +48,8 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     draggable: false,
     disableDoubleClickZoom: true
   };
+
+  
 
   const fetchDatabaseRestaurants = useCallback(async () => {
     try {
@@ -182,16 +185,6 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     }
   }, [user?.id, fetchUserAddress, addressFetched, fetchDatabaseRestaurants]);
 
-  useEffect(() => {
-    if (selectedRestaurant) {
-      fetchItemsForRestaurant(selectedRestaurant);
-    } else {
-      setItems([]);
-      setCategories([]);
-      setSelectedCategory('');
-    }
-  }, [selectedRestaurant, fetchItemsForRestaurant]);
-
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
   };
@@ -200,6 +193,8 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     setSelectedRestaurant(restaurant);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+
 
   const findDatabaseRestaurantByName = (googleRestaurantName) => {
     return databaseRestaurants.find(dbRest => 
@@ -415,51 +410,6 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
                     </div>
                   ))}
               </div>
-
-              {selectedRestaurant && (
-                <div className="items-panel" style={{ padding: '12px 0' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <h3 style={{ margin: 0 }}>Menu — {selectedRestaurant.name}</h3>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <label style={{ fontSize: 12 }}>Filter:</label>
-                      <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                        <option value="">All</option>
-                        {categories.map((c, i) => (
-                          <option key={i} value={c}>{c}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {loadingItems ? (
-                    <div>Loading items...</div>
-                  ) : (
-                    <div className="items-grid">
-                      {items
-                        .filter(it => !selectedCategory || it.category === selectedCategory)
-                        .map((it, idx) => (
-                          <div key={idx} className="item-card">
-                            <div className="item-image">
-                              {it.image_url ? (
-                                <img src={it.image_url} alt={it.dish_name} style={{ width: '100%', height: '110px', objectFit: 'cover', borderRadius: 6 }} />
-                              ) : (
-                                <div style={{ width: '100%', height: '110px', background: '#f6f6f6', borderRadius: 6 }} />
-                              )}
-                            </div>
-                            <div className="item-name">{it.dish_name}</div>
-                            <div className="item-meta">{it.category ? it.category : 'Uncategorized'}</div>
-                            <div className="item-price">
-                              ${it.price?.toFixed ? it.price.toFixed(2) : it.price}
-                              {it.discount_percentage && it.discount_percentage > 0 ? (
-                                <span className="promo"> {` - ${it.discount_percentage}% off`}</span>
-                              ) : null}
-                            </div>
-                          </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
             </>
           )}
         </div>
