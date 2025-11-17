@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/AuthPage.css';
 
 const AuthPage = ({ onLoginSuccess }) => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [userType, setUserType] = useState(null); 
+  const [businesses, setBusinesses] = useState([]); 
+  const [selectedBusinessId, setSelectedBusinessId] = useState(null);
+  const [loadingBusinesses, setLoadingBusinesses] = useState(false);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -21,7 +26,27 @@ const AuthPage = ({ onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
 
-  const API_BASE_URL = 'http://localhost:5000/api'; 
+  const API_BASE_URL = 'http://localhost:5000/api';
+  useEffect(() => {
+    if (isSignUp && userType === 'owner') {
+      fetchBusinesses();
+    }
+  }, [isSignUp, userType]);
+
+  const fetchBusinesses = async () => {
+    setLoadingBusinesses(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/restaurants/get-all`);
+      if (response.ok) {
+        const data = await response.json();
+        setBusinesses(data.restaurants || []);
+      }
+    } catch (err) {
+      setError('Failed to load businesses');
+    } finally {
+      setLoadingBusinesses(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -90,6 +115,10 @@ const AuthPage = ({ onLoginSuccess }) => {
       setError('Country is required');
       return false;
     }
+    if (userType === 'owner' && !selectedBusinessId) {
+      setError('Please select a business');
+      return false;
+    }
     return true;
   };
 
@@ -108,40 +137,43 @@ const AuthPage = ({ onLoginSuccess }) => {
 
     try {
       if (isSignUp) {
-        // Sign up
+        const signupData = {
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          email: formData.email,
+          phone: formData.phone || null,
+          password: formData.password,
+          user_type: userType, 
+          business_id: userType === 'owner' ? selectedBusinessId : null, 
+          address: {
+            street: formData.street,
+            building_number: formData.building_number || null,
+            apartment_number: formData.apartment_number || null,
+            zip_code: formData.zip_code,
+            city: formData.city,
+            state: formData.state || null,
+            country: formData.country
+          }
+        };
+
         const response = await fetch(`${API_BASE_URL}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            first_name: formData.first_name,
-            last_name: formData.last_name,
-            email: formData.email,
-            phone: formData.phone || null,
-            password: formData.password,
-            address: {
-              street: formData.street,
-              building_number: formData.building_number || null,
-              apartment_number: formData.apartment_number || null,
-              zip_code: formData.zip_code,
-              city: formData.city,
-              state: formData.state || null,
-              country: formData.country
-            }
-          })
+          body: JSON.stringify(signupData)
         });
 
         const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Sign up failed');
-      }
+        if (!response.ok) {
+          throw new Error(data.error || 'Sign up failed');
+        }
 
-      setSuccess('Account created successfully! Logging in...');
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setTimeout(() => {
-        onLoginSuccess(data.user);
-      }, 1500);
+        setSuccess('Account created successfully! Logging in...');
+        localStorage.setItem("currentUser", JSON.stringify(data.user));
+        setTimeout(() => {
+          onLoginSuccess(data.user);
+        }, 1500);
       } else {
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
           method: 'POST',
@@ -161,6 +193,7 @@ const AuthPage = ({ onLoginSuccess }) => {
 
         const data = await response.json();
         setSuccess('Login successful! Redirecting...');
+        localStorage.setItem("currentUser", JSON.stringify(data.user));
         setTimeout(() => {
           onLoginSuccess(data.user);
         }, 1500);
@@ -174,6 +207,8 @@ const AuthPage = ({ onLoginSuccess }) => {
 
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
+    setUserType(null);
+    setSelectedBusinessId(null);
     setError('');
     setSuccess('');
     setFormData({
@@ -191,12 +226,117 @@ const AuthPage = ({ onLoginSuccess }) => {
       country: ''
     });
   };
+  if (isSignUp && !userType) {
+    return (
+      <div className="auth-container">
+        <div className="auth-box">
+          <h1 className="auth-title">Create Account</h1>
+          <p className="auth-subtitle">Are you a customer or business owner?</p>
 
+          {error && <div className="error-message">{error}</div>}
+
+          <div className="user-type-selection">
+            <button
+              className="user-type-button customer"
+              onClick={() => setUserType('customer')}
+            >
+              <div className="user-type-text">
+                <strong>Customer</strong>
+                <p>Order from restaurants</p>
+              </div>
+            </button>
+
+            <button
+              className="user-type-button owner"
+              onClick={() => setUserType('owner')}
+            >
+              <div className="user-type-text">
+                <strong>Business Owner</strong>
+                <p>Manage your restaurant</p>
+              </div>
+            </button>
+          </div>
+
+          <div className="toggle-mode">
+            <p>
+              Already have an account?{' '}
+              <button
+                type="button"
+                className="toggle-button"
+                onClick={toggleMode}
+              >
+                Log In
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (isSignUp && userType === 'owner' && !selectedBusinessId) {
+    return (
+      <div className="auth-container">
+        <div className="auth-box">
+          <h1 className="auth-title">Select Your Business</h1>
+
+          {error && <div className="error-message">{error}</div>}
+
+          {loadingBusinesses ? (
+            <div className="loading">Loading businesses...</div>
+          ) : businesses.length === 0 ? (
+            <div className="no-results">
+              <p>No businesses found. Please contact support.</p>
+            </div>
+          ) : (
+            <div className="business-selection">
+              {businesses.map(business => (
+                <button
+                  key={business.id}
+                  className="business-card"
+                  onClick={() => setSelectedBusinessId(business.id)}
+                >
+                  <div className="business-card-header">
+                    <h3>{business.name}</h3>
+                  </div>
+                  <div className="business-card-info">
+                    <p className="type">{business.type}</p>
+                    {business.phone && <p className="phone">{business.phone}</p>}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          <button
+            className="back-button"
+            onClick={() => {
+              setUserType(null);
+              setSelectedBusinessId(null);
+            }}
+          >
+            ← Back
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="auth-container">
       <div className="auth-box">
         <h1 className="auth-title">{isSignUp ? 'Sign Up' : 'Log In'}</h1>
-        
+
+        {isSignUp && userType === 'owner' && (
+          <div className="selected-business">
+            Selected Business: <strong>{businesses.find(b => b.id === selectedBusinessId)?.name}</strong>
+            <button
+              className="change-button"
+              onClick={() => setSelectedBusinessId(null)}
+            >
+              Change
+            </button>
+          </div>
+        )}
+
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
 
@@ -397,8 +537,8 @@ const AuthPage = ({ onLoginSuccess }) => {
             </>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="submit-button"
             disabled={loading}
           >
@@ -409,8 +549,8 @@ const AuthPage = ({ onLoginSuccess }) => {
         <div className="toggle-mode">
           <p>
             {isSignUp ? "Already have an account? " : "Don't have an account? "}
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="toggle-button"
               onClick={toggleMode}
             >

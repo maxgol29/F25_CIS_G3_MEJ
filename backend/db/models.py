@@ -301,14 +301,19 @@ class Database:
 
 # auth-related database operations
 
- 
-    def signup(self, first_name, last_name, email, phone, password, address):
+    def signup(self, first_name, last_name, email, phone, password, address, user_type='customer', business_id=None):
         self._ensure_connection()
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)
         try:
             cursor.execute('SELECT id FROM "User" WHERE email = %s', (email,))
             if cursor.fetchone():
                 raise ValueError("Email already exists")
+            role_name = 'owner' if user_type == 'owner' else 'customer'
+            cursor.execute('SELECT id FROM "Role" WHERE name = %s', (role_name,))
+            role_result = cursor.fetchone()
+            if not role_result:
+                raise ValueError(f"Role '{role_name}' not found. Please create roles first.")
+            role_id = role_result['id']
             cursor.execute('''
                 INSERT INTO "Address" 
                 (street, building_number, apartment_number, zip_code, city, state, country, created_at, updated_at)
@@ -326,15 +331,21 @@ class Database:
             address_id = cursor.fetchone()['id']
             cursor.execute('''
                 INSERT INTO "User" 
-                (first_name, last_name, email, phone, is_active, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-                RETURNING id, first_name, last_name, email, phone
-            ''', (first_name, last_name, email, phone))
+                (roleid, first_name, last_name, email, phone, is_active, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                RETURNING id, first_name, last_name, email, phone, roleid
+            ''', (role_id, first_name, last_name, email, phone)) 
             user = cursor.fetchone()
             cursor.execute('''
                 INSERT INTO "User_Address" (userID, addressID, address_type)
                 VALUES (%s, %s, 'home')
             ''', (user['id'], address_id))
+            if user_type == 'owner' and business_id:
+                cursor.execute('''
+                    UPDATE "Business"
+                    SET ownerID = %s, updated_at = CURRENT_TIMESTAMP
+                    WHERE id = %s
+                ''', (user['id'], business_id))            
             password_hash = generate_password_hash(password)
             cursor.execute('''
                 INSERT INTO "User_Auth" 
@@ -342,8 +353,18 @@ class Database:
                 VALUES (%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
             ''', (user['id'], password_hash))
 
-            self.conn.commit()
-            return user
+            self.conn.commit()            
+            result = {
+                'id': user['id'],
+                'first_name': user['first_name'],
+                'last_name': user['last_name'],
+                'email': user['email'],
+                'phone': user['phone'],
+                'user_type': user_type,
+                'business_id': business_id if user_type == 'owner' else None,
+                'roleID': user['roleID'] 
+            }
+            return result
         except Exception as e:
             self.conn.rollback()
             raise e
@@ -355,9 +376,10 @@ class Database:
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)
         try:
             cursor.execute('''
-                SELECT u.id, u.first_name, u.last_name, u.email, ua.password_hash
+                SELECT u.id, u.first_name, u.last_name, u.email, u.phone, u.roleID, r.name as role_name, ua.password_hash
                 FROM "User" u
                 INNER JOIN "User_Auth" ua ON u.id = ua.userID
+                LEFT JOIN "Role" r ON u.roleID = r.id
                 WHERE u.email = %s AND u.is_active = TRUE
             ''', (email,))
             user = cursor.fetchone()
@@ -366,7 +388,22 @@ class Database:
 
             cursor.execute('UPDATE "User_Auth" SET last_login = CURRENT_TIMESTAMP WHERE userID = %s', (user['id'],))
             self.conn.commit()
-            return {k: user[k] for k in ('id', 'first_name', 'last_name', 'email')}
+            user_type = 'owner' if user['role_name'] == 'owner' else 'customer'
+            business_id = None
+            if user_type == 'owner':
+                cursor.execute('SELECT id FROM "Business" WHERE ownerID = %s', (user['id'],))
+                business = cursor.fetchone()
+                business_id = business['id'] if business else None
+            return {
+                'id': user['id'],
+                'first_name': user['first_name'],
+                'last_name': user['last_name'],
+                'email': user['email'],
+                'phone': user['phone'],
+                'user_type': user_type, 
+                'role': user['role_name'],
+                'business_id': business_id
+            }
         finally:
             cursor.close()
 
@@ -376,10 +413,11 @@ class Database:
         try:
             cursor.execute('''
                 SELECT 
-                    u.id, u.first_name, u.last_name, u.email, u.phone,
+                    u.id, u.first_name, u.last_name, u.email, u.phone, u.roleID, r.name as role_name,
                     a.street, a.building_number, a.apartment_number,
                     a.zip_code, a.city, a.state, a.country
                 FROM "User" u
+                LEFT JOIN "Role" r ON u.roleID = r.id
                 LEFT JOIN "User_Address" ua ON u.id = ua.userID AND ua.address_type = 'home'
                 LEFT JOIN "Address" a ON ua.addressID = a.id
                 WHERE u.id = %s AND u.is_active = TRUE
@@ -387,7 +425,9 @@ class Database:
             data = cursor.fetchone()
             if not data:
                 raise ValueError("User not found")
-            return data
+            result = dict(data)
+            result['user_type'] = 'owner' if result.get('role_name') == 'owner' else 'customer'
+            return result
         finally:
             cursor.close()
 

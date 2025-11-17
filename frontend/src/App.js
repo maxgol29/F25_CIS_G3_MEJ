@@ -4,14 +4,15 @@ import HomePage from '../src/components/HomePage';
 import ProfilePage from '../src/components/ProfilePage';
 import MapPage from '../src/components/Mappage';
 import BrowsePage from '../src/components/BrowsePage';
-import BusinessDetailPage from '../src/components/BusinessDetailPage';  
+import BusinessDetailPage from '../src/components/BusinessDetailPage';
+import OwnerPage from '../src/components/OwnerPage';
 import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
-  const [selectedBusinessId, setSelectedBusinessId] = useState(null);  // ✅ NEW
+  const [selectedBusinessId, setSelectedBusinessId] = useState(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
@@ -20,6 +21,12 @@ function App() {
         const userData = JSON.parse(storedUser);
         setUser(userData);
         setIsLoggedIn(true);
+        const isOwner = userData.user_type === 'owner' || userData.role === 'owner';        
+        if (isOwner) {
+          setCurrentPage('owner');
+        } else {
+          setCurrentPage('home');
+        }
       } catch (error) {
         console.error('Error parsing stored user:', error);
         localStorage.removeItem('currentUser');
@@ -30,8 +37,13 @@ function App() {
   const handleLoginSuccess = (userData) => {
     setUser(userData);
     setIsLoggedIn(true);
-    setCurrentPage('home');
     localStorage.setItem('currentUser', JSON.stringify(userData));
+    const isOwner = userData.user_type === 'owner' || userData.role === 'owner';    
+    if (isOwner) {
+      setCurrentPage('owner');
+    } else {
+      setCurrentPage('home');
+    }
   };
 
   const handleLogout = () => {
@@ -43,7 +55,7 @@ function App() {
 
   const handleNavigate = (page, businessId = null) => {
     if (businessId) {
-      setSelectedBusinessId(businessId); 
+      setSelectedBusinessId(businessId);
     }
     setCurrentPage(page);
     window.scrollTo(0, 0);
@@ -57,7 +69,7 @@ function App() {
         return <MapPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'browse':
         return <BrowsePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
-      case 'businessDetail': 
+      case 'businessDetail':
         return (
           <BusinessDetailPage 
             businessId={selectedBusinessId} 
@@ -66,6 +78,8 @@ function App() {
             onNavigate={handleNavigate} 
           />
         );
+      case 'owner':
+        return <OwnerPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'home':
       default:
         return <HomePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;

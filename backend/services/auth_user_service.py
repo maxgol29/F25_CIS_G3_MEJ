@@ -1,7 +1,7 @@
 from db.models import db
 
 class AuthUserService:
-    def signup(self, first_name, last_name, email, phone, password, address):
+    def signup(self, first_name, last_name, email, phone, password, address, user_type='customer', business_id=None):
         if not all([first_name, last_name, email, password]):
             raise ValueError("Missing user fields")
         if len(password) < 6:
@@ -10,8 +10,11 @@ class AuthUserService:
             raise ValueError("Invalid email format")
         if not all(k in address for k in ['street', 'zip_code', 'city', 'country']):
             raise ValueError("Incomplete address data")
-        return db.signup(first_name, last_name, email, phone, password, address)
-
+        if user_type not in ['customer', 'owner']:
+            raise ValueError("Invalid user_type. Must be 'customer' or 'owner'")
+        if user_type == 'owner' and not business_id:
+            raise ValueError("Business ID is required for owner signup")     
+        return db.signup( first_name=first_name, last_name=last_name, email=email, phone=phone, password=password, address=address, user_type=user_type, business_id=business_id)
     def login(self, email, password):
         if not email or not password:
             raise ValueError("Missing credentials")

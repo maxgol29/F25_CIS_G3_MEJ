@@ -123,16 +123,16 @@ def add_review():
 #user endpoints
 
 @api_bp.route('/users', methods=['GET'])
-def get_users():
-    try:
-        limit = request.args.get('limit', type=int)
-        result = user_service.get_all_users(limit=limit)
-        return jsonify({
-            'count': len(result),
-            'users': [dict(user) for user in result]
-        }), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+# def get_users():
+#     try:
+#         limit = request.args.get('limit', type=int)
+#         result = user_service.get_all_users(limit=limit)
+#         return jsonify({
+#             'count': len(result),
+#             'users': [dict(user) for user in result]
+#         }), 200
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
     
 
 @api_bp.route('/users', methods=['POST'])
@@ -308,14 +308,18 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 def signup():
     try:
         data = request.get_json()
+        user_type = data.get('user_type', 'customer')
+        business_id = data.get('business_id')
         user = auth_user_service.signup(
             first_name=data.get('first_name'),
             last_name=data.get('last_name'),
             email=data.get('email'),
             phone=data.get('phone'),
             password=data.get('password'),
-            address=data.get('address', {})
-        )
+            address=data.get('address', {}),
+            user_type=user_type,  
+            business_id=business_id  
+        ) 
         return jsonify({'message': 'User created successfully', 'user': user}), 201
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
@@ -336,6 +340,20 @@ def login():
         print(f"Login error: {e}")
         return jsonify({'error': 'Login failed'}), 500
     
+@auth_bp.route('/user/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    try:
+        user = auth_user_service.get_user_details(user_id)
+        return jsonify({
+            'success': True,
+            'user': user  # ✅ Includes user_type
+        }), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        print(f"Get user error: {e}")
+        return jsonify({'error': 'Failed to fetch user'}), 500
+
 # Restaurants adding to db
 
 restaurants_bp = Blueprint('restaurants', __name__, url_prefix='/api/restaurants')
