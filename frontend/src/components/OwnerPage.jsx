@@ -1,5 +1,5 @@
 import '../styles/OwnerPage.css';
-import NavBar from './NavBar';
+// import NavBar from './NavBar';
 
 const OwnerPage = ({ user, onLogout, onNavigate }) => {
   const handleLogoClick = () => {
