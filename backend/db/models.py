@@ -426,7 +426,7 @@ class Database:
             if not data:
                 raise ValueError("User not found")
             result = dict(data)
-            result['user_type'] = 'owner' if result.get('role_name') == 'owner' else 'customer'       
+            result['user_type'] = 'owner' if result.get('role_name') == 'owner' else 'customer'
             return result
         finally:
             cursor.close()
