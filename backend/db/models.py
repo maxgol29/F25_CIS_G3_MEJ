@@ -301,31 +301,19 @@ class Database:
 
 # auth-related database operations
 
-
     def signup(self, first_name, last_name, email, phone, password, address, user_type='customer', business_id=None):
         self._ensure_connection()
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)
         try:
-            # Check if email exists
             cursor.execute('SELECT id FROM "User" WHERE email = %s', (email,))
             if cursor.fetchone():
                 raise ValueError("Email already exists")
-            
-            # ✅ Step 1: Get role ID based on user_type
             role_name = 'owner' if user_type == 'owner' else 'customer'
-            print(f"🔍 DEBUG: Looking for role: {role_name}")
-            
             cursor.execute('SELECT id FROM "Role" WHERE name = %s', (role_name,))
             role_result = cursor.fetchone()
-            
             if not role_result:
-                print(f"❌ ERROR: Role '{role_name}' not found in database!")
                 raise ValueError(f"Role '{role_name}' not found. Please create roles first.")
-            
             role_id = role_result['id']
-            print(f"✅ DEBUG: Found role ID: {role_id}")
-            
-            # Create address
             cursor.execute('''
                 INSERT INTO "Address" 
                 (street, building_number, apartment_number, zip_code, city, state, country, created_at, updated_at)
@@ -341,36 +329,23 @@ class Database:
                 address['country']
             ))
             address_id = cursor.fetchone()['id']
-            
-            # ✅ Step 2: Create user WITH roleID
-            print(f"🔍 DEBUG: Creating user with roleID={role_id}, user_type={user_type}")
             cursor.execute('''
                 INSERT INTO "User" 
                 (roleid, first_name, last_name, email, phone, is_active, created_at, updated_at)
                 VALUES (%s, %s, %s, %s, %s, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 RETURNING id, first_name, last_name, email, phone, roleid
-            ''', (role_id, first_name, last_name, email, phone))  # ✅ role_id is FIRST parameter
-            
+            ''', (role_id, first_name, last_name, email, phone)) 
             user = cursor.fetchone()
-            print(f"✅ DEBUG: User created with ID={user['id']}, roleID={user['roleid']}")
-            
-            # Link address to user
             cursor.execute('''
                 INSERT INTO "User_Address" (userID, addressID, address_type)
                 VALUES (%s, %s, 'home')
             ''', (user['id'], address_id))
-            
-            # ✅ Step 3: If owner, associate with business
             if user_type == 'owner' and business_id:
-                print(f"🔍 DEBUG: Linking owner to business {business_id}")
                 cursor.execute('''
                     UPDATE "Business"
                     SET ownerID = %s, updated_at = CURRENT_TIMESTAMP
                     WHERE id = %s
-                ''', (user['id'], business_id))
-                print(f"✅ DEBUG: Business linked")
-            
-            # Create user auth
+                ''', (user['id'], business_id))            
             password_hash = generate_password_hash(password)
             cursor.execute('''
                 INSERT INTO "User_Auth" 
@@ -378,9 +353,7 @@ class Database:
                 VALUES (%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
             ''', (user['id'], password_hash))
 
-            self.conn.commit()
-            
-            # ✅ Step 4: Return user with user_type
+            self.conn.commit()            
             result = {
                 'id': user['id'],
                 'first_name': user['first_name'],
@@ -389,15 +362,11 @@ class Database:
                 'phone': user['phone'],
                 'user_type': user_type,
                 'business_id': business_id if user_type == 'owner' else None,
-                'roleID': user['roleID']  # ✅ Return roleID so you can verify
+                'roleID': user['roleID'] 
             }
-            
-            print(f"✅ DEBUG: Signup complete. Result: {result}")
             return result
-            
         except Exception as e:
             self.conn.rollback()
-            print(f"❌ ERROR in signup: {e}")
             raise e
         finally:
             cursor.close()
@@ -420,13 +389,11 @@ class Database:
             cursor.execute('UPDATE "User_Auth" SET last_login = CURRENT_TIMESTAMP WHERE userID = %s', (user['id'],))
             self.conn.commit()
             user_type = 'owner' if user['role_name'] == 'owner' else 'customer'
-
             business_id = None
             if user_type == 'owner':
                 cursor.execute('SELECT id FROM "Business" WHERE ownerID = %s', (user['id'],))
                 business = cursor.fetchone()
                 business_id = business['id'] if business else None
-            
             return {
                 'id': user['id'],
                 'first_name': user['first_name'],
