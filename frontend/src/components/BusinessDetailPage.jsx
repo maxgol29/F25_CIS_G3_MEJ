@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+  const API_BASE_URL = process.env.API_BASE_URL;
 
   const [business, setBusiness] = useState(null);
   const [items, setItems] = useState([]);

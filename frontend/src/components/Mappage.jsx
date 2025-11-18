@@ -17,7 +17,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
   const [databaseRestaurants, setDatabaseRestaurants] = useState([]); 
   const mapRef = useRef(null);
 
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = process.env.API_BASE_URL;
   const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
   const RADIUS_METERS = 3200;
