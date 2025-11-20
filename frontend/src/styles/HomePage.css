@@ -50,9 +50,8 @@
 
 .logout-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba #cecece;
+  box-shadow: 0 10px 25px rgba(206, 206, 206, 0.5);
 }
-
 .logout-button:active {
   transform: translateY(0);
 }

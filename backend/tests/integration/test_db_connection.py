@@ -15,107 +15,19 @@ class TestDatabaseConnection:
         db.close()
     
     def test_tables_exist(self, app):
+        tables = ['item', 'review', 'user', 'business', 'role', 
+                'address', 'permission', 'promo_code', 'payment', 'promotype']
+        
         cursor = db.conn.cursor()
-
-        cursor.execute("""
-            SELECT EXISTS (
-                SELECT FROM information_schema.tables 
-                WHERE table_name = 'Item'
-            )
-        """)
-        item_table_exists = cursor.fetchone()[0]
-
-        cursor.execute("""
-            SELECT EXISTS (
-                SELECT FROM information_schema.tables 
-                WHERE table_name = 'Review'
-            )
-        """)
-        review_table_exists = cursor.fetchone()[0]
-
-        cursor.execute("""
-            SELECT EXISTS (
-                SELECT FROM information_schema.tables 
-                WHERE table_name = 'User'
-            )
-        """)
-        user_table_exists = cursor.fetchone()[0]
-
-        cursor.execute("""
-                       SELECT EXISTS (
-                           SELECT FROM information_schema.tables 
-                           WHERE table_name = 'Business'
-                       )
-        """)
-        business_table_exists = cursor.fetchone()[0]
-
-        cursor.execute("""
-                       SELECT EXISTS (
-                           SELECT FROM information_schema.tables 
-                           WHERE table_name = 'Role'
-                       )
-        """)
-
-        role_table_exists = cursor.fetchone()[0]
-
-        cursor.execute("""
-                      SELECT EXISTS (
-                           SELECT FROM information_schema.tables
-                           WHERE table_name = 'Address'
-                       )
-        """)
-
-        address_table_exists = cursor.fetchone()[0]
-
-
-        cursor.execute("""
-                      SELECT EXISTS (
-                           SELECT FROM information_schema.tables
-                           WHERE table_name = 'Permission'
-                       )
-        """)
-
-        permission_table_exists = cursor.fetchone()[0]
-
-        cursor.execute("""
-                      SELECT EXISTS (
-                           SELECT FROM information_schema.tables
-                           WHERE table_name = 'Promo_Code'
-                       )
-        """)
-
-        promo_code_table_exists = cursor.fetchone()[0]
-
-
-        cursor.execute("""
-                      SELECT EXISTS (
-                           SELECT FROM information_schema.tables
-                           WHERE table_name = 'Payment'
-                       )
-        """)
-
-        payment_table_exists = cursor.fetchone()[0]
-
-
-        
-        cursor.execute("""
-                      SELECT EXISTS (
-                           SELECT FROM information_schema.tables
-                           WHERE table_name = 'PromoType'
-                       )
-        """)
-
-        promo_type_table_exists = cursor.fetchone()[0]
-
-        cursor.close()
-        
-        assert item_table_exists is True
-        assert review_table_exists is True
-        assert user_table_exists is True
-        assert business_table_exists is True
-        assert role_table_exists is True
-        assert address_table_exists is True
-        assert permission_table_exists is True
-        assert promo_code_table_exists is True
-        assert payment_table_exists is True
-        assert promo_type_table_exists is True
+        try:
+            for table in tables:
+                cursor.execute("""
+                    SELECT EXISTS (
+                        SELECT FROM information_schema.tables 
+                        WHERE table_name = %s
+                    )
+                """, (table,))
+                exists = cursor.fetchone()[0]
+                assert exists, f"Table '{table}' does not exist"
+        finally:
+            cursor.close()

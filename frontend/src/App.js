@@ -56,9 +56,7 @@ function App() {
   };
 
   const handleNavigate = (page, businessId = null) => {
-    if (businessId) {
-      setSelectedBusinessId(businessId);
-    }
+    setSelectedBusinessId(businessId);
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };

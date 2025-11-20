@@ -25,7 +25,9 @@ def client(app):
 
 @pytest.fixture(autouse=True)
 def cleanup_user():
+    yield 
     from db.models import db
+    cursor = None
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
@@ -33,12 +35,17 @@ def cleanup_user():
         db.conn.commit()
     except Exception as e:
         print(f"Error cleaning up test user: {e}")
+        if db.conn:
+            db.conn.rollback()
     finally:
-        cursor.close()
+        if cursor:
+            cursor.close()
 
 @pytest.fixture(autouse=True)
 def cleanup_item():
+    yield
     from db.models import db
+    cursor = None
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
@@ -52,7 +59,9 @@ def cleanup_item():
 
 @pytest.fixture(autouse=True)
 def cleanup_review():
+    yield
     from db.models import db
+    cursor = None
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
@@ -64,8 +73,10 @@ def cleanup_review():
         cursor.close()
 
 @pytest.fixture
-def  cleanup_business():
+def cleanup_business():
+    yield
     from db.models import db
+    cursor = None
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
@@ -78,7 +89,9 @@ def  cleanup_business():
 
 @pytest.fixture(autouse=True)
 def cleanup_promo_code():
+    yield
     from db.models import db
+    cursor = None
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
@@ -91,7 +104,9 @@ def cleanup_promo_code():
 
 @pytest.fixture(autouse=True)
 def cleanup_address():
+    yield
     from db.models import db
+    cursor = None
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()
@@ -104,7 +119,9 @@ def cleanup_address():
 
 @pytest.fixture(autouse=True)
 def cleanup_role():
+    yield
     from db.models import db
+    cursor = None
     try:
         db._ensure_connection()
         cursor = db.conn.cursor()

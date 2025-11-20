@@ -171,8 +171,14 @@ h2 {
   cursor: pointer;
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
 }
 
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
 .action-button.secondary {
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
   color: white;
@@ -180,7 +186,7 @@ h2 {
 
 .action-button.secondary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 25px rgba(133, 142, 150, 0.3);
 }
 
 .action-button.danger {

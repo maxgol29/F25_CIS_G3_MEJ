@@ -3,8 +3,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --omit=optional
-
+RUN npm ci --omit=optional
 COPY . .
 
 EXPOSE 3000

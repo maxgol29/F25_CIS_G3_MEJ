@@ -9,7 +9,8 @@ class Database:
 
     def connect(self):
         try:
-            ssl_mode = 'disable' if config.DB_HOST == 'localhost' else 'require'
+            local_hosts = {'localhost', '127.0.0.1', '::1', '0.0.0.0'}
+            ssl_mode = 'disable' if config.DB_HOST in local_hosts else 'require'
             
             self.conn = psycopg2.connect(
                 host=config.DB_HOST,
@@ -23,8 +24,7 @@ class Database:
             return self.conn
         except psycopg2.Error as e:
             print(f"Database connection failed: {e}")
-            raise
-    
+            raise    
     def close(self):
         if self.conn:
             self.conn.close()
@@ -362,7 +362,7 @@ class Database:
                 'phone': user['phone'],
                 'user_type': user_type,
                 'business_id': business_id if user_type == 'owner' else None,
-                'roleID': user['roleID'] 
+                'roleID': user['roleid']
             }
             return result
         except Exception as e:
@@ -370,7 +370,7 @@ class Database:
             raise e
         finally:
             cursor.close()
-
+            
     def login(self, email, password):
         self._ensure_connection()
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)

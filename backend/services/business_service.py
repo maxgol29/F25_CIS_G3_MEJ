@@ -24,11 +24,10 @@ class BusinessService:
 
     def get_items_by_business_id(self, business_id):
 
-        if not business_id:
+        if business_id is None:
             raise ValueError("Business ID required")
         
         return db.get_items_by_business_id(business_id)
-
 
     def get_business_by_id(self, business_id):
         if not business_id:

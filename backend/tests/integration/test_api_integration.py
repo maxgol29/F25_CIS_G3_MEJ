@@ -164,8 +164,7 @@ class TestAPIIntegration:
         assert response.status_code == 400
         assert 'Missing name, type, location, or phone' in response.get_json()['error']
 
-# promo_code endpoints 
-
+    # promo_code endpoints 
     def test_all_promo_codes(self, client):
         response = client.get('/api/promo_codes?limit=50')
         assert response.status_code == 200
@@ -190,15 +189,13 @@ class TestAPIIntegration:
         data = response.get_json()
         assert data['message'] == 'Promo code added successfully'
 
-    def test_add_promo_code_missing_code(self, client):
+    def test_add_promo_code_missing_name(self, client):
         payload = {
             'description': '20% off on all items'
         }
         response = client.post('/api/promo_codes', json=payload)
         assert response.status_code == 400
-        assert 'Missing name or description' in response.get_json()['error']
-
-# address endpoints
+        assert 'Missing name or description' in response.get_json()['error']# address endpoints
 
     def test_add_address(self, client):
         payload = {
@@ -249,6 +246,7 @@ class TestAPIIntegration:
         assert 'roles' in data
         assert isinstance(data['roles'], list)
         assert data['count'] >= 0
+        assert len(data['roles']) <= 50
 
     def test_add_role(self, client):
         payload = {

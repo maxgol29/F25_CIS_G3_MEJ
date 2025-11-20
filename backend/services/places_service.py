@@ -7,14 +7,17 @@ class PlacesService:
     @staticmethod
     def get_nearby_restaurants(latitude, longitude, radius=3212):
         params = {
-            'location': f'{latitude},{longitude}',
-            'radius': radius,
-            'type': 'restaurant',
-            'key': config.GOOGLE_PLACES_API_KEY
+            "location": f"{latitude},{longitude}",
+            "radius": radius,
+            "type": "restaurant"
+        }
+
+        headers = {
+            "X-Goog-Api-Key": config.GOOGLE_PLACES_API_KEY
         }
         
         try:
-            response = requests.get(PlacesService.BASE_URL, params=params, timeout=10)
+            response = requests.get(PlacesService.BASE_URL, params=params, headers=headers, timeout=10)
             response.raise_for_status()
             
             data = response.json()
@@ -46,7 +49,7 @@ class PlacesService:
         except requests.exceptions.RequestException as e:
             return {
                 'error': 'Failed to fetch from Google Places API',
-                'details': str(e)
+                'message': str(e)
             }
 
 places_service = PlacesService()
