@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import AuthPage from '../src/components/AuthPage';
-import HomePage from '../src/components/HomePage';
-import ProfilePage from '../src/components/ProfilePage';
-import MapPage from '../src/components/Mappage';
-import BrowsePage from '../src/components/BrowsePage';
-import BusinessDetailPage from '../src/components/BusinessDetailPage';
-import OwnerPage from '../src/components/OwnerPage';
+import AuthPage from './components/AuthPage';
+import HomePage from './components/HomePage';
+import ProfilePage from './components/ProfilePage';
+import MapPage from './components/Mappage';
+import BrowsePage from './components/BrowsePage';
+import BusinessDetailPage from './components/BusinessDetailPage';
+import OwnerPage from './components/OwnerPage';
 import './App.css';
 
 function App() {
@@ -54,9 +54,7 @@ function App() {
   };
 
   const handleNavigate = (page, businessId = null) => {
-    if (businessId) {
-      setSelectedBusinessId(businessId);
-    }
+    setSelectedBusinessId(businessId);
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };

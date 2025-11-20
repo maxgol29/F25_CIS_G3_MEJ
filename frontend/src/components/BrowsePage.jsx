@@ -16,8 +16,10 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
     setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/restaurants/get-all`);
-      const data = await response.json();
-      if (!data.restaurants || !Array.isArray(data.restaurants)) {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.status}`);
+      }
+      const data = await response.json();      if (!data.restaurants || !Array.isArray(data.restaurants)) {
         setBusinesses([]);
         return;
       }

@@ -1,3 +1,4 @@
+import logging
 from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from services.address_service import address_service
@@ -9,10 +10,17 @@ from services.item_service import item_service
 from services.user_service import user_service
 from services.role_service import role_service
 from services.auth_user_service import auth_user_service
+import traceback
 
 
 api_bp = Blueprint('api', __name__)
 CORS(api_bp)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 #health check endpoint
 @api_bp.route('/health', methods=['GET'])
@@ -162,7 +170,7 @@ def get_user_by_id(user_id):
     except ValueError as e:
         return jsonify({'error': str(e)}), 404
     except Exception as e:
-        print(f"Error fetching user by ID: {e}")
+        logger.error(f"Error fetching user by ID: {e}", exc_info=True)
         return jsonify({'error': 'Failed to fetch user details'}), 500
     
 #business endpoints
@@ -185,8 +193,7 @@ def add_business():
         data = request.get_json()
 
         if not data or 'name' not in data or 'type' not in data or 'location' not in data:
-            return jsonify({'error': 'Missing name, type, location, or phone'}), 400
-
+            return jsonify({'error': 'Missing name, type, or location'}), 400
         business_service.create_business(
             name=data.get('name'),
             type=data.get('type'),
@@ -324,7 +331,7 @@ def signup():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        print(f"Signup error: {e}")
+        logger.error(f"Signup error: {e}", exc_info=True)
         return jsonify({'error': 'Signup failed'}), 500
 
 
@@ -337,7 +344,7 @@ def login():
     except ValueError as e:
         return jsonify({'error': str(e)}), 401
     except Exception as e:
-        print(f"Login error: {e}")
+        logger.error(f"Login error: {e}", exc_info=True)
         return jsonify({'error': 'Login failed'}), 500
     
 @auth_bp.route('/user/<int:user_id>', methods=['GET'])
@@ -346,12 +353,12 @@ def get_user(user_id):
         user = auth_user_service.get_user_details(user_id)
         return jsonify({
             'success': True,
-            'user': user  # ✅ Includes user_type
+            'user': user 
         }), 200
     except ValueError as e:
         return jsonify({'error': str(e)}), 404
     except Exception as e:
-        print(f"Get user error: {e}")
+        logger.error(f"Get user error: {e}")
         return jsonify({'error': 'Failed to fetch user'}), 500
 
 # Restaurants adding to db
@@ -376,8 +383,7 @@ def save_business_from_places():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        import traceback
-        traceback.print_exc()
+        logger.error("Failed to save businesses", exc_info=True)
         return jsonify({
             'error': 'Failed to save businesses',
             'details': str(e)

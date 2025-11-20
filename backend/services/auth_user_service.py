@@ -8,8 +8,9 @@ class AuthUserService:
             raise ValueError("Password too short")
         if '@' not in email or '.' not in email:
             raise ValueError("Invalid email format")
-        if not all(k in address for k in ['street', 'zip_code', 'city', 'country']):
-            raise ValueError("Incomplete address data")
+        required_keys = ['street', 'zip_code', 'city', 'country']
+        if not all(k in address and address[k] for k in required_keys):
+            raise ValueError("Incomplete address data")        
         if user_type not in ['customer', 'owner']:
             raise ValueError("Invalid user_type. Must be 'customer' or 'owner'")
         if user_type == 'owner' and not business_id:

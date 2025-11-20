@@ -11,6 +11,7 @@ class TestPlacesService:
     @patch('services.places_service.requests.get')
     def test_get_nearby_restaurants_success(self, mock_get):
         mock_response = MagicMock()
+        mock_response.status_code = 200
         mock_response.json.return_value = {
             'status': 'OK',
             'results': [
@@ -31,7 +32,12 @@ class TestPlacesService:
         assert result['success'] is True
         assert result['count'] == 1
         assert result['restaurants'][0]['name'] == 'Test Restaurant'
-    
+        assert result['restaurants'][0]['place_id'] == '12345'
+        assert result['restaurants'][0]['rating'] == 4.5
+
+        mock_get.assert_called_once()
+        call_args = mock_get.call_args
+        assert 'location=29.4241,-98.4936' in call_args[0][0] or 'location' in call_args[1].get('params', {})    
     @patch('services.places_service.requests.get')
     def test_get_nearby_restaurants_api_error(self, mock_get):
         mock_response = MagicMock()

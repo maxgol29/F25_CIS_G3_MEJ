@@ -6,7 +6,7 @@ class AddressService:
 
     def create_address(self, street, city, state, zip):
         if not all([street, city, state, zip]):
-            raise ValueError('Missing street')
+            raise ValueError('Missing required address fields')       
         return db.add_address(street, city, state, zip)
 
 address_service = AddressService()

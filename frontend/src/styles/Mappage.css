@@ -108,12 +108,12 @@
   transform: translateY(-3px);
 }
 
+
 .restaurant-card.active {
   background: linear-gradient(135deg, #60696b15 0%, #60696b15 100%);
   border-color: #60696b;
   border-width: 3px;
   box-shadow: 0 4px 15px rgba(96, 105, 107, 0.3);
-  color: #e6f7e6;
 }
 
 .restaurant-name {
