@@ -103,6 +103,21 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
               </button>
             </li>
           )}
+
+          {/* Owner links - visible only to users with owner role/type */}
+          {user && (user.user_type === 'owner' || user.role === 'owner' || user.business_id) && (
+            <li className="nav-item owner-dropdown">
+              <div className="owner-menu">
+                <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>Owner</button>
+                <div className="owner-menu-content">
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>Dashboard</button>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerMenu')}>Manage Menu</button>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerOrders')}>Orders</button>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerPromos')}>Promos</button>
+                </div>
+              </div>
+            </li>
+          )}
         </ul>
         <div className="navbar-user">
           Welcome, {user.last_name}

@@ -11,6 +11,9 @@ import PaymentPage from './components/PaymentPage';
 import OrderConfirmation from './components/OrderConfirmation';
 import OrderHistory from './components/OrderHistory';
 import OwnerPage from './components/OwnerPage';
+import MenuEditor from './components/MenuEditor';
+import OwnerOrders from './components/OwnerOrders';
+import PromoManager from './components/PromoManager';
 import './App.css';
 
 function App() {
@@ -103,6 +106,12 @@ function App() {
         return <OrderHistory user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'owner':
         return <OwnerPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'ownerMenu':
+        return <MenuEditor user={user} onNavigate={handleNavigate} />;
+      case 'ownerOrders':
+        return <OwnerOrders user={user} onNavigate={handleNavigate} />;
+      case 'ownerPromos':
+        return <PromoManager user={user} onNavigate={handleNavigate} />;
       case 'home':
       default:
         return <HomePage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;

@@ -1,0 +1,8 @@
+.owner-orders-page { padding: 20px }
+.muted { color: #666 }
+.orders-list { background:#fff; padding:12px; border-radius:8px }
+.order-item { display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee }
+.order-actions button { margin-left:8px; padding:6px 10px; border-radius:6px }
+.order-items { margin-top:8px; font-size:14px; color:#333 }
+.order-line { margin-bottom:4px }
+.error { color:#b00020 }
