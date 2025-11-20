@@ -173,13 +173,7 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
 
           <div className="confirmation-actions">
             <button 
-              onClick={() => onNavigate('home')}
-              className="action-btn primary"
-            >
-              Continue Shopping
-            </button>
-            <button 
-              onClick={() => onNavigate('profile')}
+              onClick={() => onNavigate('orderHistory')}
               className="action-btn secondary"
             >
               View Orders

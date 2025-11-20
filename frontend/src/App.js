@@ -8,7 +8,8 @@ import BrowsePage from './components/BrowsePage';
 import BusinessDetailPage from './components/BusinessDetailPage';
 import CartPage from './components/CartPage';
 import PaymentPage from './components/PaymentPage'; 
-import OrderConfirmation from './components/OrderConfirmation'; 
+import OrderConfirmation from './components/OrderConfirmation';
+import OrderHistory from './components/OrderHistory';
 import OwnerPage from './components/OwnerPage';
 import './App.css';
 
@@ -98,6 +99,8 @@ function App() {
             onNavigate={handleNavigate} 
           />
         );
+      case 'orderHistory':
+        return <OrderHistory user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'owner':
         return <OwnerPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'home':

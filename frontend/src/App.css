@@ -29,10 +29,3 @@ code {
   width: 100%;
   min-height: 100vh;
 }
-
-/* Remove default focus outline for accessibility */
-button:focus,
-input:focus {
-  outline: 2px solid #353535;
-  outline-offset: 2px;
-}

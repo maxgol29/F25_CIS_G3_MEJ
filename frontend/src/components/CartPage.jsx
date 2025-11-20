@@ -2,7 +2,7 @@ import { useCart } from '../context/CartContext';
 import NavBar from './NavBar';
 import '../styles/CartPage.css';
 
-const CartPage = ({ user, onNavigate, onLogout }) => {
+const CartPage = ({ user, onNavigate }) => {
   const { cart, removeFromCart, updateQuantity, clearCart, calculateTotals } = useCart();
   const totals = calculateTotals();
 
@@ -153,7 +153,11 @@ const CartPage = ({ user, onNavigate, onLogout }) => {
               <span>${totals.total.toFixed(2)}</span>
             </div>
 
-            <button className="checkout-btn">
+            <button 
+              className="checkout-btn"
+              onClick={() => onNavigate('payment')}
+              disabled={cart.items.length === 0}
+            >
               Proceed to Checkout
             </button>
 

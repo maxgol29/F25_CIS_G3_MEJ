@@ -787,4 +787,61 @@ class Database:
             if cursor:
                 cursor.close()
 
+    def get_user_orders(self, user_id, limit=50):
+        self._ensure_connection()
+        cursor = None
+        
+        try:
+            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+
+            cursor.execute('''
+                SELECT o.id, o.businessID, o.status, o.subtotal, o.discount_amount, 
+                    o.tax_amount, o.total_amount, o.created_at,
+                    b.name as business_name
+                FROM "Order" o
+                JOIN "Business" b ON o.businessID = b.id
+                WHERE o.userID = %s
+                ORDER BY o.created_at DESC
+                LIMIT %s
+            ''', (user_id, limit))
+            
+            orders = []
+            for row in cursor.fetchall():
+                order_id = row['id']
+
+                cursor.execute('''
+                    SELECT i.dish_name, oi.quantity
+                    FROM "Order_Item" oi
+                    JOIN "Item" i ON oi.itemID = i.id
+                    WHERE oi.orderID = %s
+                ''', (order_id,))
+                
+                items = []
+                for item_row in cursor.fetchall():
+                    items.append({
+                        'name': item_row['dish_name'],
+                        'quantity': item_row['quantity']
+                    })
+                
+                orders.append({
+                    'id': row['id'],
+                    'businessID': row['businessid'],
+                    'businessName': row['business_name'],
+                    'status': row['status'],
+                    'subtotal': float(row['subtotal']),
+                    'discount_amount': float(row['discount_amount']),
+                    'tax_amount': float(row['tax_amount']),
+                    'total_amount': float(row['total_amount']),
+                    'created_at': str(row['created_at']),
+                    'items': items
+                })
+            
+            return orders
+            
+        except Exception as e:
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+
 db = Database()
