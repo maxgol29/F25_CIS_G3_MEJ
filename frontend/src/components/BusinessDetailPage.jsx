@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/BusinessDetailPage.css';
 import NavBar from './NavBar';
+import CartFooter from './CartFooter'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { useCart } from '../context/CartContext'; 
 
-const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
+const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
   const API_BASE_URL = process.env.API_BASE_URL;
 
   const [business, setBusiness] = useState(null);
@@ -13,6 +15,8 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [addedItemId, setAddedItemId] = useState(null);
+  const { addToCart, cart } = useCart(); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,6 +52,29 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
       fetchData();
     }
   }, [businessId, API_BASE_URL]);
+
+  const handleAddToCart = (item) => {
+    try {
+      addToCart(
+        {
+          id: item.id,
+          dish_name: item.dish_name,
+          price: item.price,
+          discount_percentage: item.discount_percentage || 0,
+          image_url: item.image_url,
+          quantity: 1
+        },
+        businessId,
+        business.name
+      );
+
+      setAddedItemId(item.id);
+      setTimeout(() => setAddedItemId(null), 2000);
+      
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -98,171 +125,173 @@ const BusinessDetailPage = ({ businessId, user, onLogout, onNavigate }) => {
 
   return (
     <div>
-              <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
 
-    <div className="detail-page">
-      <div className="detail-header">
-        <button className="back-btn" onClick={() => onNavigate('browse')}>← Back</button>
-        <button className="logout-btn" onClick={onLogout}>Logout</button>
-      </div>
+      <div className="detail-page">
+        <div className="detail-header">
+          <button className="back-btn" onClick={() => onNavigate('browse')}>← Back</button>
+        </div>
 
-      <div className="business-header">
-        <h1>{business.name}</h1>
-        
-        <div className="business-meta">
-          <div className="meta-item">
-            <span className="value">{business.type}</span>
-          </div>
-
-          <div className="meta-item">
-            <span className="value">
-              {[...Array(Math.floor(business.rating || 0))].map((_, i) => (
-                <FontAwesomeIcon key={i} icon={faStar} size="sm" style={{color: "#FFD43B",}} />
-              ))} {business.rating || 'N/A'}
-              <small> ({business.total_reviews || 0} reviews)</small>
-            </span>
-          </div>
-
-          {business.phone && (
+        <div className="business-header">
+          <h1>{business.name}</h1>
+          
+          <div className="business-meta">
             <div className="meta-item">
-              <a href={`tel:${business.phone}`}>{business.phone}</a>
+              <span className="value">{business.type}</span>
             </div>
-          )}
 
-          {business.website && (
             <div className="meta-item">
-              <a href={business.website} target="_blank" rel="noopener noreferrer">
-                Visit Website
-              </a>
-            </div>
-          )}
-
-          {business.opening_hours && (
-            <div className="meta-item">
-              <span className={`status ${business.opening_hours.open_now ? 'open' : 'closed'}`}>
-                {business.opening_hours.open_now ? 'Open Now' : 'Closed'}
+              <span className="value">
+                {[...Array(Math.floor(business.rating || 0))].map((_, i) => (
+                  <FontAwesomeIcon key={i} icon={faStar} size="sm" style={{color: "#FFD43B",}} />
+                ))} {business.rating || 'N/A'}
+                <small> ({business.total_reviews || 0} reviews)</small>
               </span>
             </div>
-          )}
-        </div>
-      </div>
 
-      <div className="menu-section">
-        <div className="menu-header">
-          <h2>Menu</h2>
-          <span className="item-count">({filteredItems.length} items)</span>
-        </div>
+            {business.phone && (
+              <div className="meta-item">
+                <a href={`tel:${business.phone}`}>{business.phone}</a>
+              </div>
+            )}
 
-        <div className="menu-search">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-          {searchQuery && (
-            <button 
-              className="clear-btn"
-              onClick={() => setSearchQuery('')}
-            >
-              ✕
-            </button>
-          )}
-        </div>
+            {business.website && (
+              <div className="meta-item">
+                <a href={business.website} target="_blank" rel="noopener noreferrer">
+                  Visit Website
+                </a>
+              </div>
+            )}
 
-        {items.length === 0 ? (
-          <div className="no-items">
-            <p>No items available for this restaurant</p>
+            {business.opening_hours && (
+              <div className="meta-item">
+                <span className={`status ${business.opening_hours.open_now ? 'open' : 'closed'}`}>
+                  {business.opening_hours.open_now ? 'Open Now' : 'Closed'}
+                </span>
+              </div>
+            )}
           </div>
-        ) : filteredItems.length === 0 ? (
-          <div className="no-items">
-            <p>No items match your search</p>
-            <button onClick={() => setSearchQuery('')}>Clear Search</button>
+        </div>
+
+        <div className="menu-section">
+          <div className="menu-header">
+            <h2>Menu</h2>
+            <span className="item-count">({filteredItems.length} items)</span>
           </div>
-        ) : (
-          <div className="categories-container">
-            {categories.map((category) => (
-              <div key={category} className="category-section">
-                <h3 className="category-title">{category} ({itemsByCategory[category].length})</h3>
-                
-                <div className="items-grid">
-                  {itemsByCategory[category].map((item) => (
-                    <div key={item.id} className="item-card">
-                      {item.image_url && (
-                        <div className="item-image">
-                          <img src={item.image_url} alt={item.dish_name} />
+
+          <div className="menu-search">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+            {searchQuery && (
+              <button 
+                className="clear-btn"
+                onClick={() => setSearchQuery('')}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {items.length === 0 ? (
+            <div className="no-items">
+              <p>No items available for this restaurant</p>
+            </div>
+          ) : filteredItems.length === 0 ? (
+            <div className="no-items">
+              <p>No items match your search</p>
+              <button onClick={() => setSearchQuery('')}>Clear Search</button>
+            </div>
+          ) : (
+            <div className="categories-container">
+              {categories.map((category) => (
+                <div key={category} className="category-section">
+                  <h3 className="category-title">{category} ({itemsByCategory[category].length})</h3>
+                  
+                  <div className="items-grid">
+                    {itemsByCategory[category].map((item) => (
+                      <div key={item.id} className="item-card">
+                        {item.image_url && (
+                          <div className="item-image">
+                            <img src={item.image_url} alt={item.dish_name} />
+                          </div>
+                        )}
+                        <div className="item-info">
+                          <h4>{item.dish_name}</h4>
+                          <div className="price-section">
+                            {item.discount_percentage > 0 ? (
+                              <>
+                                <span className="original-price">${item.price.toFixed(2)}</span>
+                                <span className="discount-badge">-{item.discount_percentage}%</span>
+                                <span className="final-price">
+                                  ${(item.price * (1 - item.discount_percentage / 100)).toFixed(2)}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="final-price">${item.price.toFixed(2)}</span>
+                            )}
+                          </div>
+                          <button 
+                            className={`add-to-cart-btn ${addedItemId === item.id ? 'added' : ''}`}
+                            disabled={!item.is_available}
+                            onClick={() => handleAddToCart(item)}
+                          >
+                            {addedItemId === item.id ? 'Added!' : (item.is_available ? 'Add to Cart' : 'Unavailable')}
+                          </button>
                         </div>
-                      )}
-                      <div className="item-info">
-                        <h4>{item.dish_name}</h4>
-                        <div className="price-section">
-                          {item.discount_percentage > 0 ? (
-                            <>
-                              <span className="original-price">${item.price.toFixed(2)}</span>
-                              <span className="discount-badge">-{item.discount_percentage}%</span>
-                              <span className="final-price">
-                                ${(item.price * (1 - item.discount_percentage / 100)).toFixed(2)}
-                              </span>
-                            </>
-                          ) : (
-                            <span className="final-price">${item.price.toFixed(2)}</span>
+                        <div className="item-details-overlay">
+                          <div className="item-details">
+                            {item.portion_size && <span className="detail">{item.portion_size}</span>}
+                            {item.cooking_method && <span className="detail">{item.cooking_method}</span>}
+                            {item.available_quantity > 0 && (
+                              <span className="detail available">{item.available_quantity} in stock</span>
+                            )}
+                            {!item.is_available && <span className="detail unavailable">Unavailable</span>}
+                          </div>
+                          {item.ingredients && item.ingredients.length > 0 && (
+                            <div className="ingredients">
+                              <span className="ingredients-label">Ingredients:</span>
+                              <div className="ingredients-list">
+                                {Array.isArray(item.ingredients) ? (
+                                  item.ingredients.map((ing, idx) => (
+                                    <span key={idx} className="ingredient-tag">{ing}</span>
+                                  ))
+                                ) : (
+                                  <span className="ingredient-tag">{JSON.stringify(item.ingredients)}</span>
+                                )}
+                              </div>
+                            </div>
                           )}
                         </div>
-                        <button 
-                          className="add-to-cart-btn"
-                          disabled={!item.is_available}
-                        >
-                          {item.is_available ? 'Add to Cart' : 'Unavailable'}
-                        </button>
-                      </div>
-                      <div className="item-details-overlay">
-                        <div className="item-details">
-                          {item.portion_size && <span className="detail">{item.portion_size}</span>}
-                          {item.cooking_method && <span className="detail">{item.cooking_method}</span>}
-                          {item.available_quantity > 0 && (
-                            <span className="detail available">{item.available_quantity} in stock</span>
-                          )}
-                          {!item.is_available && <span className="detail unavailable">Unavailable</span>}
-                        </div>
-                        {item.ingredients && item.ingredients.length > 0 && (
-                          <div className="ingredients">
-                            <span className="ingredients-label">Ingredients:</span>
-                            <div className="ingredients-list">
-                              {Array.isArray(item.ingredients) ? (
-                                item.ingredients.map((ing, idx) => (
-                                  <span key={idx} className="ingredient-tag">{ing}</span>
-                                ))
-                              ) : (
-                                <span className="ingredient-tag">{JSON.stringify(item.ingredients)}</span>
-                              )}
+                        {item.description && (
+                          <div className="description-overlay-wrapper">
+                            <p>{item.description}</p>
+                            <div className="overlay-button-container">
+                              <button
+                                className={`add-to-cart-btn ${addedItemId === item.id ? 'added' : ''}`}
+                                onClick={() => handleAddToCart(item)}
+                                disabled={!item.is_available}
+                              >
+                                {addedItemId === item.id ? 'Added!' : (item.is_available ? 'Add to Cart' : 'Unavailable')}
+                              </button>
                             </div>
                           </div>
                         )}
                       </div>
-                      {item.description && (
-                        <div className="description-overlay-wrapper">
-                          <p>{item.description}</p>
-                          <div className="overlay-button-container">
-                            <button 
-                              className="add-to-cart-btn"
-                              disabled={!item.is_available}
-                            >
-                              {item.is_available ? 'Add to Cart' : 'Unavailable'}
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+      <CartFooter onNavigate={onNavigate} businessId={businessId} businessName={business.name} />
     </div>
-      </div>
   );
 };
 
