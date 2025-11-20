@@ -1,6 +1,7 @@
 import logging
 from flask import Blueprint, request, jsonify
 from flask_cors import CORS
+from services.order_service import order_service
 from services.address_service import address_service
 from services.promo_code_service import promo_code_service
 from services.business_service import business_service
@@ -10,8 +11,6 @@ from services.item_service import item_service
 from services.user_service import user_service
 from services.role_service import role_service
 from services.auth_user_service import auth_user_service
-import traceback
-
 
 api_bp = Blueprint('api', __name__)
 CORS(api_bp)
@@ -442,5 +441,65 @@ def get_business_items(business_id):
     except Exception as e:
         return jsonify({
             'error': 'Failed to fetch items',
+            'details': str(e)
+        }), 500
+    
+orders_bp = Blueprint('orders', __name__, url_prefix='/api/orders')
+
+@orders_bp.route('/create', methods=['POST'])
+def create_order():
+    try:
+        data = request.get_json()
+
+        required_fields = ['userID', 'businessID', 'items', 'subtotal', 'total_amount']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        if not isinstance(data['items'], list) or len(data['items']) == 0:
+            return jsonify({'error': 'Items must be a non-empty list'}), 400
+
+        order = order_service.create_order(
+            user_id=data['userID'],
+            business_id=data['businessID'],
+            items=data['items'],
+            subtotal=data['subtotal'],
+            discount_amount=data.get('discount_amount', 0),
+            tax_amount=data.get('tax_amount', 0),
+            processing_fee=data.get('processing_fee', 0),
+            total_amount=data['total_amount'],
+            promo_code=data.get('promoCode')
+        )   
+        return jsonify({
+            'message': 'Order created successfully',
+            'order': order
+        }), 201
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error("Failed to create order", exc_info=True)
+        return jsonify({
+            'error': 'Failed to create order',
+            'details': str(e)
+        }), 500
+
+
+@orders_bp.route('/<int:order_id>', methods=['GET'])
+def get_order(order_id):
+    try:
+        order = order_service.get_order(order_id)
+        
+        return jsonify({
+            'success': True,
+            'order': order
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch order {order_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch order',
             'details': str(e)
         }), 500

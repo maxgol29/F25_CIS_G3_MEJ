@@ -7,6 +7,8 @@ import MapPage from './components/Mappage';
 import BrowsePage from './components/BrowsePage';
 import BusinessDetailPage from './components/BusinessDetailPage';
 import CartPage from './components/CartPage';
+import PaymentPage from './components/PaymentPage'; 
+import OrderConfirmation from './components/OrderConfirmation'; 
 import OwnerPage from './components/OwnerPage';
 import './App.css';
 
@@ -15,6 +17,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null); 
 
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
@@ -55,8 +58,12 @@ function App() {
     localStorage.removeItem('currentUser');
   };
 
-  const handleNavigate = (page, businessId = null) => {
-    setSelectedBusinessId(businessId);
+  const handleNavigate = (page, id = null) => {
+    if (page === 'businessDetail' && id) {
+      setSelectedBusinessId(id);
+    } else if (page === 'orderConfirmation' && id) {
+      setSelectedOrderId(id);
+    }
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
@@ -80,6 +87,17 @@ function App() {
         );
       case 'cart':
         return <CartPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'payment': 
+        return <PaymentPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'orderConfirmation': 
+        return (
+          <OrderConfirmation 
+            orderId={selectedOrderId} 
+            user={user} 
+            onLogout={handleLogout} 
+            onNavigate={handleNavigate} 
+          />
+        );
       case 'owner':
         return <OwnerPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'home':

@@ -465,12 +465,9 @@ class Database:
         saved_count = 0
         skipped_count = 0
         errors = []
-
-        cursor = None
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
-            
-            for business in businesses:
+            for business in enumerate(businesses):
+                cursor = None
                 try:
                     google_place_id = business.get('place_id')
                     if not google_place_id:
@@ -488,38 +485,84 @@ class Database:
                         types[0] if types else 'restaurant'
                     )
 
-                    cursor.execute('''
-                        INSERT INTO "Business"
-                        (name, type, phone, website, google_place_id,
-                        opening_hours, rating, total_reviews,
-                        is_active, is_verified, created_at, updated_at)
-                        VALUES
-                        (%s, %s, %s, %s, %s,
-                        %s, %s, %s,
-                        TRUE, FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-                        ON CONFLICT (google_place_id) DO NOTHING;
-                    ''', (
-                        name, place_type, phone, website, google_place_id,
-                        opening_hours_json, rating, total_reviews
-                    ))
+                    address_id = None
+                    vicinity = business.get('vicinity', '')
+                    geometry = business.get('geometry', {})
+                    location = geometry.get('location', {})
+                    latitude = location.get('lat')
+                    longitude = location.get('lng')
+                    
+                    street = ''
+                    city = ''
+                    state = '' 
+                    zip_code = '' 
+                    country = 'United States'  
+                    
+                    if vicinity:
+                        parts = [p.strip() for p in vicinity.split(',')]
+                        
+                        if len(parts) >= 1:
+                            street = parts[0] 
+                        if len(parts) >= 2:
+                            city = parts[1] 
 
-                    if cursor.rowcount > 0:
-                        saved_count += 1
-                    else:
-                        skipped_count += 1
+                    if street and city:
+                        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+                        try:
+                            cursor.execute('''
+                                INSERT INTO "Address"
+                                (street, city, state, zip_code, country, latitude, longitude,
+                                created_at, updated_at)
+                                VALUES
+                                (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                                RETURNING id;
+                            ''', (
+                                street, city, state, zip_code, country, latitude, longitude
+                            ))
+                            
+                            cursor.close()
+                        except Exception as addr_error:
+                            if cursor:
+                                cursor.close()
+                            address_id = None
+
+                    cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+                    try:
+                        cursor.execute('''
+                            INSERT INTO "Business"
+                            (name, type, phone, website, google_place_id,
+                            opening_hours, rating, total_reviews, addressID,
+                            is_active, is_verified, created_at, updated_at)
+                            VALUES
+                            (%s, %s, %s, %s, %s,
+                            %s, %s, %s, %s,
+                            TRUE, FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                            ON CONFLICT (google_place_id) DO NOTHING;
+                        ''', (
+                            name, place_type, phone, website, google_place_id,
+                            opening_hours_json, rating, total_reviews, address_id
+                        ))
+
+                        if cursor.rowcount > 0:
+                            saved_count += 1
+                        else:
+                            skipped_count += 1
+                        
+                        self.conn.commit()
+                        cursor.close()
+                        
+                    except Exception:
+                        self.conn.rollback()
+                        if cursor:
+                            cursor.close()
 
                 except Exception as e:
-                    errors.append({'business': business.get('name'), 'error': str(e)})
+                    if cursor:
+                        cursor.close()
                     continue
-            self.conn.commit()            
             return {'saved': saved_count, 'skipped': skipped_count, 'errors': errors}
         except Exception as e:
-            if self.conn:
-                self.conn.rollback()
             raise e
-        finally:
-            if cursor:
-                cursor.close()
 
 
     def get_all_restaurants(self, limit=None):
@@ -605,6 +648,139 @@ class Database:
             
             result = [dict(item) for item in items] if items else []
             return result
+        except Exception as e:
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+
+    def create_order(self, user_id, business_id, items, subtotal, discount_amount, 
+                    tax_amount, processing_fee, total_amount, promo_code=None):
+        self._ensure_connection()
+        cursor = None
+        
+        try:
+            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+
+            cursor.execute('SELECT id FROM "User" WHERE id = %s', (user_id,))
+            if not cursor.fetchone():
+                raise ValueError("User not found")
+            
+            cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
+            if not cursor.fetchone():
+                raise ValueError("Business not found")
+
+            cursor.execute('''
+                INSERT INTO "Order" 
+                (userID, businessID, status, subtotal, discount_amount, tax_amount, 
+                processing_fee, total_amount, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                RETURNING id, userID, businessID, status, subtotal, discount_amount, 
+                        tax_amount, processing_fee, total_amount, created_at
+            ''', (user_id, business_id, 'pending', subtotal, discount_amount, 
+                tax_amount, processing_fee, total_amount))
+            
+            order = cursor.fetchone()
+            order_id = order['id']
+
+            for item in items:
+                cursor.execute('''
+                    INSERT INTO "Order_Item" 
+                    (orderID, itemID, quantity, unit_price, discount_percentage, created_at)
+                    VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
+                ''', (order_id, item['itemId'], item['quantity'], item['price'], 
+                    item.get('discountPercentage', 0)))
+            
+            self.conn.commit()
+            
+            return {
+                'id': order['id'],
+                'userID': order['userid'],
+                'businessID': order['businessid'],
+                'status': order['status'],
+                'subtotal': float(order['subtotal']),
+                'discount_amount': float(order['discount_amount']),
+                'tax_amount': float(order['tax_amount']),
+                'processing_fee': float(order['processing_fee']),
+                'total_amount': float(order['total_amount']),
+                'created_at': str(order['created_at'])
+            }
+            
+        except Exception as e:
+            self.conn.rollback()
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+
+
+    def get_order(self, order_id):
+        self._ensure_connection()
+        cursor = None     
+        try:
+            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+
+            cursor.execute('''
+                SELECT o.id, o.userID, o.businessID, o.status, o.subtotal, o.discount_amount, 
+                    o.tax_amount, o.processing_fee, o.total_amount, o.created_at,
+                    b.name as business_name, b.phone as business_phone, b.email as business_email,
+                    a.street, a.building_number, a.apartment_number, a.zip_code, 
+                    a.city, a.state, a.country, a.latitude, a.longitude
+                FROM "Order" o
+                JOIN "Business" b ON o.businessID = b.id
+                LEFT JOIN "Address" a ON b.addressID = a.id
+                WHERE o.id = %s
+            ''', (order_id,))
+            
+            order = cursor.fetchone()
+            
+            if not order:
+                raise ValueError("Order not found")
+
+            cursor.execute('''
+                SELECT oi.id, oi.itemID, i.dish_name, oi.quantity, oi.unit_price, 
+                    oi.discount_percentage
+                FROM "Order_Item" oi
+                JOIN "Item" i ON oi.itemID = i.id
+                WHERE oi.orderID = %s
+            ''', (order_id,))
+            
+            items = []
+            for row in cursor.fetchall():
+                items.append({
+                    'id': row['id'],
+                    'itemId': row['itemid'],
+                    'dishName': row['dish_name'],
+                    'quantity': row['quantity'],
+                    'price': float(row['unit_price']),
+                    'discountPercentage': float(row['discount_percentage'])
+                })
+            
+            return {
+                'id': order['id'],
+                'userID': order['userid'],
+                'businessID': order['businessid'],
+                'status': order['status'],
+                'subtotal': float(order['subtotal']),
+                'discount_amount': float(order['discount_amount']),
+                'tax_amount': float(order['tax_amount']),
+                'processing_fee': float(order['processing_fee']),
+                'total_amount': float(order['total_amount']),
+                'created_at': str(order['created_at']),
+                'business': {
+                    'address': {
+                        'street': order['street'],
+                        'building_number': order['building_number'],
+                        'apartment_number': order['apartment_number'],
+                        'zip_code': order['zip_code'],
+                        'city': order['city'],
+                        'state': order['state'],
+                        'country': order['country'],
+                    }
+                },
+                'items': items
+            }
+            
         except Exception as e:
             raise e
         finally:
