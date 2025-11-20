@@ -838,8 +838,6 @@ class Database:
             
             return orders
             
-        except Exception as e:
-            raise e
         finally:
             if cursor:
                 cursor.close()
