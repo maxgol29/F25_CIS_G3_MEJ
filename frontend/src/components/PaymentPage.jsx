@@ -346,7 +346,6 @@ const PaymentPage = ({ user, onNavigate }) => {
           <div className="order-summary-sidebar">
             <h2>Order Summary</h2>
             <div className="summary-items">
-              <h3>Items</h3>
               {cart.items.map((item, idx) => (
                 <div key={idx} className="summary-item">
                   <div className="item-info">

@@ -503,3 +503,23 @@ def get_order(order_id):
             'error': 'Failed to fetch order',
             'details': str(e)
         }), 500
+
+
+@orders_bp.route('/user/<int:user_id>', methods=['GET'])
+def get_user_orders(user_id):
+    try:
+        limit = request.args.get('limit', default=50, type=int)
+        orders = order_service.get_user_orders(user_id, limit)
+        
+        return jsonify({
+            'success': True,
+            'count': len(orders),
+            'orders': orders
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch orders for user {user_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch orders',
+            'details': str(e)
+        }), 500

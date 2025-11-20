@@ -84,6 +84,14 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
               Cart
             </button>
           </li>
+          <li className="nav-item">
+            <button 
+              className="nav-link nav-button" 
+              onClick={() => handleNavigation('orderHistory')}
+            >
+               History
+            </button>
+          </li>
 
           {activeOrder && (
             <li className="nav-item order-item">
@@ -91,7 +99,7 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
                 className="nav-link nav-button active-order-link" 
                 onClick={() => handleNavigation('orderConfirmation', activeOrder.id)}
               >
-                Order(s)
+                 Active Order
               </button>
             </li>
           )}
