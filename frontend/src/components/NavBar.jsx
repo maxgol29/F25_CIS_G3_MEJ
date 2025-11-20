@@ -1,7 +1,9 @@
 import React from 'react';
+import { useCart } from '../context/CartContext';
 import '../styles/NavBar.css';
 
 const NavBar = ({ user, onLogoClick, onNavigate }) => {
+  const { itemCount } = useCart();
   const handleNavigation = (page) => {
     if (onNavigate) {
       onNavigate(page);
@@ -50,9 +52,15 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
               Me
             </button>
           </li>
+          <li className="nav-item cart-item">
+            <button 
+              className="nav-link nav-button" 
+              onClick={() => handleNavigation('cart')}
+            >
+              Cart
+            </button>
+          </li>
         </ul>
-
-        {/* User Welcome */}
         <div className="navbar-user">
           Welcome, {user.last_name}
         </div>

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { CartProvider } from './context/CartContext';
 import AuthPage from './components/AuthPage';
 import HomePage from './components/HomePage';
 import ProfilePage from './components/ProfilePage';
 import MapPage from './components/Mappage';
 import BrowsePage from './components/BrowsePage';
 import BusinessDetailPage from './components/BusinessDetailPage';
+import CartPage from './components/CartPage';
 import OwnerPage from './components/OwnerPage';
 import './App.css';
 
@@ -76,6 +78,8 @@ function App() {
             onNavigate={handleNavigate} 
           />
         );
+      case 'cart':
+        return <CartPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'owner':
         return <OwnerPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'home':
@@ -85,13 +89,15 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {isLoggedIn && user ? (
-        renderPage()
-      ) : (
-        <AuthPage onLoginSuccess={handleLoginSuccess} />
-      )}
-    </div>
+    <CartProvider>
+      <div className="App">
+        {isLoggedIn && user ? (
+          renderPage()
+        ) : (
+          <AuthPage onLoginSuccess={handleLoginSuccess} />
+        )}
+      </div>
+    </CartProvider>
   );
 }
 
