@@ -37,88 +37,99 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
     }
   };
 
+  const isOwner = user && (user.user_type === 'owner' || user.role === 'owner' || user.business_id);
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-logo" onClick={onLogoClick}>
           localPromo
         </div>
-        <ul className="nav-menu">
-          <li className="nav-item">
-            <button 
-              className="nav-link nav-button" 
-              onClick={() => handleNavigation('home')}
-            >
-              Home
-            </button>
-          </li>
-          <li className="nav-item">
-            <button 
-              className="nav-link nav-button" 
-              onClick={() => handleNavigation('map')}
-            >
-              Map
-            </button>
-          </li>
-          <li className="nav-item">
-            <button 
-              className="nav-link nav-button" 
-              onClick={() => handleNavigation('browse')}
-            >
-              Browse
-            </button>
-          </li>
-          <li className="nav-item">
-            <button 
-              className="nav-link nav-button" 
-              onClick={() => handleNavigation('profile')}
-            >
-              Me
-            </button>
-          </li>
-          <li className="nav-item cart-item-nav-link">
-            <button 
-              className="nav-link nav-button" 
-              onClick={() => handleNavigation('cart')}
-            >
-              Cart
-            </button>
-          </li>
-          <li className="nav-item">
-            <button 
-              className="nav-link nav-button" 
-              onClick={() => handleNavigation('orderHistory')}
-            >
-               History
-            </button>
-          </li>
 
-          {activeOrder && (
-            <li className="nav-item order-item">
+        {isOwner ? (
+          <ul className="nav-menu">
+            <li className="nav-item owner-dropdown">
+                <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>
+                  Owner Dashboard
+                </button>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>
+                    Dashboard
+                  </button>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerMenu')}>
+                    Manage Menu
+                  </button>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerOrders')}>
+                    Orders
+                  </button>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerPromos')}>
+                    Promos
+                  </button>
+            </li>
+          </ul>
+        ) : (
+          <ul className="nav-menu">
+            <li className="nav-item">
               <button 
-                className="nav-link nav-button active-order-link" 
-                onClick={() => handleNavigation('orderConfirmation', activeOrder.id)}
+                className="nav-link nav-button" 
+                onClick={() => handleNavigation('home')}
               >
-                 Active Order
+                Home
               </button>
             </li>
-          )}
-
-          {/* Owner links - visible only to users with owner role/type */}
-          {user && (user.user_type === 'owner' || user.role === 'owner' || user.business_id) && (
-            <li className="nav-item owner-dropdown">
-              <div className="owner-menu">
-                <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>Owner</button>
-                <div className="owner-menu-content">
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>Dashboard</button>
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerMenu')}>Manage Menu</button>
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerOrders')}>Orders</button>
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerPromos')}>Promos</button>
-                </div>
-              </div>
+            <li className="nav-item">
+              <button 
+                className="nav-link nav-button" 
+                onClick={() => handleNavigation('map')}
+              >
+                Map
+              </button>
             </li>
-          )}
-        </ul>
+            <li className="nav-item">
+              <button 
+                className="nav-link nav-button" 
+                onClick={() => handleNavigation('browse')}
+              >
+                Browse
+              </button>
+            </li>
+            <li className="nav-item">
+              <button 
+                className="nav-link nav-button" 
+                onClick={() => handleNavigation('profile')}
+              >
+                Me
+              </button>
+            </li>
+            <li className="nav-item cart-item-nav-link">
+              <button 
+                className="nav-link nav-button" 
+                onClick={() => handleNavigation('cart')}
+              >
+                Cart
+              </button>
+            </li>
+            <li className="nav-item">
+              <button 
+                className="nav-link nav-button" 
+                onClick={() => handleNavigation('orderHistory')}
+              >
+                History
+              </button>
+            </li>
+
+            {activeOrder && (
+              <li className="nav-item order-item">
+                <button 
+                  className="nav-link nav-button active-order-link" 
+                  onClick={() => handleNavigation('orderConfirmation', activeOrder.id)}
+                >
+                  Active Order
+                </button>
+              </li>
+            )}
+          </ul>
+        )}
+
         <div className="navbar-user">
           Welcome, {user.last_name}
         </div>

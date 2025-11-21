@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/OwnerOrders.css';
 
-const API_BASE = process.env.API_BASE_URL || '';
+const API_BASE_URL = process.env.API_BASE_URL;
 
 const OwnerOrders = ({ user, onNavigate }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Note: backend does not expose orders by business; fallback to user orders if needed
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
@@ -19,8 +18,7 @@ const OwnerOrders = ({ user, onNavigate }) => {
           return;
         }
 
-        // fallback: fetch orders for this user
-        const res = await fetch(`${API_BASE}/orders/user/${user.id}`);
+        const res = await fetch(`${API_BASE_URL}/orders/business/${user.id}`);
         if (!res.ok) throw new Error('Failed to fetch orders');
         const data = await res.json();
         setOrders(data.orders || []);
@@ -36,7 +34,6 @@ const OwnerOrders = ({ user, onNavigate }) => {
   }, [user]);
 
   const handleStatusClick = (orderId, newStatus) => {
-    // Backend currently has no order status update endpoint.
     alert(`Order status update to "${newStatus}" is not available: backend endpoint required.`);
   };
 

@@ -523,3 +523,22 @@ def get_user_orders(user_id):
             'error': 'Failed to fetch orders',
             'details': str(e)
         }), 500
+
+@orders_bp.route('/business/<int:business_id>', methods=['GET'])
+def get_business_orders(business_id):
+    try:
+        limit = request.args.get('limit', default=50, type=int)
+        orders = order_service.get_business_orders(business_id, limit)
+        
+        return jsonify({
+            'success': True,
+            'count': len(orders),
+            'orders': orders
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch orders for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch orders',
+            'details': str(e)
+        }), 500

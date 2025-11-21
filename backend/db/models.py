@@ -842,4 +842,44 @@ class Database:
             if cursor:
                 cursor.close()
 
+    def get_business_orders(self, business_id, limit=50):
+        self._ensure_connection()
+        cursor = None
+        
+        try:
+            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
+            if not cursor.fetchone():
+                raise ValueError("Business not found")
+            
+            cursor.execute('''
+                SELECT id, userid, status, subtotal, discount_amount, 
+                    tax_amount, total_amount, created_at
+                FROM "Order"
+                WHERE businessID = %s
+                ORDER BY created_at DESC
+                LIMIT %s
+            ''', (business_id, limit))
+            
+            orders = []
+            for row in cursor.fetchall():
+                orders.append({
+                    'id': row['id'],
+                    'userID': row['userid'],
+                    'status': row['status'],
+                    'subtotal': float(row['subtotal']),
+                    'discount_amount': float(row['discount_amount']),
+                    'tax_amount': float(row['tax_amount']),
+                    'total_amount': float(row['total_amount']),
+                    'created_at': str(row['created_at'])
+                })
+            
+            return orders
+            
+        except Exception as e:
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+
 db = Database()

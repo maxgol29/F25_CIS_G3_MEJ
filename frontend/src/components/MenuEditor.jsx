@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/MenuEditor.css';
 
-const API_BASE = process.env.API_BASE_URL || '';
+const API_BASE_URL = process.env.API_BASE_URL;
 
 const MenuEditor = ({ user, onNavigate }) => {
   const [items, setItems] = useState([]);
@@ -24,7 +24,7 @@ const MenuEditor = ({ user, onNavigate }) => {
     const fetchItems = async () => {
       setLoading(true);
       try {
-        const url = businessId ? `${API_BASE}/items?business_id=${businessId}` : `${API_BASE}/items`;
+        const url = `${API_BASE_URL}/restaurants/${businessId}/items`;
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch items');
         const data = await res.json();
@@ -58,7 +58,7 @@ const MenuEditor = ({ user, onNavigate }) => {
     };
 
     try {
-      const res = await fetch(`${API_BASE}/items`, {
+      const res = await fetch(`${API_BASE_URL}/items`, { // OUTDATED (maxgol29 will fix)
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -80,8 +80,7 @@ const MenuEditor = ({ user, onNavigate }) => {
         cooking_method: ''
       });
 
-      // refresh items
-      const refreshRes = await fetch(businessId ? `${API_BASE}/items?business_id=${businessId}` : `${API_BASE}/items`);
+      const refreshRes = await fetch(`${API_BASE_URL}/restaurants/${businessId}/items`);
       const refreshData = await refreshRes.json();
       setItems(refreshData.items || []);
     } catch (err) {
@@ -105,8 +104,8 @@ const MenuEditor = ({ user, onNavigate }) => {
           {loading ? <p>Loading...</p> : (
             items.length === 0 ? <p>No items found.</p> : (
               <ul>
-                {items.map((it, idx) => (
-                  <li key={idx} className="menu-item">
+                {items.map((it) => (
+                  <li key={it.id} className="menu-item">
                     <div className="menu-item-left">
                       <strong>{it.dish_name}</strong>
                       <div className="menu-item-meta">{it.food_type || ''} {it.portion_size ? `· ${it.portion_size}` : ''}</div>

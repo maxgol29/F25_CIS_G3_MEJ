@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/PromoManager.css';
 
-const API_BASE = process.env.API_BASE_URL || '';
+const API_BASE_URL = process.env.API_BASE_URL;
 
 const PromoManager = ({ user, onNavigate }) => {
   const [promos, setPromos] = useState([]);
@@ -14,7 +14,7 @@ const PromoManager = ({ user, onNavigate }) => {
     const fetchPromos = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/promo_codes`);
+        const res = await fetch(`${API_BASE_URL}/promo_codes`); // NOT EXIST
         if (!res.ok) throw new Error('Failed to load promos');
         const data = await res.json();
         setPromos(data.promo_codes || []);
@@ -40,7 +40,7 @@ const PromoManager = ({ user, onNavigate }) => {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/promo_codes`, {
+      const res = await fetch(`${API_BASE_URL}/promo_codes`, { // NOT EXIST
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -51,7 +51,7 @@ const PromoManager = ({ user, onNavigate }) => {
       }
       setSuccess('Promo created');
       setForm({ name: '', description: '' });
-      const refresh = await fetch(`${API_BASE}/promo_codes`);
+      const refresh = await fetch(`${API_BASE_URL}/promo_codes`); 
       const data = await refresh.json();
       setPromos(data.promo_codes || []);
     } catch (err) {

@@ -30,7 +30,7 @@ function App() {
         const userData = JSON.parse(storedUser);
         setUser(userData);
         setIsLoggedIn(true);
-        const isOwner = userData.user_type === 'owner' || userData.role === 'owner';        
+        const isOwner = userData.role === 'owner';        
         if (isOwner) {
           setCurrentPage('owner');
         } else {
@@ -47,7 +47,7 @@ function App() {
     setUser(userData);
     setIsLoggedIn(true);
     localStorage.setItem('currentUser', JSON.stringify(userData));
-    const isOwner = userData.user_type === 'owner' || userData.role === 'owner';    
+    const isOwner = userData.role === 'owner';
     if (isOwner) {
       setCurrentPage('owner');
     } else {
