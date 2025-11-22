@@ -23,7 +23,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
     try {
         setLoading(true);
 
-        const businessResponse = await fetch(`${API_BASE_URL}/restaurants/${businessId}`);
+        const businessResponse = await fetch(`${API_BASE_URL}/businesses/${businessId}`);
         
         if (!businessResponse.ok) {
         const errorData = await businessResponse.json();
@@ -36,7 +36,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
         }
         
         setBusiness(businessData.business);
-        const itemsResponse = await fetch(`${API_BASE_URL}/restaurants/${businessId}/items`);
+        const itemsResponse = await fetch(`${API_BASE_URL}/businesses/${businessId}/items`);
         if (!itemsResponse.ok) throw new Error('Failed to fetch items');
         const itemsData = await itemsResponse.json();
         setItems(itemsData.items || []);

@@ -1,3 +1,4 @@
+# ======== NOT EXECUTED YET ==========
 from db.models import db
 
 class RoleService:
@@ -10,5 +11,6 @@ class RoleService:
         return db.add_role(name)
 
 role_service = RoleService()
+# =========================================
 
     

@@ -93,7 +93,7 @@ const PaymentPage = ({ user, onNavigate }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/promos/validate`, {
+      const response = await fetch(`${API_BASE_URL}/promos/validate`, { // NOT YET IMPLEMENTED
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

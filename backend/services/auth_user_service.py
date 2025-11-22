@@ -1,8 +1,8 @@
 from db.models import db
 
 class AuthUserService:
-    def signup(self, first_name, last_name, email, phone, password, address, user_type='customer', business_id=None):
-        if not all([first_name, last_name, email, password]):
+    def signup(self, first_name, last_name, email, phone, password, address, user_type='customer', business_id=None): 
+        if not all([first_name, last_name, email, password]): 
             raise ValueError("Missing user fields")
         if len(password) < 6:
             raise ValueError("Password too short")

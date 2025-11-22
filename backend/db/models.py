@@ -43,31 +43,11 @@ class Database:
                 self.connect()
 
     # Item-related database operations
-    
-    def add_item(self, image_url, dish_name, food_type=None, ingredients=None, portion_size=None, nutritional_profile=None, cooking_method=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute(
-                '''INSERT INTO "Item" (image_url, dish_name, food_type, ingredients, portion_size, nutritional_profile, cooking_method) 
-                   VALUES (%s, %s, %s, %s, %s, %s, %s)''',
-                (image_url, dish_name, food_type, ingredients, portion_size, nutritional_profile, cooking_method)
-            )
-            self.conn.commit()
-            print("Item added successfully")
-            return True
-        except psycopg2.Error as e:
-            self.conn.rollback()
-            print(f"Error inserting item: {e}")
-            raise
-        finally:
-            cursor.close()
 
     def get_all_items(self, limit=None, business_id=None, google_place_id=None, category=None):
         self._ensure_connection()
         cursor = self.conn.cursor(cursor_factory=RealDictCursor)
         try:
-            # Base query selects items; optionally join Business when filtering by google_place_id
             if google_place_id:
                 query = 'SELECT i.* FROM "Item" i LEFT JOIN "Business" b ON i.businessID = b.id WHERE b.google_place_id = %s'
                 params = [google_place_id]
@@ -88,144 +68,6 @@ class Database:
 
             cursor.execute(query, tuple(params) if params else None)
             return cursor.fetchall()
-        finally:
-            cursor.close()
-
-    # Review-related database operations
-    
-    def add_review(self, review_text, label):
-        self._ensure_connection()
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute(
-                'INSERT INTO "Review" (review_text, label) VALUES (%s, %s)',
-                (review_text, label)
-            )
-            self.conn.commit()
-            print("Review added successfully")
-            return True
-        except psycopg2.Error as e:
-            self.conn.rollback()
-            print(f"Error inserting review: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    def get_all_reviews(self, limit=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
-        try:
-            query = 'SELECT * FROM "Review"'
-            if limit:
-                query += f' LIMIT {limit}'
-            cursor.execute(query)
-            return cursor.fetchall()
-        except psycopg2.Error as e:
-            print(f"Error fetching reviews: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    # User-related database operations
-
-    def add_user(self, last_name, email):
-        self._ensure_connection()
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute(
-                'INSERT INTO "User" (last_name, email) VALUES (%s, %s)',
-                (last_name, email)
-            )
-            self.conn.commit()
-            print("User added successfully")
-            return True
-        except psycopg2.Error as e:
-            self.conn.rollback()
-            print(f"Error inserting user: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    def get_all_users(self, limit=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
-        try:
-            query = 'SELECT * FROM "User"'
-            if limit:
-                query += f' LIMIT {limit}'
-            cursor.execute(query)
-            return cursor.fetchall()
-        except psycopg2.Error as e:
-            print(f"Error fetching users: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    def get_all_businesses(self, limit=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
-        try:
-            query = 'SELECT * FROM "Business"'
-            if limit:
-                query += f' LIMIT {limit}'
-            cursor.execute(query)
-            return cursor.fetchall()
-        except psycopg2.Error as e:
-            print(f"Error fetching businesses: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    def add_business(self, name, type, location):
-        self._ensure_connection()
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute(
-                'INSERT INTO "Business" (name, type, location) VALUES (%s, %s, %s)',
-                (name, type, location)
-            )
-            self.conn.commit()
-            print("Business added successfully")
-            return True
-        except psycopg2.Error as e:
-            self.conn.rollback()
-            print(f"Error inserting business: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    # PromoCode-related database operations
-
-    def add_promo_code(self, name, description):
-        self._ensure_connection()
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute(
-                'INSERT INTO "Promo_Code" (name, description) VALUES (%s, %s)',
-                (name, description)
-            )
-            self.conn.commit()
-            print("Promo code added successfully")
-            return True
-        except psycopg2.Error as e:
-            self.conn.rollback()
-            print(f"Error inserting promo code: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    def get_all_promo_codes(self, limit=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
-        try:
-            query = 'SELECT * FROM "Promo_Code"'
-            if limit:
-                query += f' LIMIT {limit}'
-            cursor.execute(query)
-            return cursor.fetchall()
-        except psycopg2.Error as e:
-            print(f"Error fetching promo codes: {e}")
-            raise
         finally:
             cursor.close()
 
@@ -260,41 +102,6 @@ class Database:
             return cursor.fetchall()
         except psycopg2.Error as e:
             print(f"Error fetching addresses: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    # Role-related database operations
-
-    def add_role(self, name):
-        self._ensure_connection()
-        cursor = self.conn.cursor()
-        try:
-            cursor.execute(
-                'INSERT INTO "Role" (name) VALUES (%s)',
-                (name,)
-            )
-            self.conn.commit()
-            print("Role added successfully")
-            return True
-        except psycopg2.Error as e:
-            self.conn.rollback()
-            print(f"Error inserting role: {e}")
-            raise
-        finally:
-            cursor.close()
-
-    def get_all_roles(self, limit=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
-        try:
-            query = 'SELECT * FROM "Role"'
-            if limit:
-                query += f' LIMIT {limit}'
-            cursor.execute(query)
-            return cursor.fetchall()
-        except psycopg2.Error as e:
-            print(f"Error fetching roles: {e}")
             raise
         finally:
             cursor.close()
@@ -431,33 +238,6 @@ class Database:
         finally:
             cursor.close()
 
-    def update_user_password(self, user_id, new_password):
-        """Update a user's password only. Returns True if successful."""
-        self._ensure_connection()
-        cursor = self.conn.cursor()
-        try:
-            password_hash = generate_password_hash(new_password)
-            cursor.execute('''
-                UPDATE "User_Auth"
-                SET password_hash = %s, updated_at = CURRENT_TIMESTAMP
-                WHERE userID = %s
-                RETURNING userID
-            ''', (password_hash, user_id))
-            
-            result = cursor.fetchone()
-            if not result:
-                raise ValueError("User not found or password update failed")
-            
-            self.conn.commit()
-            return True
-        except psycopg2.Error as e:
-            self.conn.rollback()
-            print(f"Error updating password: {e}")
-            raise
-        finally:
-            cursor.close()
-
-
    # Save businesses from Google Places API
 
     def save_businesses_from_places(self, businesses):
@@ -564,38 +344,8 @@ class Database:
         except Exception as e:
             raise e
 
-
-    def get_all_restaurants(self, limit=None):
-        self._ensure_connection()
-        cursor = None
-        try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
-            
-            query = '''
-                SELECT 
-                    id, name, type, google_place_id, rating, 
-                    total_reviews, opening_hours, phone, website,
-                    is_active, created_at
-                FROM "Business"
-                WHERE is_active = TRUE
-                ORDER BY rating DESC, total_reviews DESC
-            '''  
-            if limit:
-                query += f' LIMIT {limit}'
-            
-            cursor.execute(query)
-            restaurants = cursor.fetchall()
-            
-            result = [dict(r) for r in restaurants] if restaurants else []
-            return result
-        except Exception as e:
-            raise e
-        finally:
-            if cursor:
-                cursor.close()
-
     def get_business_by_id(self, business_id):
-        self._ensure_connection()
+        self._ensure_connection() 
         cursor = None     
         try:
             cursor = self.conn.cursor(cursor_factory=RealDictCursor)
@@ -655,7 +405,7 @@ class Database:
                 cursor.close()
 
     def create_order(self, user_id, business_id, items, subtotal, discount_amount, 
-                    tax_amount, processing_fee, total_amount, promo_code=None):
+                    tax_amount, processing_fee, total_amount, promo_code=None): 
         self._ensure_connection()
         cursor = None
         
@@ -712,7 +462,6 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
-
 
     def get_order(self, order_id):
         self._ensure_connection()
@@ -883,3 +632,254 @@ class Database:
                 cursor.close()
 
 db = Database()
+
+
+# ======== NOT EXECUTED YET ==========
+
+def add_item(self, image_url, dish_name, food_type=None, ingredients=None, portion_size=None, nutritional_profile=None, cooking_method=None):
+    self._ensure_connection()
+    cursor = self.conn.cursor()
+    try:
+        cursor.execute(
+            '''INSERT INTO "Item" (image_url, dish_name, food_type, ingredients, portion_size, nutritional_profile, cooking_method) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)''',
+            (image_url, dish_name, food_type, ingredients, portion_size, nutritional_profile, cooking_method)
+        )
+        self.conn.commit()
+        print("Item added successfully")
+        return True
+    except psycopg2.Error as e:
+        self.conn.rollback()
+        print(f"Error inserting item: {e}")
+        raise
+    finally:
+        cursor.close()
+
+# Review-related database operations
+
+def add_review(self, review_text, label):
+    self._ensure_connection()
+    cursor = self.conn.cursor()
+    try:
+        cursor.execute(
+            'INSERT INTO "Review" (review_text, label) VALUES (%s, %s)',
+            (review_text, label)
+        )
+        self.conn.commit()
+        print("Review added successfully")
+        return True
+    except psycopg2.Error as e:
+        self.conn.rollback()
+        print(f"Error inserting review: {e}")
+        raise
+    finally:
+        cursor.close()
+
+def get_all_reviews(self, limit=None):
+    self._ensure_connection()
+    cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+    try:
+        query = 'SELECT * FROM "Review"'
+        if limit:
+            query += f' LIMIT {limit}'
+        cursor.execute(query)
+        return cursor.fetchall()
+    except psycopg2.Error as e:
+        print(f"Error fetching reviews: {e}")
+        raise
+    finally:
+        cursor.close()
+
+    # User-related database operations
+
+def add_user(self, last_name, email):
+    self._ensure_connection()
+    cursor = self.conn.cursor()
+    try:
+        cursor.execute(
+            'INSERT INTO "User" (last_name, email) VALUES (%s, %s)',
+            (last_name, email)
+        )
+        self.conn.commit()
+        print("User added successfully")
+        return True
+    except psycopg2.Error as e:
+        self.conn.rollback()
+        print(f"Error inserting user: {e}")
+        raise
+    finally:
+        cursor.close()
+
+def get_all_users(self, limit=None):
+    self._ensure_connection()
+    cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+    try:
+        query = 'SELECT * FROM "User"'
+        if limit:
+            query += f' LIMIT {limit}'
+        cursor.execute(query)
+        return cursor.fetchall()
+    except psycopg2.Error as e:
+        print(f"Error fetching users: {e}")
+        raise
+    finally:
+        cursor.close()
+
+def get_all_businesses(self, limit=None): 
+    self._ensure_connection()
+    cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+    try:
+        query = 'SELECT * FROM "Business"'
+        if limit:
+            query += f' LIMIT {limit}'
+        cursor.execute(query)
+        return cursor.fetchall()
+    except psycopg2.Error as e:
+        print(f"Error fetching businesses: {e}")
+        raise
+    finally:
+        cursor.close()
+
+def add_business(self, name, type, location):
+    self._ensure_connection()
+    cursor = self.conn.cursor()
+    try:
+        cursor.execute(
+            'INSERT INTO "Business" (name, type, location) VALUES (%s, %s, %s)',
+            (name, type, location)
+        )
+        self.conn.commit()
+        print("Business added successfully")
+        return True
+    except psycopg2.Error as e:
+        self.conn.rollback()
+        print(f"Error inserting business: {e}")
+        raise
+    finally:
+        cursor.close()
+
+# PromoCode-related database operations
+
+def add_promo_code(self, name, description):
+    self._ensure_connection()
+    cursor = self.conn.cursor()
+    try:
+        cursor.execute(
+            'INSERT INTO "Promo_Code" (name, description) VALUES (%s, %s)',
+            (name, description)
+        )
+        self.conn.commit()
+        print("Promo code added successfully")
+        return True
+    except psycopg2.Error as e:
+        self.conn.rollback()
+        print(f"Error inserting promo code: {e}")
+        raise
+    finally:
+        cursor.close()
+
+def get_all_promo_codes(self, limit=None): 
+    self._ensure_connection()
+    cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+    try:
+        query = 'SELECT * FROM "Promo_Code"'
+        if limit:
+            query += f' LIMIT {limit}'
+        cursor.execute(query)
+        return cursor.fetchall()
+    except psycopg2.Error as e:
+        print(f"Error fetching promo codes: {e}")
+        raise
+    finally:
+        cursor.close()
+
+# Role-related database operations
+
+def add_role(self, name):
+    self._ensure_connection()
+    cursor = self.conn.cursor()
+    try:
+        cursor.execute(
+            'INSERT INTO "Role" (name) VALUES (%s)',
+            (name,)
+        )
+        self.conn.commit()
+        print("Role added successfully")
+        return True
+    except psycopg2.Error as e:
+        self.conn.rollback()
+        print(f"Error inserting role: {e}")
+        raise
+    finally:
+        cursor.close()
+
+def get_all_roles(self, limit=None):
+    self._ensure_connection()
+    cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+    try:
+        query = 'SELECT * FROM "Role"'
+        if limit:
+            query += f' LIMIT {limit}'
+        cursor.execute(query)
+        return cursor.fetchall()
+    except psycopg2.Error as e:
+        print(f"Error fetching roles: {e}")
+        raise
+    finally:
+        cursor.close()
+
+def update_user_password(self, user_id, new_password):
+    self._ensure_connection()
+    cursor = self.conn.cursor()
+    try:
+        password_hash = generate_password_hash(new_password)
+        cursor.execute('''
+            UPDATE "User_Auth"
+            SET password_hash = %s, updated_at = CURRENT_TIMESTAMP
+            WHERE userID = %s
+            RETURNING userID
+        ''', (password_hash, user_id))
+        
+        result = cursor.fetchone()
+        if not result:
+            raise ValueError("User not found or password update failed")
+        
+        self.conn.commit()
+        return True
+    except psycopg2.Error as e:
+        self.conn.rollback()
+        print(f"Error updating password: {e}")
+        raise
+    finally:
+        cursor.close()
+
+def get_all_restaurants(self, limit=None):
+    self._ensure_connection()
+    cursor = None
+    try:
+        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        
+        query = '''
+            SELECT 
+                id, name, type, google_place_id, rating, 
+                total_reviews, opening_hours, phone, website,
+                is_active, created_at
+            FROM "Business"
+            WHERE is_active = TRUE
+            ORDER BY rating DESC, total_reviews DESC
+        '''  
+        if limit:
+            query += f' LIMIT {limit}'
+        
+        cursor.execute(query)
+        restaurants = cursor.fetchall()
+        
+        result = [dict(r) for r in restaurants] if restaurants else []
+        return result
+    except Exception as e:
+        raise e
+    finally:
+        if cursor:
+            cursor.close()
+
+# ====================================

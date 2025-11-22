@@ -1,3 +1,4 @@
+# ======== NOT EXECUTED YET ==========
 from db.models import db
 
 class PromoCodeService:
@@ -10,3 +11,4 @@ class PromoCodeService:
         return db.add_promo_code(name, description)
 
 promo_code_service = PromoCodeService()
+# =========================================

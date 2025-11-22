@@ -1,3 +1,5 @@
+# ======== NOT EXECUTED YET ==========
+
 import requests
 from config import config
 
@@ -53,3 +55,5 @@ class PlacesService:
             }
 
 places_service = PlacesService()
+
+# =========================================

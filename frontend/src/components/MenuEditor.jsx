@@ -24,7 +24,7 @@ const MenuEditor = ({ user, onNavigate }) => {
     const fetchItems = async () => {
       setLoading(true);
       try {
-        const url = `${API_BASE_URL}/restaurants/${businessId}/items`;
+        const url = `${API_BASE_URL}/businesses/${businessId}/items`;
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch items');
         const data = await res.json();
@@ -80,7 +80,7 @@ const MenuEditor = ({ user, onNavigate }) => {
         cooking_method: ''
       });
 
-      const refreshRes = await fetch(`${API_BASE_URL}/restaurants/${businessId}/items`);
+      const refreshRes = await fetch(`${API_BASE_URL}/businesses/${businessId}/items`);
       const refreshData = await refreshRes.json();
       setItems(refreshData.items || []);
     } catch (err) {

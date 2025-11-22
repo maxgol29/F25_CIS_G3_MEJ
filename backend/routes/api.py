@@ -1,18 +1,13 @@
 import logging
 from flask import Blueprint, request, jsonify
 from flask_cors import CORS
-from services.order_service import order_service
-from services.address_service import address_service
-from services.promo_code_service import promo_code_service
-from services.business_service import business_service
-from services.places_service import places_service
-from services.review_service import review_service
-from services.item_service import item_service
-from services.user_service import user_service
-from services.role_service import role_service
-from services.auth_user_service import auth_user_service
+from services import *
 
 api_bp = Blueprint('api', __name__)
+auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+orders_bp = Blueprint('orders', __name__, url_prefix='/api/orders')
+businesses_bp = Blueprint('businesses', __name__, url_prefix='/api/businesses')
+
 CORS(api_bp)
 
 logging.basicConfig(
@@ -25,29 +20,9 @@ logger = logging.getLogger(__name__)
 @api_bp.route('/health', methods=['GET'])
 def health_check():
     return jsonify({'status': 'healthy'}), 200
-
-@api_bp.route('/restaurants', methods=['GET'])
-def get_nearby_restaurants():
-    try:
-        lat = request.args.get('lat', type=float)
-        lng = request.args.get('lng', type=float)
-        radius = request.args.get('radius', default=3212, type=int)
-        
-        if lat is None or lng is None:
-            return jsonify({'error': 'Missing lat or lng parameters'}), 400
-        
-        result = places_service.get_nearby_restaurants(lat, lng, radius)
-        
-        if 'error' in result:
-            return jsonify(result), 400
-        
-        return jsonify(result), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-
+   
 #items endpoints
-@api_bp.route('/items', methods=['GET'])
+@api_bp.route('/items', methods=['GET']) 
 def get_items():
     try:
         limit = request.args.get('limit', type=int)
@@ -60,11 +35,261 @@ def get_items():
             'count': len(result),
             'items': [dict(item) for item in result]
         }), 200
+    except Exception as e: 
+        return jsonify({'error': str(e)}), 500
+    
+    
+# new APIs for authentication can be added here
+
+@auth_bp.route('/signup', methods=['POST'])
+def signup():
+    try:
+        data = request.get_json()
+        user_type = data.get('user_type', 'customer')
+        business_id = data.get('business_id')
+        user = auth_user_service.signup(
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            email=data.get('email'),
+            phone=data.get('phone'),
+            password=data.get('password'),
+            address=data.get('address', {}),
+            user_type=user_type,  
+            business_id=business_id  
+        ) 
+        return jsonify({'message': 'User created successfully', 'user': user}), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Signup error: {e}", exc_info=True)
+        return jsonify({'error': 'Signup failed'}), 500
+
+
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        user = auth_user_service.login(data.get('email'), data.get('password'))
+        return jsonify({'message': 'Login successful', 'user': user}), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 401
+    except Exception as e:
+        logger.error(f"Login error: {e}", exc_info=True)
+        return jsonify({'error': 'Login failed'}), 500
+
+@auth_bp.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    try:
+        user = auth_user_service.get_user_details(user_id)
+        return jsonify({
+            'success': True,
+            'user': user 
+        }), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Get user error: {e}")
+        return jsonify({'error': 'Failed to fetch user'}), 500
+
+# businesses adding to db
+
+@businesses_bp.route('/save-from-places', methods=['POST'])
+def save_business_from_places():
+    try:
+        data = request.get_json()
+        businesses = data.get('businesses', []) if data else []
+
+        result = business_service.save_businesses_from_places(businesses)
+        
+        return jsonify({
+            'message': 'Businesses processed',
+            'saved': result['saved'],
+            'skipped': result['skipped'],
+            'errors': result['errors']
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error("Failed to save businesses", exc_info=True)
+        return jsonify({
+            'error': 'Failed to save businesses',
+            'details': str(e)
+        }), 500
+
+@businesses_bp.route('/get-all', methods=['GET'])
+def get_all_businesses():
+    try:
+        limit = request.args.get('limit', default=None, type=int)
+        businesses = business_service.get_all_businesses_service(limit)
+        
+        return jsonify({
+            'count': len(businesses),
+            'businesses': businesses
+        }), 200
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': 'Failed to fetch businesses',
+            'details': str(e)
+        }), 500
+    
+
+@businesses_bp.route('/<int:business_id>', methods=['GET'])
+def get_business_details(business_id): 
+    try:
+        business = business_service.get_business_by_id(business_id)
+        
+        return jsonify({
+            'success': True,
+            'business': business
+        }), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to fetch business',
+            'details': str(e)
+        }), 500
+
+@businesses_bp.route('/<int:business_id>/items', methods=['GET'])
+def get_business_items(business_id):
+    try:
+        items = business_service.get_items_by_business_id(business_id)
+        
+        return jsonify({
+            'success': True,
+            'count': len(items),
+            'items': items
+        }), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to fetch items',
+            'details': str(e)
+        }), 500
+    
+
+@orders_bp.route('/create', methods=['POST'])
+def create_order():
+    try:
+        data = request.get_json()
+
+        required_fields = ['userID', 'businessID', 'items', 'subtotal', 'total_amount']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        if not isinstance(data['items'], list) or len(data['items']) == 0:
+            return jsonify({'error': 'Items must be a non-empty list'}), 400
+
+        order = order_service.create_order(
+            user_id=data['userID'],
+            business_id=data['businessID'],
+            items=data['items'],
+            subtotal=data['subtotal'],
+            discount_amount=data.get('discount_amount', 0),
+            tax_amount=data.get('tax_amount', 0),
+            processing_fee=data.get('processing_fee', 0),
+            total_amount=data['total_amount'],
+            promo_code=data.get('promoCode')
+        )   
+        return jsonify({
+            'message': 'Order created successfully',
+            'order': order
+        }), 201
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error("Failed to create order", exc_info=True)
+        return jsonify({
+            'error': 'Failed to create order',
+            'details': str(e)
+        }), 500
+
+
+@orders_bp.route('/<int:order_id>', methods=['GET'])
+def get_order(order_id):
+    try:
+        order = order_service.get_order(order_id)
+        
+        return jsonify({
+            'success': True,
+            'order': order
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch order {order_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch order',
+            'details': str(e)
+        }), 500
+
+
+@orders_bp.route('/user/<int:user_id>', methods=['GET'])
+def get_user_orders(user_id):
+    try:
+        limit = request.args.get('limit', default=50, type=int)
+        orders = order_service.get_user_orders(user_id, limit)
+        
+        return jsonify({
+            'success': True,
+            'count': len(orders),
+            'orders': orders
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch orders for user {user_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch orders',
+            'details': str(e)
+        }), 500
+
+@orders_bp.route('/business/<int:business_id>', methods=['GET'])
+def get_business_orders(business_id):
+    try:
+        limit = request.args.get('limit', default=50, type=int)
+        orders = order_service.get_business_orders(business_id, limit)
+        
+        return jsonify({
+            'success': True,
+            'count': len(orders),
+            'orders': orders
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch orders for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch orders',
+            'details': str(e)
+        }), 500
+    
+# ======== NOT EXECUTED YET ==========
+
+@api_bp.route('/businesses', methods=['GET']) 
+def get_nearby_businesses():
+    try:
+        lat = request.args.get('lat', type=float)
+        lng = request.args.get('lng', type=float)
+        radius = request.args.get('radius', default=3212, type=int)
+        
+        if lat is None or lng is None:
+            return jsonify({'error': 'Missing lat or lng parameters'}), 400
+        
+        result = places_service.get_nearby_businesses(lat, lng, radius)
+        
+        if 'error' in result:
+            return jsonify(result), 400
+        
+        return jsonify(result), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-     
-
-
+    
 @api_bp.route('/items', methods=['POST'])
 def add_item():
     try:
@@ -90,7 +315,6 @@ def add_item():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 #reviews endpoints
 
 @api_bp.route('/reviews', methods=['GET'])
@@ -105,8 +329,6 @@ def get_reviews():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-
-
 @api_bp.route('/reviews', methods=['POST'])
 def add_review():
     try:
@@ -130,17 +352,16 @@ def add_review():
 #user endpoints
 
 @api_bp.route('/users', methods=['GET'])
-# def get_users():
-#     try:
-#         limit = request.args.get('limit', type=int)
-#         result = user_service.get_all_users(limit=limit)
-#         return jsonify({
-#             'count': len(result),
-#             'users': [dict(user) for user in result]
-#         }), 200
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
-    
+def get_users():
+    try:
+        limit = request.args.get('limit', type=int)
+        result = user_service.get_all_users(limit=limit)
+        return jsonify({
+            'count': len(result),
+            'users': [dict(user) for user in result]
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @api_bp.route('/users', methods=['POST'])
 def add_user():
@@ -161,19 +382,6 @@ def add_user():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-@api_bp.route('/users/<int:user_id>', methods=['GET'])
-def get_user_by_id(user_id):
-    try:
-        user = user_service.get_user_details(user_id)
-        return jsonify(user), 200
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 404
-    except Exception as e:
-        logger.error(f"Error fetching user by ID: {e}", exc_info=True)
-        return jsonify({'error': 'Failed to fetch user details'}), 500
-    
-#business endpoints
-
 @api_bp.route('/businesses', methods=['GET'])
 def get_businesses():
     try:
@@ -273,7 +481,6 @@ def add_address():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 #role endpoints
 
 @api_bp.route('/roles', methods=['GET'])
@@ -306,239 +513,17 @@ def add_role():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-# new APIs for authentication can be added here
+# OUTDATED
+
+# @api_bp.route('/users/<int:user_id>', methods=['GET'])
+# def get_user_by_id(user_id):
+#     try:
+#         user = user_service.get_user_details(user_id)
+#         return jsonify(user), 200
+#     except ValueError as e:
+#         return jsonify({'error': str(e)}), 404
+#     except Exception as e:
+#         logger.error(f"Error fetching user by ID: {e}", exc_info=True)
+#         return jsonify({'error': 'Failed to fetch user details'}), 500
     
-auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
-
-@auth_bp.route('/signup', methods=['POST'])
-def signup():
-    try:
-        data = request.get_json()
-        user_type = data.get('user_type', 'customer')
-        business_id = data.get('business_id')
-        user = auth_user_service.signup(
-            first_name=data.get('first_name'),
-            last_name=data.get('last_name'),
-            email=data.get('email'),
-            phone=data.get('phone'),
-            password=data.get('password'),
-            address=data.get('address', {}),
-            user_type=user_type,  
-            business_id=business_id  
-        ) 
-        return jsonify({'message': 'User created successfully', 'user': user}), 201
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        logger.error(f"Signup error: {e}", exc_info=True)
-        return jsonify({'error': 'Signup failed'}), 500
-
-
-@auth_bp.route('/login', methods=['POST'])
-def login():
-    try:
-        data = request.get_json()
-        user = auth_user_service.login(data.get('email'), data.get('password'))
-        return jsonify({'message': 'Login successful', 'user': user}), 200
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 401
-    except Exception as e:
-        logger.error(f"Login error: {e}", exc_info=True)
-        return jsonify({'error': 'Login failed'}), 500
-    
-@auth_bp.route('/user/<int:user_id>', methods=['GET'])
-def get_user(user_id):
-    try:
-        user = auth_user_service.get_user_details(user_id)
-        return jsonify({
-            'success': True,
-            'user': user 
-        }), 200
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 404
-    except Exception as e:
-        logger.error(f"Get user error: {e}")
-        return jsonify({'error': 'Failed to fetch user'}), 500
-
-# Restaurants adding to db
-
-restaurants_bp = Blueprint('restaurants', __name__, url_prefix='/api/restaurants')
-
-@restaurants_bp.route('/save-from-places', methods=['POST'])
-def save_business_from_places():
-    try:
-        data = request.get_json()
-        businesses = data.get('restaurants', []) if data else []
-
-        result = business_service.save_businesses_from_places(businesses)
-        
-        return jsonify({
-            'message': 'Businesses processed',
-            'saved': result['saved'],
-            'skipped': result['skipped'],
-            'errors': result['errors']
-        }), 200
-        
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        logger.error("Failed to save businesses", exc_info=True)
-        return jsonify({
-            'error': 'Failed to save businesses',
-            'details': str(e)
-        }), 500
-
-@restaurants_bp.route('/get-all', methods=['GET'])
-def get_all_restaurants():
-    try:
-        limit = request.args.get('limit', default=None, type=int)
-        restaurants = business_service.get_all_restaurants_service(limit)
-        
-        return jsonify({
-            'count': len(restaurants),
-            'restaurants': restaurants
-        }), 200
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({
-            'error': 'Failed to fetch restaurants',
-            'details': str(e)
-        }), 500
-    
-
-
-@restaurants_bp.route('/<int:business_id>', methods=['GET'])
-def get_business_details(business_id):
-    try:
-        business = business_service.get_business_by_id(business_id)
-        
-        return jsonify({
-            'success': True,
-            'business': business
-        }), 200
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 404
-    except Exception as e:
-        return jsonify({
-            'error': 'Failed to fetch business',
-            'details': str(e)
-        }), 500
-
-
-@restaurants_bp.route('/<int:business_id>/items', methods=['GET'])
-def get_business_items(business_id):
-    try:
-        items = business_service.get_items_by_business_id(business_id)
-        
-        return jsonify({
-            'success': True,
-            'count': len(items),
-            'items': items
-        }), 200
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 404
-    except Exception as e:
-        return jsonify({
-            'error': 'Failed to fetch items',
-            'details': str(e)
-        }), 500
-    
-orders_bp = Blueprint('orders', __name__, url_prefix='/api/orders')
-
-@orders_bp.route('/create', methods=['POST'])
-def create_order():
-    try:
-        data = request.get_json()
-
-        required_fields = ['userID', 'businessID', 'items', 'subtotal', 'total_amount']
-        for field in required_fields:
-            if field not in data:
-                return jsonify({'error': f'Missing required field: {field}'}), 400
-
-        if not isinstance(data['items'], list) or len(data['items']) == 0:
-            return jsonify({'error': 'Items must be a non-empty list'}), 400
-
-        order = order_service.create_order(
-            user_id=data['userID'],
-            business_id=data['businessID'],
-            items=data['items'],
-            subtotal=data['subtotal'],
-            discount_amount=data.get('discount_amount', 0),
-            tax_amount=data.get('tax_amount', 0),
-            processing_fee=data.get('processing_fee', 0),
-            total_amount=data['total_amount'],
-            promo_code=data.get('promoCode')
-        )   
-        return jsonify({
-            'message': 'Order created successfully',
-            'order': order
-        }), 201
-        
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        logger.error("Failed to create order", exc_info=True)
-        return jsonify({
-            'error': 'Failed to create order',
-            'details': str(e)
-        }), 500
-
-
-@orders_bp.route('/<int:order_id>', methods=['GET'])
-def get_order(order_id):
-    try:
-        order = order_service.get_order(order_id)
-        
-        return jsonify({
-            'success': True,
-            'order': order
-        }), 200
-        
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 404
-    except Exception as e:
-        logger.error(f"Failed to fetch order {order_id}", exc_info=True)
-        return jsonify({
-            'error': 'Failed to fetch order',
-            'details': str(e)
-        }), 500
-
-
-@orders_bp.route('/user/<int:user_id>', methods=['GET'])
-def get_user_orders(user_id):
-    try:
-        limit = request.args.get('limit', default=50, type=int)
-        orders = order_service.get_user_orders(user_id, limit)
-        
-        return jsonify({
-            'success': True,
-            'count': len(orders),
-            'orders': orders
-        }), 200
-        
-    except Exception as e:
-        logger.error(f"Failed to fetch orders for user {user_id}", exc_info=True)
-        return jsonify({
-            'error': 'Failed to fetch orders',
-            'details': str(e)
-        }), 500
-
-@orders_bp.route('/business/<int:business_id>', methods=['GET'])
-def get_business_orders(business_id):
-    try:
-        limit = request.args.get('limit', default=50, type=int)
-        orders = order_service.get_business_orders(business_id, limit)
-        
-        return jsonify({
-            'success': True,
-            'count': len(orders),
-            'orders': orders
-        }), 200
-        
-    except Exception as e:
-        logger.error(f"Failed to fetch orders for business {business_id}", exc_info=True)
-        return jsonify({
-            'error': 'Failed to fetch orders',
-            'details': str(e)
-        }), 500
+# ================================

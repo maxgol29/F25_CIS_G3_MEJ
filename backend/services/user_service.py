@@ -1,3 +1,4 @@
+# ======== NOT EXECUTED YET ==========
 from db.models import db
 
 class UserService:
@@ -14,3 +15,4 @@ class UserService:
         return db.get_user_details(user_id)
     
 user_service = UserService()
+# =========================================

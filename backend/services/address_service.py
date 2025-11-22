@@ -10,3 +10,4 @@ class AddressService:
         return db.add_address(street, city, state, zip)
 
 address_service = AddressService()
+

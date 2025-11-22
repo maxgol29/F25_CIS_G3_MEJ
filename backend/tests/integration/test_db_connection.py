@@ -15,8 +15,10 @@ class TestDatabaseConnection:
         db.close()
     
     def test_tables_exist(self, app):
-        tables = ['item', 'review', 'user', 'business', 'role', 
-                'address', 'permission', 'promo_code', 'payment', 'promotype']
+        tables = ['Permission', 'Role', 'Address', 'Promo_Type', 'User', 
+                'Payment_Method', 'Business', 'Review', 'Promo_Code', 
+                'User_Address', 'Item', 'Promo_Code_Item', 'Order', 
+                'Order_Item', 'Promo_Code_Usage', 'User_Auth', 'Session']
         
         cursor = db.conn.cursor()
         try:

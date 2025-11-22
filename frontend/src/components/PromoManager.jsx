@@ -51,7 +51,7 @@ const PromoManager = ({ user, onNavigate }) => {
       }
       setSuccess('Promo created');
       setForm({ name: '', description: '' });
-      const refresh = await fetch(`${API_BASE_URL}/promo_codes`); 
+      const refresh = await fetch(`${API_BASE_URL}/promo_codes`);  // NOT EXIST
       const data = await refresh.json();
       setPromos(data.promo_codes || []);
     } catch (err) {

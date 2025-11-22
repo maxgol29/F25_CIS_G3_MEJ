@@ -53,10 +53,10 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
 
   const fetchDatabaseRestaurants = useCallback(async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/restaurants/get-all`);
+      const response = await fetch(`${API_BASE_URL}/businesses/get-all`);
       if (response.ok) {
         const data = await response.json();
-        setDatabaseRestaurants(data.restaurants || []);
+        setDatabaseRestaurants(data.businesses || []);
       }
     } catch (err) {
       console.error('Error: ', err);
@@ -65,10 +65,10 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
 
   const saveRestaurantsToDatabase = useCallback(async (restaurantsList) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/restaurants/save-from-places`, {
+      const response = await fetch(`${API_BASE_URL}/businesses/save-from-places`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ restaurants: restaurantsList })
+        body: JSON.stringify({ businesses: restaurantsList })
       });
 
       if (response.ok) {

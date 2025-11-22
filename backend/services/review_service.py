@@ -1,3 +1,4 @@
+# ======== NOT EXECUTED YET ==========
 from db.models import db
 
 class ReviewService:
@@ -9,4 +10,5 @@ class ReviewService:
             raise ValueError('Label must be 0, 1, or 2')
         return db.add_review(review_text, label)
 
-review_service = ReviewService()        
+review_service = ReviewService()   
+# =========================================     

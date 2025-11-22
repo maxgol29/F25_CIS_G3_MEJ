@@ -1,15 +1,8 @@
 from db.models import db
 
 class BusinessService:
-    def get_all_businesses(self, limit=None):
-        return db.get_all_businesses(limit)
 
-    def create_business(self, name, type, location):
-        if not name or not type or not location:
-            raise ValueError('Missing name, type, or location')
-        return db.add_business(name, type, location)
-
-    def save_businesses_from_places(self, businesses):
+    def save_businesses_from_places(self, businesses): 
         if not businesses:
             raise ValueError("No businesses provided")
 
@@ -18,9 +11,9 @@ class BusinessService:
 
         return db.save_businesses_from_places(businesses)
     
-    def get_all_restaurants_service(self, limit=None):
-        restaurants = db.get_all_restaurants(limit)
-        return restaurants
+    def get_all_businesses_service(self, limit=None): 
+        businesses = db.get_all_businesses(limit)
+        return businesses
 
     def get_items_by_business_id(self, business_id):
 
@@ -40,5 +33,18 @@ class BusinessService:
             raise ValueError("Business not found")
         
         return business
-
+    
 business_service = BusinessService()
+    
+# ======== NOT EXECUTED YET ==========
+
+def get_all_businesses(self, limit=None):
+    return db.get_all_businesses(limit)
+
+def create_business(self, name, type, location):
+    if not name or not type or not location:
+        raise ValueError('Missing name, type, or location')
+    return db.add_business(name, type, location)
+
+# =========================================
+    
