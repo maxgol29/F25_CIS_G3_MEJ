@@ -8,7 +8,7 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
 
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -16,7 +16,7 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
 
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/orders/user/${user.id}`);
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/user/${user.id}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch orders');
@@ -32,7 +32,7 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
     };
 
     fetchOrders();
-  }, [user, API_BASE_URL]);
+  }, [user, REACT_APP_API_BASE_URL]);
 
   const filteredOrders = orders.filter(order => {
     if (filter === 'completed') {

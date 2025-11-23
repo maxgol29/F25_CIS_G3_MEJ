@@ -21,7 +21,7 @@ const PaymentPage = ({ user, onNavigate }) => {
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoDiscount, setPromoDiscount] = useState(0);
 
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   if (!cart.items || cart.items.length === 0) {
     return (
@@ -93,7 +93,7 @@ const PaymentPage = ({ user, onNavigate }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/promos/validate`, { // NOT YET IMPLEMENTED
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/promos/validate`, { // NOT YET IMPLEMENTED
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -141,7 +141,7 @@ const PaymentPage = ({ user, onNavigate }) => {
         promoCode: promoApplied ? formData.promoCode : null
       };
 
-      const response = await fetch(`${API_BASE_URL}/orders/create`, {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)

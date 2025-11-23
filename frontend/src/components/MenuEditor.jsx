@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/MenuEditor.css';
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const MenuEditor = ({ user, onNavigate }) => {
   const [items, setItems] = useState([]);
@@ -24,7 +24,7 @@ const MenuEditor = ({ user, onNavigate }) => {
     const fetchItems = async () => {
       setLoading(true);
       try {
-        const url = `${API_BASE_URL}/businesses/${businessId}/items`;
+        const url = `${REACT_APP_API_BASE_URL}/businesses/${businessId}/items`;
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch items');
         const data = await res.json();
@@ -58,7 +58,7 @@ const MenuEditor = ({ user, onNavigate }) => {
     };
 
     try {
-      const res = await fetch(`${API_BASE_URL}/items`, { // OUTDATED (maxgol29 will fix)
+      const res = await fetch(`${REACT_APP_API_BASE_URL}/items`, { // OUTDATED (maxgol29 will fix)
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -80,7 +80,7 @@ const MenuEditor = ({ user, onNavigate }) => {
         cooking_method: ''
       });
 
-      const refreshRes = await fetch(`${API_BASE_URL}/businesses/${businessId}/items`);
+      const refreshRes = await fetch(`${REACT_APP_API_BASE_URL}/businesses/${businessId}/items`);
       const refreshData = await refreshRes.json();
       setItems(refreshData.items || []);
     } catch (err) {

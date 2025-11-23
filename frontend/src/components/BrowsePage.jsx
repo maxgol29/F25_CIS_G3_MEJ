@@ -3,7 +3,7 @@ import '../styles/BrowsePage.css';
 import NavBar from './NavBar';
 
 const BrowsePage = ({ user, onNavigate, onLogout}) => {
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [businesses, setBusinesses] = useState([]);
   const [filteredBusinesses, setFilteredBusinesses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
   const fetchBusinesses = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/restaurants/get-all`);
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/restaurants/get-all`);
       if (!response.ok) {
         throw new Error(`Failed to fetch: ${response.status}`);
       }
@@ -30,7 +30,7 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
     } finally {
       setLoading(false);
     }
-  }, [API_BASE_URL]);
+  }, [REACT_APP_API_BASE_URL]);
 
   useEffect(() => {
     fetchBusinesses();

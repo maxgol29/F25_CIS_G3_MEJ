@@ -7,7 +7,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../context/CartContext'; 
 
 const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const [business, setBusiness] = useState(null);
   const [items, setItems] = useState([]);
@@ -23,7 +23,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
     try {
         setLoading(true);
 
-        const businessResponse = await fetch(`${API_BASE_URL}/businesses/${businessId}`);
+        const businessResponse = await fetch(`${REACT_APP_API_BASE_URL}/businesses/${businessId}`);
         
         if (!businessResponse.ok) {
         const errorData = await businessResponse.json();
@@ -36,7 +36,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
         }
         
         setBusiness(businessData.business);
-        const itemsResponse = await fetch(`${API_BASE_URL}/businesses/${businessId}/items`);
+        const itemsResponse = await fetch(`${REACT_APP_API_BASE_URL}/businesses/${businessId}/items`);
         if (!itemsResponse.ok) throw new Error('Failed to fetch items');
         const itemsData = await itemsResponse.json();
         setItems(itemsData.items || []);
@@ -51,7 +51,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
     if (businessId) {
       fetchData();
     }
-  }, [businessId, API_BASE_URL]);
+  }, [businessId, REACT_APP_API_BASE_URL]);
 
   const handleAddToCart = (item) => {
     try {

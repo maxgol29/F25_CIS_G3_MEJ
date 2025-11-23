@@ -7,13 +7,13 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/orders/${orderId}`);
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/${orderId}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch order');
@@ -31,7 +31,7 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
     if (orderId) {
       fetchOrder();
     }
-  }, [orderId, API_BASE_URL]);
+  }, [orderId, REACT_APP_API_BASE_URL]);
 
   if (loading) {
     return (

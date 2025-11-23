@@ -26,7 +26,7 @@ const AuthPage = ({ onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
 
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   useEffect(() => {
     if (isSignUp && userType === 'owner') {
       fetchBusinesses();
@@ -36,7 +36,7 @@ const AuthPage = ({ onLoginSuccess }) => {
   const fetchBusinesses = async () => {
     setLoadingBusinesses(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/restaurants/get-all`);
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/restaurants/get-all`);
       if (response.ok) {
         const data = await response.json();
         setBusinesses(data.restaurants || []);
@@ -156,7 +156,7 @@ const AuthPage = ({ onLoginSuccess }) => {
           }
         };
 
-        const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -175,7 +175,7 @@ const AuthPage = ({ onLoginSuccess }) => {
           onLoginSuccess(data.user);
         }, 1500);
       } else {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

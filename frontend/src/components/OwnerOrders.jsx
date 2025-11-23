@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/OwnerOrders.css';
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const OwnerOrders = ({ user, onNavigate }) => {
   const [orders, setOrders] = useState([]);
@@ -18,7 +18,7 @@ const OwnerOrders = ({ user, onNavigate }) => {
           return;
         }
 
-        const res = await fetch(`${API_BASE_URL}/orders/business/${user.id}`);
+        const res = await fetch(`${REACT_APP_API_BASE_URL}/orders/business/${user.id}`);
         if (!res.ok) throw new Error('Failed to fetch orders');
         const data = await res.json();
         setOrders(data.orders || []);

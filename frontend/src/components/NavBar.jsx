@@ -3,14 +3,14 @@ import '../styles/NavBar.css';
 
 const NavBar = ({ user, onLogoClick, onNavigate }) => {
   const [activeOrder, setActiveOrder] = useState(null);
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchActiveOrder = async () => {
       if (!user || !user.id) return;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/orders/user/${user.id}`);
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/user/${user.id}`);
         
         if (response.ok) {
           const data = await response.json();
@@ -29,7 +29,7 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
     fetchActiveOrder();
     const interval = setInterval(fetchActiveOrder, 10000);
     return () => clearInterval(interval);
-  }, [user, API_BASE_URL]);
+  }, [user, REACT_APP_API_BASE_URL]);
 
   const handleNavigation = (page, params) => {
     if (onNavigate) {

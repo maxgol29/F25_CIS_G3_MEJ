@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from db.models import db
-from routes.api import api_bp, auth_bp, restaurants_bp, orders_bp
+from routes.api import api_bp, auth_bp, businesses_bp, orders_bp
 from flask_cors import CORS
 
 def create_app():
@@ -24,7 +24,7 @@ def create_app():
 
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
-    app.register_blueprint(restaurants_bp, url_prefix='/api/restaurants')
+    app.register_blueprint(businesses_bp, url_prefix='/api/businesses')
     app.register_blueprint(orders_bp, url_prefix='/api/orders')
 
     @app.route('/', methods=['GET'])

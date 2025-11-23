@@ -17,7 +17,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
   const [databaseRestaurants, setDatabaseRestaurants] = useState([]); 
   const mapRef = useRef(null);
 
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
 
   const RADIUS_METERS = 3200;
@@ -53,7 +53,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
 
   const fetchDatabaseRestaurants = useCallback(async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/businesses/get-all`);
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/businesses/get-all`);
       if (response.ok) {
         const data = await response.json();
         setDatabaseRestaurants(data.businesses || []);
@@ -61,11 +61,11 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     } catch (err) {
       console.error('Error: ', err);
     }
-  }, [API_BASE_URL]);
+  }, [REACT_APP_API_BASE_URL]);
 
   const saveRestaurantsToDatabase = useCallback(async (restaurantsList) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/businesses/save-from-places`, {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/businesses/save-from-places`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ businesses: restaurantsList })
@@ -77,7 +77,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
     } catch (err) {
       console.error('Error:', err);
     }
-  }, [API_BASE_URL, fetchDatabaseRestaurants]);
+  }, [REACT_APP_API_BASE_URL, fetchDatabaseRestaurants]);
 
   const fetchNearbyRestaurants = useCallback((lat, lng) => {
     if (!window.google?.maps?.places) return;
@@ -144,7 +144,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/users/${user.id}`, {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/users/${user.id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -170,7 +170,7 @@ const MapPage = ({ user, onNavigate, onLogout }) => {
       setLoading(false);
       setAddressFetched(true);
     }
-  }, [user.id, mapsReady, geocodeAddress, addressFetched, API_BASE_URL]);
+  }, [user.id, mapsReady, geocodeAddress, addressFetched, REACT_APP_API_BASE_URL]);
 
   useEffect(() => {
     if (mapsReady && userAddress?.street) {

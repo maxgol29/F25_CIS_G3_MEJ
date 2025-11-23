@@ -7,12 +7,12 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const API_BASE_URL = process.env.API_BASE_URL;
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const fetchUserDetails = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/users/${user.id}`, {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/users/${user.id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -27,7 +27,7 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
     } finally {
       setLoading(false);
     }
-  }, [user.id, API_BASE_URL]);
+  }, [user.id, REACT_APP_API_BASE_URL]);
 
   useEffect(() => {
     if (user?.id) {
