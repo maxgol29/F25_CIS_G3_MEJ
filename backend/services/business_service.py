@@ -34,17 +34,13 @@ class BusinessService:
         
         return business
     
+    def get_business_items_by_popularity(self, business_id):
+        return db.get_business_items_by_popularity(business_id)
+    
+    def get_business_orders_daily(self, business_id):
+        return db.get_business_orders_daily(business_id)
+
+    def get_business_income(self, business_id):
+        return db.get_business_income(business_id)
+    
 business_service = BusinessService()
-    
-# ======== NOT EXECUTED YET ==========
-
-def get_all_businesses(self, limit=None):
-    return db.get_all_businesses(limit)
-
-def create_business(self, name, type, location):
-    if not name or not type or not location:
-        raise ValueError('Missing name, type, or location')
-    return db.add_business(name, type, location)
-
-# =========================================
-    
