@@ -1,53 +1,49 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor, Json
+from psycopg2.pool import SimpleConnectionPool
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import config
 
 class Database:
     def __init__(self):
-        self.conn = None
+        self.pool = None
+        self.init_pool()
 
-    def connect(self):
-        try:
-            local_hosts = {'localhost', '127.0.0.1', '::1', '0.0.0.0'}
-            ssl_mode = 'disable' if config.DB_HOST in local_hosts else 'require'
-            
-            self.conn = psycopg2.connect(
-                host=config.DB_HOST,
-                user=config.DB_USER,
-                password=config.DB_PASSWORD,
-                database=config.DB_NAME,
-                port=config.DB_PORT,
-                sslmode=ssl_mode
-            )
-            print("Database connection successful")
-            return self.conn
-        except psycopg2.Error as e:
-            print(f"Database connection failed: {e}")
-            raise    
-    def close(self):
-        if self.conn:
-            self.conn.close()
-            self.conn = None
-    
-    def _ensure_connection(self):
-        if not self.conn:
-            self.connect()
-        else:
-            try:
-                cursor = self.conn.cursor()
-                cursor.execute("SELECT 1")
-                cursor.close()
-            except (psycopg2.OperationalError, psycopg2.InterfaceError):
-                self.close()
-                self.connect()
+    def init_pool(self):
+        local_hosts = {'localhost', '127.0.0.1', '::1', '0.0.0.0'}
+        ssl_mode = 'disable' if config.DB_HOST in local_hosts else 'require'
+
+        self.pool = SimpleConnectionPool(
+            1,      
+            10,    
+            host=config.DB_HOST,
+            user=config.DB_USER,
+            password=config.DB_PASSWORD,
+            database=config.DB_NAME,
+            port=config.DB_PORT,
+            sslmode=ssl_mode
+        )
+        print("Connection pool initialized")
+
+    def get_conn(self):
+        return self.pool.getconn()
+
+    def return_conn(self, conn):
+        self.pool.putconn(conn)
+
+    def close_pool(self):
+        if self.pool:
+            self.pool.closeall()
 
     # Item-related database operations
 
     def get_all_items(self, limit=None, business_id=None, google_place_id=None, category=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        conn = None
+        cursor = None
+
         try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             if google_place_id:
                 query = 'SELECT i.* FROM "Item" i LEFT JOIN "Business" b ON i.businessID = b.id WHERE b.google_place_id = %s'
                 params = [google_place_id]
@@ -69,14 +65,19 @@ class Database:
             cursor.execute(query, tuple(params) if params else None)
             return cursor.fetchall()
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def update_item(self, business_id, item_id, data):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
                 raise ValueError("Business not found")
@@ -130,7 +131,7 @@ class Database:
             cursor.execute(query, update_values)
             
             updated_item = cursor.fetchone()
-            self.conn.commit()
+            conn.commit()
             
             return {
                 'id': updated_item['id'],
@@ -149,19 +150,22 @@ class Database:
             }
             
         except Exception as e:
-            if self.conn:
-                self.conn.rollback()
+            if conn:
+                conn.rollback()
             raise e
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
     
     def delete_item(self, business_id, item_id):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
                 raise ValueError("Business not found")
@@ -177,7 +181,7 @@ class Database:
                 (item_id, business_id)
             )
             
-            self.conn.commit()
+            conn.commit()
             
             return {
                 'message': f'Item "{item["dish_name"]}" deleted successfully',
@@ -185,19 +189,22 @@ class Database:
             }
             
         except Exception as e:
-            if self.conn:
-                self.conn.rollback()
+            if conn:
+                conn.rollback()
             raise e
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def create_item(self, business_id, data):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
 
             dish_name = data.get('dish_name', '').strip()
             if not dish_name:
@@ -265,7 +272,7 @@ class Database:
             ))
             
             created_item = cursor.fetchone()
-            self.conn.commit()
+            conn.commit()
             
             return {
                 'id': created_item['id'],
@@ -286,37 +293,48 @@ class Database:
             }
             
         except Exception as e:
-            if self.conn:
-                self.conn.rollback()
+            if conn:
+                conn.rollback()
             raise e
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     #Address-related database operations
 
     def add_address(self, street, city, state, zip):
-        self._ensure_connection()
-        cursor = self.conn.cursor()
+        conn = None
+        cursor = None
+
         try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute(
                 'INSERT INTO "Address" (street, city, state, zip) VALUES (%s, %s, %s, %s)',
                 (street, city, state, zip)
             )
-            self.conn.commit()
+            conn.commit()
             print("Address added successfully")
             return True
         except psycopg2.Error as e:
-            self.conn.rollback()
+            conn.rollback()
             print(f"Error inserting address: {e}")
             raise
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_all_addresses(self, limit=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        conn = None
+        cursor = None
+
         try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             query = 'SELECT * FROM "Address"'
             if limit:
                 query += f' LIMIT {limit}'
@@ -326,14 +344,20 @@ class Database:
             print(f"Error fetching addresses: {e}")
             raise
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
 
 # auth-related database operations
 
     def signup(self, first_name, last_name, email, phone, password, address, user_type='customer', business_id=None):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        conn = None
+        cursor = None
+
         try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('SELECT id FROM "User" WHERE email = %s', (email,))
             if cursor.fetchone():
                 raise ValueError("Email already exists")
@@ -382,7 +406,7 @@ class Database:
                 VALUES (%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
             ''', (user['id'], password_hash))
 
-            self.conn.commit()            
+            conn.commit()            
             result = {
                 'id': user['id'],
                 'first_name': user['first_name'],
@@ -395,15 +419,21 @@ class Database:
             }
             return result
         except Exception as e:
-            self.conn.rollback()
+            conn.rollback()
             raise e
         finally:
-            cursor.close()
-            
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
+
     def login(self, email, password):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        conn = None
+        cursor = None
+
         try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('''
                 SELECT u.id, u.first_name, u.last_name, u.email, u.phone, u.roleID, r.name as role_name, ua.password_hash
                 FROM "User" u
@@ -416,7 +446,7 @@ class Database:
                 raise ValueError("Invalid email or password")
 
             cursor.execute('UPDATE "User_Auth" SET last_login = CURRENT_TIMESTAMP WHERE userID = %s', (user['id'],))
-            self.conn.commit()
+            conn.commit()
             user_type = 'owner' if user['role_name'] == 'owner' else 'customer'
             business_id = None
             if user_type == 'owner':
@@ -434,12 +464,18 @@ class Database:
                 'business_id': business_id
             }
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_user_details(self, user_id):
-        self._ensure_connection()
-        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+        conn = None
+        cursor = None
+
         try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('''
                 SELECT 
                     u.id, u.first_name, u.last_name, u.email, u.phone, u.roleID, r.name as role_name,
@@ -458,16 +494,23 @@ class Database:
             result['user_type'] = 'owner' if result.get('role_name') == 'owner' else 'customer'
             return result
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
 
    # Save businesses from Google Places API
 
     def save_businesses_from_places(self, businesses):
-        self._ensure_connection()
+        conn = None
+        cursor = None
         saved_count = 0
         skipped_count = 0
         errors = []
+
         try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             for business in enumerate(businesses):
                 cursor = None
                 try:
@@ -509,7 +552,7 @@ class Database:
                             city = parts[1] 
 
                     if street and city:
-                        cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+                        cursor = conn.cursor(cursor_factory=RealDictCursor)
                         try:
                             cursor.execute('''
                                 INSERT INTO "Address"
@@ -528,7 +571,7 @@ class Database:
                                 cursor.close()
                             address_id = None
 
-                    cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+                    cursor = conn.cursor(cursor_factory=RealDictCursor)
                     try:
                         cursor.execute('''
                             INSERT INTO "Business"
@@ -550,11 +593,11 @@ class Database:
                         else:
                             skipped_count += 1
                         
-                        self.conn.commit()
+                        conn.commit()
                         cursor.close()
                         
                     except Exception:
-                        self.conn.rollback()
+                        conn.rollback()
                         if cursor:
                             cursor.close()
 
@@ -565,12 +608,40 @@ class Database:
             return {'saved': saved_count, 'skipped': skipped_count, 'errors': errors}
         except Exception as e:
             raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
+        
+    def get_all_businesses(self, limit=None):
+        conn = None
+        cursor = None
+
+        try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            query = 'SELECT * FROM "Business"'
+            if limit:
+                query += f' LIMIT {limit}'
+            cursor.execute(query)
+            return cursor.fetchall()
+        except psycopg2.Error as e:
+            print(f"Error fetching businesses: {e}")
+            raise
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_by_id(self, business_id):
-        self._ensure_connection() 
-        cursor = None     
+        conn = None
+        cursor = None
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             
             query = '''
                 SELECT 
@@ -589,15 +660,18 @@ class Database:
         except Exception as e:
             raise e
         finally:
-            if cursor:
+            if cursor:            
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_items_by_business_id(self, business_id):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor) 
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             check_query = 'SELECT "id" FROM "Business" WHERE "id" = %s'
             cursor.execute(check_query, (business_id,))
             
@@ -625,14 +699,17 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def create_order(self, user_id, business_id, items, subtotal, discount_amount, 
-                    tax_amount, processing_fee, total_amount, promo_code=None): 
-        self._ensure_connection()
+                    tax_amount, processing_fee, total_amount, promo_code=None, promo_id=None): 
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
 
             cursor.execute('SELECT id FROM "User" WHERE id = %s', (user_id,))
             if not cursor.fetchone():
@@ -644,12 +721,12 @@ class Database:
 
             cursor.execute('''
                 INSERT INTO "Order" 
-                (userID, businessID, status, subtotal, discount_amount, tax_amount, 
+                (userID, businessID, promoID, status, subtotal, discount_amount, tax_amount, 
                 processing_fee, total_amount, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 RETURNING id, userID, businessID, status, subtotal, discount_amount, 
                         tax_amount, processing_fee, total_amount, created_at
-            ''', (user_id, business_id, 'pending', subtotal, discount_amount, 
+            ''', (user_id, business_id, promo_id, 'pending', subtotal, discount_amount, 
                 tax_amount, processing_fee, total_amount))
             
             order = cursor.fetchone()
@@ -662,8 +739,23 @@ class Database:
                     VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
                 ''', (order_id, item['itemId'], item['quantity'], item['price'], 
                     item.get('discountPercentage', 0)))
+                
+            if promo_id:
+                cursor.execute('''
+                    INSERT INTO "Promo_Code_Usage"
+                    (promoID, userID, orderID, discount_amount, used_at)
+                    VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP)
+                ''', (promo_id, user_id, order_id, discount_amount))
+
+                cursor.execute('''
+                    UPDATE "Promo_Code"
+                    SET current_uses = current_uses + 1,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = %s
+                ''', (promo_id,))
+                    
             
-            self.conn.commit()
+            conn.commit()
             
             return {
                 'id': order['id'],
@@ -679,17 +771,21 @@ class Database:
             }
             
         except Exception as e:
-            self.conn.rollback()
+            conn.rollback()
             raise e
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_order(self, order_id):
-        self._ensure_connection()
-        cursor = None     
+        conn = None
+        cursor = None
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
 
             cursor.execute('''
                 SELECT o.id, o.userID, o.businessID, o.status, o.subtotal, o.discount_amount, 
@@ -757,13 +853,16 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_user_orders(self, user_id, limit=50):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
 
             cursor.execute('''
                 SELECT o.id, o.businessID, o.status, o.subtotal, o.discount_amount, 
@@ -812,14 +911,18 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_orders(self, business_id, limit=50):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
+
             if not cursor.fetchone():
                 raise ValueError("Business not found")
             
@@ -852,12 +955,16 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_items_by_popularity(self, business_id):
-        self._ensure_connection()
+        conn = None
         cursor = None
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
                 raise ValueError("Business not found")
@@ -905,17 +1012,20 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     # PromoCode-related database operations
 
     def create_promo_code(self, business_id, type_id, code, description, 
                      expiration_date=None, max_uses=None, item_ids=None, is_active=True):
         
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
 
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
@@ -960,7 +1070,7 @@ class Database:
                         ON CONFLICT DO NOTHING;
                     ''', (promo_id, item_id))
             
-            self.conn.commit()
+            conn.commit()
             
             return {
                 'id': promo['id'],
@@ -978,19 +1088,22 @@ class Database:
             }
             
         except Exception as e:
-            if self.conn:
-                self.conn.rollback()
+            if conn:
+                conn.rollback()
             raise e
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_promos(self, business_id):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
                 raise ValueError("Business not found")
@@ -1049,13 +1162,16 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_promo_usage(self, business_id, promo_id):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
 
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
@@ -1105,13 +1221,16 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_all_promos_usage(self, business_id):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
                 raise ValueError("Business not found")
@@ -1157,13 +1276,75 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
+
+    def validate_promo_code(self, promo_code, subtotal):
+        conn = None
+        cursor = None
+
+        try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            cursor.execute('''
+                SELECT 
+                    pc.id,
+                    pc.code,
+                    pc.typeID,
+                    pc.description,
+                    pc.expiration_date,
+                    pc.max_uses,
+                    pc.current_uses,
+                    pc.is_active,
+                    pt.discount_percentage,
+                    pt.discount_fixed_amount,
+                    pt.name as type_name
+                FROM "Promo_Code" pc
+                JOIN "Promo_Type" pt ON pc.typeID = pt.id
+                WHERE pc.code = %s AND pc.is_active = TRUE
+            ''', (promo_code.upper(),))
+            
+            promo = cursor.fetchone()
+            
+            if not promo:
+                raise ValueError("Invalid or inactive promo code")
+            if promo['expiration_date']:
+                from datetime import datetime
+                if datetime.now() > promo['expiration_date']:
+                    raise ValueError("Promo code has expired")
+            if promo['max_uses'] and promo['current_uses'] >= promo['max_uses']:
+                raise ValueError("Promo code usage limit reached")
+            if promo['discount_fixed_amount']:
+                discount_amount = float(promo['discount_fixed_amount'])
+            else:
+                discount_percentage = float(promo['discount_percentage'])
+                discount_amount = subtotal * (discount_percentage / 100)
+            
+            return {
+                'promo_id': promo['id'],
+                'code': promo['code'],
+                'type_name': promo['type_name'],
+                'discount_percentage': float(promo['discount_percentage'] or 0),
+                'discount_fixed_amount': float(promo['discount_fixed_amount'] or 0),
+                'discount_amount': round(discount_amount, 2)
+            }
+            
+        except Exception as e:
+            print(f"Error validating promo code: {e}")
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_orders_daily(self, business_id):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
 
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
@@ -1199,13 +1380,16 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_income(self, business_id):
-        self._ensure_connection()
+        conn = None
         cursor = None
-        
+
         try:
-            cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
             if not cursor.fetchone():
                 raise ValueError("Business not found")
@@ -1271,5 +1455,7 @@ class Database:
         finally:
             if cursor:
                 cursor.close()
+            if conn:
+                self.return_conn(conn)
 
 db = Database()

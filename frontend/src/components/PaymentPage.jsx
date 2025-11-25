@@ -15,7 +15,8 @@ const PaymentPage = ({ user, onNavigate }) => {
     expiryDate: '',
     cvv: '',
     paymentMethod: 'card', 
-    promoCode: ''
+    promoCode: '',
+    promo_id: null
   });
 
   const [promoApplied, setPromoApplied] = useState(false);
@@ -93,7 +94,7 @@ const PaymentPage = ({ user, onNavigate }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/promos/validate`, { // NOT YET IMPLEMENTED
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/promo-codes/validate`, { // NOT YET IMPLEMENTED
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -104,7 +105,12 @@ const PaymentPage = ({ user, onNavigate }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Promo code validated:', data.promo_id);
         setPromoDiscount(data.discount_amount || 0);
+        setFormData(prev => ({
+          ...prev,
+          promo_id: data.promo_id
+        }));
         setPromoApplied(true);
         setError('');
       } else {
@@ -130,6 +136,7 @@ const PaymentPage = ({ user, onNavigate }) => {
       setError('');
 
       const orderData = {
+        promoID: promoApplied ? formData.promo_id : null,
         userID: user.id,
         businessID: cart.businessId,
         items: cart.items,
@@ -140,6 +147,8 @@ const PaymentPage = ({ user, onNavigate }) => {
         total_amount: totals.total - promoDiscount + ((totals.subtotal - totals.totalDiscount) * 0.02),
         promoCode: promoApplied ? formData.promoCode : null
       };
+
+      console.log('Submitting order data:', orderData);
 
       const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/create`, {
         method: 'POST',

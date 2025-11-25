@@ -49,10 +49,7 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
         {isOwner ? (
           <ul className="nav-menu">
             <li className="nav-item owner-dropdown">
-                <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>
-                  Owner Dashboard
-                </button>
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('dashboard')}>
                     Dashboard
                   </button>
                   <button className="nav-link nav-button" onClick={() => handleNavigation('ownerMenu')}>

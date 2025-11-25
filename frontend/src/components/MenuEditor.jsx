@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/MenuEditor.css';
+import NavBar from './NavBar';
 
 const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -91,13 +92,8 @@ const MenuEditor = ({ user, onNavigate }) => {
 
   return (
     <div className="menu-editor-page">
+      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
       <h2>Menu Editor</h2>
-      {businessId ? (
-        <p>Managing menu for business id: <strong>{businessId}</strong></p>
-      ) : (
-        <p className="warning">No `business_id` found on user. Showing all items.</p>
-      )}
-
       <div className="menu-content">
         <div className="menu-list">
           <h3>Your Items</h3>
@@ -147,10 +143,6 @@ const MenuEditor = ({ user, onNavigate }) => {
             <button type="submit">Add Item</button>
           </form>
         </div>
-      </div>
-
-      <div style={{ marginTop: 20 }}>
-        <button onClick={() => onNavigate && onNavigate('owner')}>Back to Dashboard</button>
       </div>
     </div>
   );

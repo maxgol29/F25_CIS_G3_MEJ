@@ -15,16 +15,16 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
   const fetchBusinesses = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/restaurants/get-all`);
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/businesses/get-all`);
       if (!response.ok) {
         throw new Error(`Failed to fetch: ${response.status}`);
       }
-      const data = await response.json();      if (!data.restaurants || !Array.isArray(data.restaurants)) {
+      const data = await response.json();      if (!data.businesses || !Array.isArray(data.businesses)) {
         setBusinesses([]);
         return;
       }
 
-      setBusinesses(data.restaurants || []);
+      setBusinesses(data.businesses || []);
     } catch (err) {
       console.error('Error fetching businesses:', err);
     } finally {

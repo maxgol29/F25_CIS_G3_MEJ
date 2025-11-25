@@ -24,5 +24,8 @@ class PromoCodeService:
     
     def get_business_all_promos_usage(self, business_id):
         return db.get_business_all_promos_usage(business_id)
+    
+    def validate_promo_code(self, promo_code, subtotal):
+        return db.validate_promo_code(promo_code, subtotal)
 
 promo_code_service = PromoCodeService()

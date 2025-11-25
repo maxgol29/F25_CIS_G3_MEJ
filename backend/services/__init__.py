@@ -3,10 +3,7 @@ from .address_service import address_service
 from .promo_code_service import promo_code_service
 from .business_service import business_service
 from .places_service import places_service
-from .review_service import review_service
 from .item_service import item_service
-from .user_service import user_service
-from .role_service import role_service
 from .auth_user_service import auth_user_service
 
 __all__ = [
@@ -15,9 +12,6 @@ __all__ = [
     "promo_code_service",
     "business_service",
     "places_service",
-    "review_service",
     "item_service",
-    "user_service",
-    "role_service",
     "auth_user_service",
 ]

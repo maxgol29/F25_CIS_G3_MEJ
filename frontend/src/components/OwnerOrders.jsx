@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/OwnerOrders.css';
-
-const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+import NavBar from './NavBar';
 
 const OwnerOrders = ({ user, onNavigate }) => {
+  const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -18,7 +18,7 @@ const OwnerOrders = ({ user, onNavigate }) => {
           return;
         }
 
-        const res = await fetch(`${REACT_APP_API_BASE_URL}/orders/business/${user.id}`);
+        const res = await fetch(`${REACT_APP_API_BASE_URL}/orders/business/${user.business_id}`);
         if (!res.ok) throw new Error('Failed to fetch orders');
         const data = await res.json();
         setOrders(data.orders || []);
@@ -39,9 +39,8 @@ const OwnerOrders = ({ user, onNavigate }) => {
 
   return (
     <div className="owner-orders-page">
-      <h2>Owner Orders</h2>
-      <p className="muted">Note: backend lacks an orders-by-business endpoint. Showing user orders as fallback.</p>
-
+      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+      <h2>Orders</h2>
       {loading ? <p>Loading...</p> : null}
       {error && <div className="error">{error}</div>}
 
@@ -70,10 +69,6 @@ const OwnerOrders = ({ user, onNavigate }) => {
           )}
         </div>
       )}
-
-      <div style={{ marginTop: 20 }}>
-        <button onClick={() => onNavigate && onNavigate('owner')}>Back to Dashboard</button>
-      </div>
     </div>
   );
 };
