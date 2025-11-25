@@ -36,10 +36,10 @@ const AuthPage = ({ onLoginSuccess }) => {
   const fetchBusinesses = async () => {
     setLoadingBusinesses(true);
     try {
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/restaurants/get-all`);
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/business/get-all`);
       if (response.ok) {
         const data = await response.json();
-        setBusinesses(data.restaurants || []);
+        setBusinesses(data.businesses || []);
       }
     } catch (err) {
       setError('Failed to load businesses');
@@ -193,7 +193,7 @@ const AuthPage = ({ onLoginSuccess }) => {
 
         const data = await response.json();
         setSuccess('Login successful! Redirecting...');
-        localStorage.setItem("currentUser", JSON.stringify(data.user));
+                localStorage.setItem("currentUser", JSON.stringify(data.user));
         setTimeout(() => {
           onLoginSuccess(data.user);
         }, 1500);

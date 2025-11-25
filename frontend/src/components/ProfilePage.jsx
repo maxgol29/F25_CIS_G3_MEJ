@@ -12,7 +12,7 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
   const fetchUserDetails = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/users/${user.id}`, {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/auth/users/${user.id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });

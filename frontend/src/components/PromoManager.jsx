@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/PromoManager.css';
+import NavBar from './NavBar';
 
 const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -14,10 +15,10 @@ const PromoManager = ({ user, onNavigate }) => {
     const fetchPromos = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${REACT_APP_API_BASE_URL}/promo_codes`); // NOT EXIST
+        const res = await fetch(`${REACT_APP_API_BASE_URL}/promo-codes/business/${user.business_id}`);
         if (!res.ok) throw new Error('Failed to load promos');
         const data = await res.json();
-        setPromos(data.promo_codes || []);
+        setPromos(data.promos || []);
       } catch (err) {
         console.error(err);
         setError('Could not load promo codes');
@@ -62,6 +63,7 @@ const PromoManager = ({ user, onNavigate }) => {
 
   return (
     <div className="promo-manager-page">
+      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
       <h2>Promo Manager</h2>
       {loading ? <p>Loading promos...</p> : null}
       {error && <div className="error">{error}</div>}
@@ -87,10 +89,6 @@ const PromoManager = ({ user, onNavigate }) => {
           <input name="description" value={form.description} onChange={handleChange} />
           <button type="submit">Create</button>
         </form>
-      </div>
-
-      <div style={{ marginTop: 20 }}>
-        <button onClick={() => onNavigate && onNavigate('owner')}>Back to Dashboard</button>
       </div>
     </div>
   );

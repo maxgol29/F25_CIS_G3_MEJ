@@ -1,3 +1,4 @@
+import atexit
 from flask import Flask, jsonify
 from db.models import db
 from routes.api import api_bp, auth_bp, businesses_bp, orders_bp, promo_codes_bp
@@ -19,9 +20,6 @@ def create_app():
         "supports_credentials": True
     }
     })   
-    
-    db.connect()
-
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(businesses_bp, url_prefix='/api/businesses')
@@ -32,11 +30,11 @@ def create_app():
     def root():
         return jsonify({'message': 'Places API Server Running'}), 200
     
-    @app.teardown_appcontext
-    def teardown_db(exception):
-        db.close()
-    
     return app
+
+@atexit.register
+def shutdown_pool():
+    db.close_pool()
 
 if __name__ == '__main__':
     import os

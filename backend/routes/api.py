@@ -323,6 +323,7 @@ def create_order():
             return jsonify({'error': 'Items must be a non-empty list'}), 400
 
         order = order_service.create_order(
+            promo_id=data.get('promoID'),
             user_id=data['userID'],
             business_id=data['businessID'],
             items=data['items'],
@@ -504,3 +505,51 @@ def get_business_all_promos_usage(business_id):
             'error': 'Failed to fetch promos usage',
             'details': str(e)
         }), 500
+
+@promo_codes_bp.route('/validate', methods=['POST'])
+def validate_promo():
+    try:
+        data = request.get_json()
+        
+        if not data or 'code' not in data:
+            return jsonify({'error': 'Missing promo code'}), 400
+        
+        if 'subtotal' not in data:
+            return jsonify({'error': 'Missing subtotal'}), 400 
+        
+        promo = promo_code_service.validate_promo_code(data['code'], data['subtotal'])
+
+        return jsonify({
+            'promo_id': promo['promo_id'],
+            'success': True,
+            'discount_amount': promo['discount_amount'],
+            'discount_percentage': promo.get('discount_percentage', 0),
+            'message': f"Promo applied: ${promo['discount_amount']:.2f} off"
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error("Failed to validate promo code", exc_info=True)
+        return jsonify({
+            'error': 'Failed to validate promo code',
+            'details': str(e)
+        }), 500
+    
+@api_bp.route('/places/nearby-search', methods=['POST'])
+def nearby_search():    
+    data = request.get_json()
+    lat = data.get('latitude') if data else None
+    lng = data.get('longitude') if data else None
+    radius = data.get('radius', 3200) if data else 3200
+    place_type = data.get('type', 'restaurant')
+    
+    if lat is None or lng is None:
+        return jsonify({'error': 'Missing latitude or longitude', 'received': data}), 400
+    
+    result = places_service.get_nearby_businesses(lat, lng, radius, place_type)
+    
+    if 'error' in result:
+        return jsonify(result), 400
+    
+    return jsonify(result), 200
