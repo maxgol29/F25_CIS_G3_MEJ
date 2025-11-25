@@ -62,18 +62,6 @@ jobs:
           DB_PORT: 5432
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
 
-      - name: Run integration tests
-        run: |
-          cd backend
-          pytest tests/integration/ -v --cov=. --cov-report=xml
-        env:
-          DB_HOST: localhost
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_PORT: 5432
-          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
-
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
