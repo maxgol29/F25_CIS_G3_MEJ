@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart, Treemap } from 'recharts';
+import { Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart, Treemap, AreaChart, Area } from 'recharts';
 import '../styles/Dashboard.css';
 import NavBar from './NavBar';
 
@@ -85,6 +85,7 @@ const Dashboard = ({ user, onNavigate }) => {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [businessPromoUsage, setBusinessPromoUsage] = useState(null);
   const [popularItems, setPopularItems] = useState(null);
+  const [dailyOrders, setDailyOrders] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -115,6 +116,32 @@ const Dashboard = ({ user, onNavigate }) => {
     if (user && user.business_id) {
       fetchBusinessPromoUsage();
     }
+  }, [user, API_BASE_URL]);
+  useEffect(() => {
+    const fetchDailyOrders = async () => {
+      try {
+        if (!user || !user.business_id) return;
+
+        const endpoint = `${API_BASE_URL}/businesses/business/${user.business_id}/orders/daily`;
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.daily_orders && Array.isArray(data.daily_orders)) {
+          const sortedData = data.daily_orders.sort((a, b) => 
+            new Date(a.order_date) - new Date(b.order_date)
+          );
+          setDailyOrders(sortedData);
+        }
+      } catch (err) {
+      }
+    };
+
+    fetchDailyOrders();
   }, [user, API_BASE_URL]);
 
   useEffect(() => {
@@ -421,6 +448,74 @@ const Dashboard = ({ user, onNavigate }) => {
           </div>
         </div>
       )}
+      {dailyOrders && dailyOrders.length > 0 ? (
+        <div className="chart-section">
+          <div className="chart-container full-width">
+            <h2>Daily Orders Overview</h2>
+            <ResponsiveContainer width="100%" height={400}>
+              <AreaChart data={dailyOrders}>
+                <defs>
+
+                  <linearGradient id="colorOrderCount" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={COLORS[0]} stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor={COLORS[0]} stopOpacity={0}/>
+                  </linearGradient>
+
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={COLORS[1]} stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor={COLORS[1]} stopOpacity={0}/>
+                  </linearGradient>
+
+                  <linearGradient id="colorCustomers" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={COLORS[2]} stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor={COLORS[2]} stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="order_date" />
+                <YAxis yAxisId="left" label={{ value: 'Order Count / Customers', angle: -90, position: 'insideLeft' }} />
+                <YAxis yAxisId="right" orientation="right" label={{ value: 'Revenue ($)', angle: 90, position: 'insideRight' }} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#f9f9f9', border: '1px solid #ccc' }}
+                  formatter={(value) => (typeof value === 'number' ? value.toFixed(2) : value)}
+                />
+                <Legend />
+
+                <Area 
+                  yAxisId="left"
+                  type="monotone" 
+                  dataKey="order_count" 
+                  stroke={COLORS[0]} 
+                  fillOpacity={1} 
+                  fill="url(#colorOrderCount)"
+                  name="Order Count"
+                />
+
+                <Area 
+                  yAxisId="right"
+                  type="monotone" 
+                  dataKey="total_revenue" 
+                  stroke={COLORS[1]}
+                  fillOpacity={1} 
+                  fill="url(#colorRevenue)"
+                  name="Total Revenue"
+                />
+
+                <Area 
+                  yAxisId="left"
+                  type="monotone" 
+                  dataKey="unique_customers" 
+                  stroke={COLORS[2]}
+                  fillOpacity={1} 
+                  fill="url(#colorCustomers)"
+                  name="Customers"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
