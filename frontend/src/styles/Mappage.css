@@ -1,0 +1,317 @@
+.map-page-fullscreen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #fff;
+}
+
+.error-message-floating {
+  position: fixed;
+  top: 70px;
+  left: 15px;
+  right: 15px;
+  background-color: #fee;
+  color: #c33;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 13px;
+  border-left: 4px solid #c33;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.fullscreen-map-section {
+  width: 100%;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
+.google-map-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.api-key-error {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fef5f5;
+  border: 2px dashed #ff6b6b;
+}
+
+.api-key-error h3 {
+  color: #ff6b6b;
+  font-size: 20px;
+  margin: 0;
+}
+
+.fullscreen-businesses-section {
+  width: 100%;
+  min-height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.businesses-header {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.businesses-header h2 {
+  color: #333;
+  font-size: 24px;
+  margin: 0 0 5px 0;
+  font-weight: 700;
+}
+
+.scroll-hint {
+  color: #999;
+  font-size: 12px;
+  margin: 0;
+}
+
+.businesses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  flex: 1;
+  align-content: start;
+}
+
+.businesses-card {
+  width: 200px;
+  height: 200px;
+  padding: 12px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 4px solid #858e96;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.businesses-card:hover {
+  background: #f9f9f9;
+  border-color: #60696b;
+  box-shadow: 0 4px 12px #60696b;
+  transform: translateY(-3px);
+}
+
+
+.businesses-card.active {
+  background: linear-gradient(135deg, #60696b15 0%, #60696b15 100%);
+  border-color: #60696b;
+  border-width: 3px;
+  box-shadow: 0 4px 15px rgba(96, 105, 107, 0.3);
+}
+
+.businesses-name {
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.businesses-card.active .businesses-name {
+  color: #27ae60;
+}
+
+.businesses-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.stars {
+  color: #FFA500;
+  font-weight: 600;
+}
+
+.reviews {
+  color: #999;
+  font-size: 10px;
+}
+
+.no-rating {
+  color: #aaa;
+  font-style: italic;
+  font-size: 10px;
+}
+
+.businesses-status {
+  margin-top: auto;
+}
+
+.open {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #e6f7e6;
+  color: #27ae60;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.closed {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #ffe6e6;
+  color: #e74c3c;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.unknown {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #e8e8e8;
+  color: #666;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.loading-businesses {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 16px;
+  color: #666;
+}
+
+@media (max-width: 1024px) {
+  .businesses-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .businesses-card {
+    width: 160px;
+    height: 160px;
+  }
+
+  .businesses-header h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fullscreen-map-section {
+    height: 50vh;
+  }
+
+  .fullscreen-businesses-section {
+    min-height: 50vh;
+    padding: 12px;
+  }
+
+  .businesses-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+
+  .businesses-card {
+    width: 140px;
+    height: 140px;
+    padding: 10px;
+  }
+
+  .businesses-header h2 {
+    font-size: 18px;
+    margin: 0 0 8px 0;
+  }
+
+  .businesses-name {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .businesses-rating {
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+
+  .error-message-floating {
+    top: 60px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fullscreen-map-section {
+    height: 45vh;
+  }
+
+  .fullscreen-businesses-section {
+    min-height: 55vh;
+    padding: 10px;
+  }
+
+  .businesses-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .businesses-card {
+    width: auto;
+    height: 120px;
+    padding: 8px;
+  }
+
+  .businesses-header h2 {
+    font-size: 16px;
+    margin: 0 0 5px 0;
+  }
+
+  .businesses-header {
+    margin-bottom: 10px;
+  }
+
+  .businesses-name {
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
+
+  .businesses-rating {
+    font-size: 9px;
+    margin-bottom: 3px;
+  }
+
+  .open,
+  .closed,
+  .unknown {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  .error-message-floating {
+    top: 55px;
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+}
