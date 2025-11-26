@@ -36,7 +36,7 @@ const AuthPage = ({ onLoginSuccess }) => {
   const fetchBusinesses = async () => {
     setLoadingBusinesses(true);
     try {
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/business/get-all`);
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/businesses/get-all`);
       if (response.ok) {
         const data = await response.json();
         setBusinesses(data.businesses || []);

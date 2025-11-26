@@ -13,6 +13,9 @@ class ItemService:
     
     def create_item(self, business_id, data):
         return db.create_item(business_id, data)
+    
+    def get_items_by_popularity(self, business_id):
+        return db.get_items_by_popularity(business_id)
 
 item_service = ItemService()
 
