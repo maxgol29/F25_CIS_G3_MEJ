@@ -7,7 +7,7 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
 
   useEffect(() => {
     const fetchActiveOrder = async () => {
-      if (!user || !user.id) return;
+      if (user.role === 'owner') return;
 
       try {
         const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/user/${user.id}`);

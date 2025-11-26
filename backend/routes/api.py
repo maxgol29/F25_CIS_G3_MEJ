@@ -111,10 +111,27 @@ def create_item(business_id):
             'error': 'Failed to create item',
             'details': str(e)
         }), 500
-
     
-    
-# new APIs for authentication can be added here
+@api_bp.route('/business/<int:business_id>/items/popular', methods=['GET'])
+def get_items_by_popularity(business_id):
+    try:
+        items = item_service.get_items_by_popularity(business_id)
+        
+        return jsonify({
+            'success': True,
+            'business_id': business_id,
+            'count': len(items),
+            'items': items
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch popular items for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch items',
+            'details': str(e)
+        }), 500
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup():

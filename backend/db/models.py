@@ -301,6 +301,54 @@ class Database:
                 cursor.close()
             if conn:
                 self.return_conn(conn)
+    
+    def get_items_by_popularity(self, business_id):
+        conn = None
+        cursor = None
+
+        try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+            cursor.execute('''
+                SELECT 
+                    i.id,
+                    i.dish_name,
+                    i.food_type,
+                    i.price,
+                    i.is_available,
+                    COUNT(oi.id) as times_ordered,
+                    COALESCE(SUM(oi.quantity), 0) as total_quantity_sold,
+                    SUM(COUNT(oi.id)) OVER (PARTITION BY i.food_type) as food_type_total_orders
+                FROM "Item" i
+                LEFT JOIN "Order_Item" oi ON i.id = oi.itemID
+                LEFT JOIN "Order" o ON oi.orderID = o.id
+                WHERE i.businessID = %s
+                GROUP BY i.id, i.dish_name, i.food_type, i.price, i.is_available
+                ORDER BY food_type_total_orders DESC, COUNT(oi.id) DESC;
+            ''', (business_id,))
+            
+            items = []
+            for row in cursor.fetchall():
+                items.append({
+                    'id': row['id'],
+                    'dish_name': row['dish_name'],
+                    'food_type': row['food_type'],
+                    'price': float(row['price']),
+                    'is_available': row['is_available'],
+                    'times_ordered': row['times_ordered'],
+                    'total_quantity_sold': row['total_quantity_sold']
+                })
+            
+            return items
+            
+        except Exception as e:
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)    
 
     #Address-related database operations
 
@@ -1360,15 +1408,19 @@ class Database:
                 FROM "Order"
                 WHERE businessID = %s
                 GROUP BY DATE(created_at)
-                ORDER BY DATE(created_at) DESC;
+                ORDER BY DATE(created_at) ASC;
             ''', (business_id,))
             
             daily_data = []
+            cumulative_revenue = 0            
             for row in cursor.fetchall():
+                daily_revenue = float(row['total_revenue']) if row['total_revenue'] else 0
+                cumulative_revenue += daily_revenue
                 daily_data.append({
                     'order_date': str(row['order_date']),
                     'order_count': row['order_count'],
-                    'total_revenue': float(row['total_revenue']) if row['total_revenue'] else 0,
+                    'total_revenue': daily_revenue,
+                    'cumulative_revenue': round(cumulative_revenue, 2),
                     'average_order_value': float(row['average_order_value']) if row['average_order_value'] else 0,
                     'unique_customers': row['unique_customers']
                 })
