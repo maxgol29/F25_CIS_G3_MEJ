@@ -8,7 +8,6 @@ class PlacesService:
     
     @staticmethod
     def _get_place_details(place):
-        """Fetch details for a single place (for parallel execution)"""
         try:
             detail_response = requests.get(
                 PlacesService.BASE_URL_DETAILS,
@@ -52,7 +51,6 @@ class PlacesService:
     
     @staticmethod
     def get_nearby_businesses(latitude, longitude, radius=3200, place_type="restaurant"):
-        """Fetch nearby restaurants, bars, cafes with full details (parallel)"""
         try:
             api_key = config.GOOGLE_PLACES_API_KEY
             
@@ -87,5 +85,4 @@ class PlacesService:
         
         except Exception as e:
             return {'error': str(e)}
-        
 places_service = PlacesService()
