@@ -1408,15 +1408,19 @@ class Database:
                 FROM "Order"
                 WHERE businessID = %s
                 GROUP BY DATE(created_at)
-                ORDER BY DATE(created_at) DESC;
+                ORDER BY DATE(created_at) ASC;
             ''', (business_id,))
             
             daily_data = []
+            cumulative_revenue = 0            
             for row in cursor.fetchall():
+                daily_revenue = float(row['total_revenue']) if row['total_revenue'] else 0
+                cumulative_revenue += daily_revenue
                 daily_data.append({
                     'order_date': str(row['order_date']),
                     'order_count': row['order_count'],
-                    'total_revenue': float(row['total_revenue']) if row['total_revenue'] else 0,
+                    'total_revenue': daily_revenue,
+                    'cumulative_revenue': round(cumulative_revenue, 2),
                     'average_order_value': float(row['average_order_value']) if row['average_order_value'] else 0,
                     'unique_customers': row['unique_customers']
                 })

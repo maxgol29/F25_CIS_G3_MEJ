@@ -516,6 +516,61 @@ const Dashboard = ({ user, onNavigate }) => {
           </div>
         </div>
       ) : null}
+      {dailyOrders && dailyOrders.length > 0 ? (
+        <div className="chart-section">
+          <div className="chart-container full-width">
+            <h2>Daily Orders Metrics</h2>
+            <ResponsiveContainer width="100%" height={400}>
+              <ComposedChart data={dailyOrders}>
+                <defs>
+                  <linearGradient id="colorCumulativeRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={COLORS[5]} stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor={COLORS[5]} stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="order_date" />
+                <YAxis yAxisId="left" label={{ value: 'Order Count', angle: -90, position: 'insideLeft' }} />
+                <YAxis yAxisId="right" orientation="right" label={{ value: 'Revenue ($)', angle: 90, position: 'insideRight' }} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#f9f9f9', border: '1px solid #ccc' }}
+                  formatter={(value) => (typeof value === 'number' ? value.toFixed(2) : value)}
+                />
+                <Legend />
+
+                <Bar 
+                  yAxisId="left"
+                  dataKey="order_count" 
+                  fill={COLORS[0]} 
+                  name="Order Count"
+                  opacity={0.8}
+                />
+
+                <Area 
+                  yAxisId="right"
+                  type="monotone" 
+                  dataKey="total_revenue" 
+                  fill="url(#colorCumulativeRevenue)"
+                  stroke={COLORS[5]}
+                  fillOpacity={1}
+                  name="Daily Revenue"
+                />
+
+                <Line 
+                  yAxisId="right"
+                  type="monotone" 
+                  dataKey="cumulative_revenue" 
+                  stroke={COLORS[3]}
+                  strokeWidth={3}
+                  name="Cumulative Revenue"
+                  isAnimationActive={true}
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
