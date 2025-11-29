@@ -47,7 +47,7 @@
   margin: 0;
 }
 
-.fullscreen-restaurants-section {
+.fullscreen-businesses-section {
   width: 100%;
   min-height: 100vh;
   flex-shrink: 0;
@@ -58,12 +58,12 @@
   box-sizing: border-box;
 }
 
-.restaurants-header {
+.businesses-header {
   margin-bottom: 15px;
   text-align: center;
 }
 
-.restaurants-header h2 {
+.businesses-header h2 {
   color: #333;
   font-size: 24px;
   margin: 0 0 5px 0;
@@ -76,7 +76,7 @@
   margin: 0;
 }
 
-.restaurants-grid {
+.businesses-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 12px;
@@ -84,7 +84,7 @@
   align-content: start;
 }
 
-.restaurant-card {
+.businesses-card {
   width: 200px;
   height: 200px;
   padding: 12px;
@@ -101,7 +101,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.restaurant-card:hover {
+.businesses-card:hover {
   background: #f9f9f9;
   border-color: #60696b;
   box-shadow: 0 4px 12px #60696b;
@@ -109,14 +109,14 @@
 }
 
 
-.restaurant-card.active {
+.businesses-card.active {
   background: linear-gradient(135deg, #60696b15 0%, #60696b15 100%);
   border-color: #60696b;
   border-width: 3px;
   box-shadow: 0 4px 15px rgba(96, 105, 107, 0.3);
 }
 
-.restaurant-name {
+.businesses-name {
   color: #333;
   font-size: 13px;
   font-weight: 600;
@@ -127,11 +127,11 @@
   overflow: hidden;
 }
 
-.restaurant-card.active .restaurant-name {
+.businesses-card.active .businesses-name {
   color: #27ae60;
 }
 
-.restaurant-rating {
+.businesses-rating {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -155,7 +155,7 @@
   font-size: 10px;
 }
 
-.restaurant-status {
+.businesses-status {
   margin-top: auto;
 }
 
@@ -189,7 +189,7 @@
   font-weight: 600;
 }
 
-.loading-restaurants {
+.loading-businesses {
   padding: 20px;
   text-align: center;
   color: #666;
@@ -206,16 +206,16 @@
 }
 
 @media (max-width: 1024px) {
-  .restaurants-grid {
+  .businesses-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
 
-  .restaurant-card {
+  .businesses-card {
     width: 160px;
     height: 160px;
   }
 
-  .restaurants-header h2 {
+  .businesses-header h2 {
     font-size: 20px;
   }
 }
@@ -225,33 +225,33 @@
     height: 50vh;
   }
 
-  .fullscreen-restaurants-section {
+  .fullscreen-businesses-section {
     min-height: 50vh;
     padding: 12px;
   }
 
-  .restaurants-grid {
+  .businesses-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
   }
 
-  .restaurant-card {
+  .businesses-card {
     width: 140px;
     height: 140px;
     padding: 10px;
   }
 
-  .restaurants-header h2 {
+  .businesses-header h2 {
     font-size: 18px;
     margin: 0 0 8px 0;
   }
 
-  .restaurant-name {
+  .businesses-name {
     font-size: 12px;
     margin-bottom: 4px;
   }
 
-  .restaurant-rating {
+  .businesses-rating {
     font-size: 10px;
     margin-bottom: 4px;
   }
@@ -267,37 +267,37 @@
     height: 45vh;
   }
 
-  .fullscreen-restaurants-section {
+  .fullscreen-businesses-section {
     min-height: 55vh;
     padding: 10px;
   }
 
-  .restaurants-grid {
+  .businesses-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
 
-  .restaurant-card {
+  .businesses-card {
     width: auto;
     height: 120px;
     padding: 8px;
   }
 
-  .restaurants-header h2 {
+  .businesses-header h2 {
     font-size: 16px;
     margin: 0 0 5px 0;
   }
 
-  .restaurants-header {
+  .businesses-header {
     margin-bottom: 10px;
   }
 
-  .restaurant-name {
+  .businesses-name {
     font-size: 11px;
     margin-bottom: 3px;
   }
 
-  .restaurant-rating {
+  .businesses-rating {
     font-size: 9px;
     margin-bottom: 3px;
   }

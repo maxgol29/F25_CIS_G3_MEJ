@@ -42,10 +42,6 @@ const OwnerPage = ({ user, onLogout, onNavigate }) => {
             </button>
           </div>
         </div>
-
-        <div className="coming-soon">
-          <p>More features coming soon...</p>
-        </div>
       </div>
     </div>
   );

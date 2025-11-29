@@ -14,6 +14,7 @@ import OwnerPage from './components/OwnerPage';
 import MenuEditor from './components/MenuEditor';
 import OwnerOrders from './components/OwnerOrders';
 import PromoManager from './components/PromoManager';
+import Dashboard from './components/Dashboard';
 import './App.css';
 
 function App() {
@@ -106,6 +107,8 @@ function App() {
         return <OrderHistory user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
       case 'owner':
         return <OwnerPage user={user} onLogout={handleLogout} onNavigate={handleNavigate} />;
+      case 'dashboard':
+        return <Dashboard user={user} onNavigate={handleNavigate} />;
       case 'ownerMenu':
         return <MenuEditor user={user} onNavigate={handleNavigate} />;
       case 'ownerOrders':

@@ -7,7 +7,7 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
 
   useEffect(() => {
     const fetchActiveOrder = async () => {
-      if (!user || !user.id) return;
+      if (user.role === 'owner') return;
 
       try {
         const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/user/${user.id}`);
@@ -49,10 +49,7 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
         {isOwner ? (
           <ul className="nav-menu">
             <li className="nav-item owner-dropdown">
-                <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>
-                  Owner Dashboard
-                </button>
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('owner')}>
+                  <button className="nav-link nav-button" onClick={() => handleNavigation('dashboard')}>
                     Dashboard
                   </button>
                   <button className="nav-link nav-button" onClick={() => handleNavigation('ownerMenu')}>

@@ -7,6 +7,7 @@ api_bp = Blueprint('api', __name__)
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 orders_bp = Blueprint('orders', __name__, url_prefix='/api/orders')
 businesses_bp = Blueprint('businesses', __name__, url_prefix='/api/businesses')
+promo_codes_bp = Blueprint('promo', __name__, url_prefix='/api/promo_codes')
 
 CORS(api_bp)
 
@@ -38,8 +39,99 @@ def get_items():
     except Exception as e: 
         return jsonify({'error': str(e)}), 500
     
+@api_bp.route('/business/<int:business_id>/items/<int:item_id>', methods=['PUT'])
+def update_item(business_id, item_id):
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        updated_item = item_service.update_item(business_id, item_id, data)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Item updated successfully',
+            'item': updated_item
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to update item {item_id} for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to update item',
+            'details': str(e)
+        }), 500
+
+@api_bp.route('/business/<int:business_id>/items/<int:item_id>', methods=['DELETE'])
+def delete_item(business_id, item_id):
+    try:
+        result = item_service.delete_item(business_id, item_id)
+        
+        return jsonify({
+            'success': True,
+            'message': result['message'],
+            'deleted_item_id': result['deleted_item_id']
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to delete item {item_id} for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to delete item',
+            'details': str(e)
+        }), 500
+
+@api_bp.route('/business/<int:business_id>/items', methods=['POST'])
+def create_item(business_id):
+    try:
+        data = request.get_json()        
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        required_fields = ['dish_name', 'price']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+        
+        created_item = item_service.create_item(business_id, data)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Item created successfully',
+            'item': created_item
+        }), 201
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Failed to create item for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to create item',
+            'details': str(e)
+        }), 500
     
-# new APIs for authentication can be added here
+@api_bp.route('/business/<int:business_id>/items/popular', methods=['GET'])
+def get_items_by_popularity(business_id):
+    try:
+        items = item_service.get_items_by_popularity(business_id)
+        
+        return jsonify({
+            'success': True,
+            'business_id': business_id,
+            'count': len(items),
+            'items': items
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch popular items for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch items',
+            'details': str(e)
+        }), 500
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
@@ -170,6 +262,68 @@ def get_business_items(business_id):
             'error': 'Failed to fetch items',
             'details': str(e)
         }), 500
+
+@businesses_bp.route('/business/<int:business_id>/items/popular', methods=['GET'])
+def get_business_items_by_popularity(business_id):
+    try:
+        items = business_service.get_business_items_by_popularity(business_id)
+        
+        return jsonify({
+            'success': True,
+            'business_id': business_id,
+            'count': len(items),
+            'items': items
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch popular items for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch items',
+            'details': str(e)
+        }), 500
+
+@businesses_bp.route('/business/<int:business_id>/orders/daily', methods=['GET'])
+def get_business_orders_daily(business_id):
+    try:
+        daily_orders = business_service.get_business_orders_daily(business_id)
+        
+        return jsonify({
+            'success': True,
+            'business_id': business_id,
+            'count': len(daily_orders),
+            'daily_orders': daily_orders
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch daily orders for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch daily orders',
+            'details': str(e)
+        }), 500
+
+@businesses_bp.route('/business/<int:business_id>/income', methods=['GET'])
+def get_business_income(business_id):
+    try:
+        income_data = business_service.get_business_income(business_id)
+        
+        return jsonify({
+            'success': True,
+            'business_id': business_id,
+            'income': income_data
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch income for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch income data',
+            'details': str(e)
+        }), 500
     
 
 @orders_bp.route('/create', methods=['POST'])
@@ -186,6 +340,7 @@ def create_order():
             return jsonify({'error': 'Items must be a non-empty list'}), 400
 
         order = order_service.create_order(
+            promo_id=data.get('promoID'),
             user_id=data['userID'],
             business_id=data['businessID'],
             items=data['items'],
@@ -268,262 +423,150 @@ def get_business_orders(business_id):
             'error': 'Failed to fetch orders',
             'details': str(e)
         }), 500
-    
-# ======== NOT EXECUTED YET ==========
 
-@api_bp.route('/businesses', methods=['GET']) 
-def get_nearby_businesses():
-    try:
-        lat = request.args.get('lat', type=float)
-        lng = request.args.get('lng', type=float)
-        radius = request.args.get('radius', default=3212, type=int)
-        
-        if lat is None or lng is None:
-            return jsonify({'error': 'Missing lat or lng parameters'}), 400
-        
-        result = places_service.get_nearby_businesses(lat, lng, radius)
-        
-        if 'error' in result:
-            return jsonify(result), 400
-        
-        return jsonify(result), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-@api_bp.route('/items', methods=['POST'])
-def add_item():
+# promo code endpoints
+
+@promo_codes_bp.route('/create', methods=['POST'])
+def create_promo():
     try:
         data = request.get_json()
         
-        if not data or 'dish_name' not in data:
-            return jsonify({'error': 'Missing dish_name'}), 400
+        required_fields = ['businessID', 'code', 'typeID', 'description']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
         
-        image_url = data.get('image_url')
-        dish_name = data.get('dish_name')
-        food_type = data.get('food_type')
-        ingredients = data.get('ingredients')
-        portion_size = data.get('portion_size')
-        nutritional_profile = data.get('nutritional_profile')
-        cooking_method = data.get('cooking_method')
-
-        item_service.create_item(image_url, dish_name, food_type, ingredients, portion_size, nutritional_profile, cooking_method)
-
+        promo = order_service.create_promo_code(
+            business_id=data['businessID'],
+            type_id=data['typeID'],
+            code=data['code'],
+            description=data['description'],
+            expiration_date=data.get('expiration_date'),
+            max_uses=data.get('max_uses'),
+            item_ids=data.get('item_ids', []), 
+            is_active=data.get('is_active', True)
+        )
+        
         return jsonify({
-            'message': 'Item added successfully'
+            'message': 'Promo code created successfully',
+            'promo': promo
         }), 201
-    
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-#reviews endpoints
-
-@api_bp.route('/reviews', methods=['GET'])
-def get_reviews():
-    try:
-        limit = request.args.get('limit', type=int)
-        result = review_service.get_all_reviews(limit=limit)
+        logger.error("Failed to create promo code", exc_info=True)
         return jsonify({
-            'count': len(result),
-            'reviews': [dict(review) for review in result]
+            'error': 'Failed to create promo code',
+            'details': str(e)
+        }), 500
+
+@promo_codes_bp.route('/business/<int:business_id>', methods=['GET'])
+def get_business_promos(business_id):
+    try:
+        promos = promo_code_service.get_business_promos(business_id)
+        
+        return jsonify({
+            'success': True,
+            'count': len(promos),
+            'promos': promos
         }), 200
+        
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-@api_bp.route('/reviews', methods=['POST'])
-def add_review():
+        logger.error(f"Failed to fetch promos for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch promos',
+            'details': str(e)
+        }), 500
+
+@promo_codes_bp.route('/<int:promo_id>/business/<int:business_id>/usage', methods=['GET'])
+def get_business_promo_usage(business_id, promo_id):
+    try:
+        usage_history = promo_code_service.get_business_promo_usage(business_id, promo_id)
+        
+        return jsonify({
+            'success': True,
+            'business_id': business_id,
+            'promo_id': promo_id,
+            'count': len(usage_history),
+            'usage': usage_history
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch promo usage for business {business_id}, promo {promo_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch promo usage',
+            'details': str(e)
+        }), 500
+
+
+@promo_codes_bp.route('/business/<int:business_id>/promos/usage', methods=['GET'])
+def get_business_all_promos_usage(business_id):
+    try:
+        usage_history = promo_code_service.get_business_all_promos_usage(business_id)
+
+        return jsonify({
+            'success': True,
+            'business_id': business_id,
+            'count': len(usage_history),
+            'usage': usage_history
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 404
+    except Exception as e:
+        logger.error(f"Failed to fetch all promos usage for business {business_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch promos usage',
+            'details': str(e)
+        }), 500
+
+@promo_codes_bp.route('/validate', methods=['POST'])
+def validate_promo():
     try:
         data = request.get_json()
         
-        if not data or 'review_text' not in data or 'label' not in data:
-            return jsonify({'error': 'Missing review_text or label'}), 400
-
-        review_service.create_review(
-            review_text=data.get('review_text'),
-            label=data.get('label')
-        )
+        if not data or 'code' not in data:
+            return jsonify({'error': 'Missing promo code'}), 400
         
-        return jsonify({'message': 'Review added successfully'}), 201
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-#user endpoints
+        if 'subtotal' not in data:
+            return jsonify({'error': 'Missing subtotal'}), 400 
+        
+        promo = promo_code_service.validate_promo_code(data['code'], data['subtotal'])
 
-@api_bp.route('/users', methods=['GET'])
-def get_users():
-    try:
-        limit = request.args.get('limit', type=int)
-        result = user_service.get_all_users(limit=limit)
         return jsonify({
-            'count': len(result),
-            'users': [dict(user) for user in result]
+            'promo_id': promo['promo_id'],
+            'success': True,
+            'discount_amount': promo['discount_amount'],
+            'discount_percentage': promo.get('discount_percentage', 0),
+            'message': f"Promo applied: ${promo['discount_amount']:.2f} off"
         }), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@api_bp.route('/users', methods=['POST'])
-def add_user():
-    try:
-        data = request.get_json()
-
-        if not data or 'last_name' not in data or 'email' not in data:
-            return jsonify({'error': 'Missing last_name or email'}), 400
-
-        user_service.create_user(
-            last_name=data.get('last_name'),
-            email=data.get('email')
-        )
-
-        return jsonify({'message': 'User added successfully'}), 201
+        
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-@api_bp.route('/businesses', methods=['GET'])
-def get_businesses():
-    try:
-        limit = request.args.get('limit', type=int)
-        result = business_service.get_all_businesses(limit=limit)
+        logger.error("Failed to validate promo code", exc_info=True)
         return jsonify({
-            'count': len(result),
-            'businesses': [dict(business) for business in result]
-        }), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@api_bp.route('/businesses', methods=['POST'])
-def add_business():
-    try:
-        data = request.get_json()
-
-        if not data or 'name' not in data or 'type' not in data or 'location' not in data:
-            return jsonify({'error': 'Missing name, type, or location'}), 400
-        business_service.create_business(
-            name=data.get('name'),
-            type=data.get('type'),
-            location=data.get('location')
-        )
-
-        return jsonify({'message': 'Business added successfully'}), 201
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+            'error': 'Failed to validate promo code',
+            'details': str(e)
+        }), 500
     
-#promo code endpoints
-
-@api_bp.route('/promo_codes', methods=['GET'])
-def get_promo_codes():
-    try:
-        limit = request.args.get('limit', type=int)
-        result = promo_code_service.get_all_promo_codes(limit=limit)
-        return jsonify({
-            'count': len(result),
-            'promo_codes': [dict(promo_code) for promo_code in result]
-        }), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+@api_bp.route('/places/nearby-search', methods=['POST'])
+def nearby_search():    
+    data = request.get_json()
+    lat = data.get('latitude') if data else None
+    lng = data.get('longitude') if data else None
+    radius = data.get('radius', 3200) if data else 3200
+    place_type = data.get('type', 'restaurant')
     
-@api_bp.route('/promo_codes', methods=['POST'])
-def add_promo_code():
-    try:
-        data = request.get_json()
-
-        if not data or 'name' not in data or 'description' not in data:
-            return jsonify({'error': 'Missing name or description'}), 400
-
-        promo_code_service.create_promo_code(
-            name=data.get('name'),
-            description=data.get('description')
-        )
-
-        return jsonify({'message': 'Promo code added successfully'}), 201
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-#address endpoints
-
-@api_bp.route('/addresses', methods=['GET'])
-def get_addresses():
-    try:
-        limit = request.args.get('limit', type=int)
-        result = address_service.get_all_addresses(limit=limit)
-        return jsonify({
-            'count': len(result),
-            'addresses': [dict(address) for address in result]
-        }), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@api_bp.route('/addresses', methods=['POST'])
-def add_address():
-    try:
-        data = request.get_json()
-
-        if not data or 'street' not in data:
-            return jsonify({'error': 'Missing street'}), 400
-
-        address_service.create_address(
-            street=data.get('street'),
-            city=data.get('city'),
-            state=data.get('state'),
-            zip=data.get('zip')
-        )
-
-        return jsonify({'message': 'Address added successfully'}), 201
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-#role endpoints
-
-@api_bp.route('/roles', methods=['GET'])
-def get_roles():
-    try:
-        limit = request.args.get('limit', type=int)
-        result = role_service.get_all_roles(limit=limit)
-        return jsonify({
-            'count': len(result),
-            'roles': [dict(role) for role in result]
-        }), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    if lat is None or lng is None:
+        return jsonify({'error': 'Missing latitude or longitude', 'received': data}), 400
     
-@api_bp.route('/roles', methods=['POST'])
-def add_role():
-    try:
-        data = request.get_json()
-
-        if not data or 'name' not in data:
-            return jsonify({'error': 'Missing name'}), 400
-
-        role_service.create_role(
-            name=data.get('name')
-        )
-
-        return jsonify({'message': 'Role added successfully'}), 201
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    result = places_service.get_nearby_businesses(lat, lng, radius, place_type)
     
-# OUTDATED
-
-# @api_bp.route('/users/<int:user_id>', methods=['GET'])
-# def get_user_by_id(user_id):
-#     try:
-#         user = user_service.get_user_details(user_id)
-#         return jsonify(user), 200
-#     except ValueError as e:
-#         return jsonify({'error': str(e)}), 404
-#     except Exception as e:
-#         logger.error(f"Error fetching user by ID: {e}", exc_info=True)
-#         return jsonify({'error': 'Failed to fetch user details'}), 500
+    if 'error' in result:
+        return jsonify(result), 400
     
-# ================================
+    return jsonify(result), 200
