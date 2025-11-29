@@ -1,0 +1,11 @@
+frontend/node_modules
+
+frontend/.env.local
+frontend/.env
+
+backend/.env
+backend/.env.local
+backend/**/*.pyc
+backend/__pycache__/
+backend/*.pyc
+backend/.pytest_cache/
