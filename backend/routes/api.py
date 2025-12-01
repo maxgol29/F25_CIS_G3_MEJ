@@ -436,7 +436,7 @@ def create_promo():
             if field not in data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
         
-        promo = order_service.create_promo_code(
+        promo = promo_code_service.create_promo_code(
             business_id=data['businessID'],
             type_id=data['typeID'],
             code=data['code'],
@@ -458,6 +458,24 @@ def create_promo():
         logger.error("Failed to create promo code", exc_info=True)
         return jsonify({
             'error': 'Failed to create promo code',
+            'details': str(e)
+        }), 500
+    
+@promo_codes_bp.route('/types', methods=['GET'])
+def get_promo_types():
+    try:
+        promo_types = promo_code_service.get_promo_types()
+        
+        return jsonify({
+            'success': True,
+            'promo_types': promo_types,
+            'count': len(promo_types)
+        }), 200
+        
+    except Exception as e:
+        logger.error("Failed to fetch promo types", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch promo types',
             'details': str(e)
         }), 500
 

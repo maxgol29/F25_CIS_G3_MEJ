@@ -1212,6 +1212,39 @@ class Database:
                 cursor.close()
             if conn:
                 self.return_conn(conn)
+    
+    def get_promo_types(self):
+        conn = None
+        cursor = None
+
+        try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+            cursor.execute('''
+                SELECT 
+                    id,
+                    description
+                FROM "Promo_Type"
+                ORDER BY id ASC;
+            ''')
+            
+            promo_types = []
+            for row in cursor.fetchall():
+                promo_types.append({
+                    'id': row['id'],
+                    'description': row['description']
+                })
+            
+            return promo_types
+            
+        except Exception as e:
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
 
     def get_business_promo_usage(self, business_id, promo_id):
         conn = None

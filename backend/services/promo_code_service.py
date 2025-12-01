@@ -27,5 +27,8 @@ class PromoCodeService:
     
     def validate_promo_code(self, promo_code, subtotal):
         return db.validate_promo_code(promo_code, subtotal)
+    
+    def get_promo_types(self):
+        return db.get_promo_types()
 
 promo_code_service = PromoCodeService()
