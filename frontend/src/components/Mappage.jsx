@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { GoogleMap, LoadScriptNext, Marker, Circle, InfoWindow } from '@react-google-maps/api';
 import NavBar from './NavBar';
-import '../styles/Mappage.css';
+import styles from  '../styles/Mappage.module.css';
 
 const GOOGLE_LIBS = ['places'];
 
@@ -233,10 +233,10 @@ const MapPage = ({ user, onNavigate }) => {
 
   if (loading) {
     return (
-      <div className="map-page">
+      <div className={styles.mapPage}>
         <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
-        <div className="map-container">
-          <div className="loading">Loading map...</div>
+        <div className={styles.mapContainer}>
+          <div className={styles.loading}>Loading map...</div>
         </div>
       </div>
     );
@@ -252,14 +252,14 @@ const MapPage = ({ user, onNavigate }) => {
   };
 
   return (
-    <div className="map-page-fullscreen">
+    <div className={styles.mapPageFullscreen}>
       <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
 
-      {error && <div className="error-message-floating">{error}</div>}
+      {error && <div className={styles.errorMessageFloating}>{error}</div>}
 
-      <div className="fullscreen-map-section">
+      <div className={styles.fullscreenMapSection}>
         {!GOOGLE_MAPS_API_KEY ? (
-          <div className="api-key-error">
+          <div className={styles.apiKeyError}>
             <h3>Google Maps API Key Missing</h3>
           </div>
         ) : (
@@ -347,8 +347,8 @@ const MapPage = ({ user, onNavigate }) => {
       </div>
 
       {businesses.length > 0 && (
-        <div className="fullscreen-businesses-section">
-          <div className="Businesss-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className={styles.fullscreenBusinessesSection}>
+          <div className={styles.businessesHeader} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <h2 style={{ margin: 0 }}> Businesses ({businesses.length})</h2>
             <div style={{ width: 300 }}>
               <input
@@ -362,19 +362,19 @@ const MapPage = ({ user, onNavigate }) => {
           </div>
 
           {loadingBusinesses ? (
-            <div className="loading-businesses">Loading Businesses...</div>
+            <div className={styles.loadingBusinesses}>Loading Businesses...</div>
           ) : (
             <>
-              <div className="businesses-grid">
+              <div className={styles.businessesGrid}>
                 {businesses
                   .filter(r => !searchQuery || (r.name && r.name.toLowerCase().includes(searchQuery.toLowerCase())))
                   .map((business, index) => (
                     <div
                       key={business.place_id || index}
-                      className={`businesses-card ${selectedBusiness?.place_id === business.place_id ? 'active' : ''}`}
+                      className={`${styles.businessesCard} ${selectedBusiness?.place_id === business.place_id ? styles.active : ''}`}
                       onClick={() => handleBusinessClick(business)}
                     >
-                      <div className="businesses-image">
+                      <div className={styles.businessesImage}>
                         {business.photos && business.photos.length > 0 ? (
                           <img
                             alt={business.name}
@@ -385,24 +385,24 @@ const MapPage = ({ user, onNavigate }) => {
                           <div style={{ width: '100%', height: '120px', background: '#eee', borderRadius: 6 }} />
                         )}
                       </div>
-                      <div className="businesses-name">{business.name}</div>
-                      <div className="businesses-rating">
+                      <div className={styles.businessesName}>{business.name}</div>
+                      <div className={styles.businessesRating}>
                         {business.rating ? (
                           <>
-                            <span className="stars">{business.rating}</span>
-                            <span className="reviews">({business.user_ratings_total})</span>
+                            <span className={styles.stars}>{business.rating}</span>
+                            <span className={styles.reviews}>({business.user_ratings_total})</span>
                           </>
                         ) : (
-                          <span className="no-rating">No ratings yet</span>
+                          <span className={styles.noRating}>No ratings yet</span>
                         )}
                       </div>
-                      <div className="Business-status">
+                      <div className={styles.businessesStatus}>
                         {getOpenStatus(business) === true ? (
-                          <span className="open">Open</span>
+                          <span className={styles.open}>Open</span>
                         ) : getOpenStatus(business) === false ? (
-                          <span className="closed">Closed</span>
+                          <span className={styles.closed}>Closed</span>
                         ) : (
-                          <span className="unknown">Hours unknown</span>
+                          <span className={styles.unknown}>Hours unknown</span>
                         )}
                       </div>
                     </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import '../styles/BrowsePage.css';
+import styles from '../styles/BrowsePage.module.css';
 import NavBar from './NavBar';
 
 const BrowsePage = ({ user, onNavigate, onLogout}) => {
@@ -63,34 +63,34 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
     <div>
         <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
 
-        <div className="browse-page">
-        <div className="browse-header">
+        <div className={styles.browsePage}>
+        <div className={styles.browseHeader}>
             <h1>Discover Restaurants</h1>
         </div>
-        <div className="filters-section">
+        <div className={styles.filtersSection}>
             {/* Search Bar */}
-            <div className="search-bar">
+            <div className={styles.searchBar}>
             <input
                 type="text"
                 placeholder="Search restaurants..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
+                className={styles.searchInput}
             />
             {searchQuery && (
                 <button
-                className="clear-btn"
+                className={styles.clearBtn}
                 onClick={() => setSearchQuery('')}
                 >
                 ✕
                 </button>
             )}
             </div>
-            <div className="filter-group">
+            <div className={styles.filterGroup}>
             <select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
-                className="filter-select"
+                className={styles.filterSelect}
             >
                 {businessTypes.map(type => (
                 <option key={type} value={type}>
@@ -99,8 +99,8 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
                 ))}
             </select>
             </div>
-            <div className="filter-group">
-            <div className="rating-filter">
+            <div className={styles.filterGroup}>
+            <div className={styles.ratingFilter}>
                 <input
                 type="range"
                 min="1.0"
@@ -108,19 +108,19 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
                 step="0.1"
                 value={minRating}
                 onChange={(e) => setMinRating(parseFloat(e.target.value))}
-                className="rating-slider"
+                className={styles.ratingSlider}
                 />
-                <span className="rating-display">{minRating.toFixed(1)}</span>
+                <span className={styles.ratingDisplay}>{minRating.toFixed(1)}</span>
             </div>
             </div>
         </div>
         {loading && (
-            <div className="loading">
+            <div className={styles.loading}>
             <p>Loading restaurants...</p>
             </div>
         )}
         {!loading && filteredBusinesses.length === 0 && (
-            <div className="no-results">
+            <div className={styles.noResults}>
             <p>No restaurants found</p>
             <button onClick={() => {
                 setSearchQuery('');
@@ -133,7 +133,7 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
         )}
 
         {/* Businesses */}
-        <div className="businesses-grid">
+        <div className={styles.businessesGrid}>
             {filteredBusinesses.map((business) => (
             <div
                 key={business.id}
@@ -147,33 +147,33 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
                 role="button"
                 tabIndex={0}
                 style={{ cursor: 'pointer' }}
-                className="business-card"
+                className={styles.businessCard}
             >
-                <div className="card-header">
+                <div className={styles.cardHeader}>
                 <h4>{business.name}</h4>
                 </div>
-                <div className="rating-section">
-                <span className="rating-value">
+                <div className={styles.ratingSection}>
+                <span className={styles.ratingValue}>
                     {business.rating || 'N/A'} ({business.total_reviews || 0} reviews)
                 </span>
-                <span className="type-badge">{business.type}</span>
+                <span className={styles.typeBadge}>{business.type}</span>
                 </div>
-                <div className="card-info">
+                <div className={styles.cardInfo}>
                 {business.phone && (
-                    <div className="info-item">
+                    <div className={styles.infoItem}>
                     <a href={`tel:${business.phone}`}>{business.phone}</a>
                     </div>
                 )}
 
                 {business.website && (
-                    <div className="info-item">
+                    <div className={styles.infoItem}>
                     <a href={business.website} target="_blank" rel="noopener noreferrer">
                         Website
                     </a>
                     </div>
                 )}
                 {business.opening_hours && (
-                    <div className="info-item">
+                    <div className={styles.infoItem}>
                     <span>
                         {business.opening_hours.open_now ? 'Open Now' : 'Closed'}
                     </span>

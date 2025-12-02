@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from './NavBar';
 import OrderQRCode from './OrderQRCode';
-import '../styles/OrderConfirmation.css';
+import styles from '../styles/OrderConfirmation.module.css';
 
 const OrderConfirmation = ({ orderId, user, onNavigate }) => {
   const [order, setOrder] = useState(null);
@@ -47,13 +47,13 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
 
   if (error || !order) {
     return (
-      <div className="confirmation-page">
+      <div className={styles.confirmationPage}>
         <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
-        <div className="confirmation-container">
-          <div className="error-box">
+        <div className={styles.confirmationContainer}>
+          <div className={styles.errorBox}>
             <h2>Something went wrong</h2>
             <p>{error || 'Order not found'}</p>
-            <button onClick={() => onNavigate('home')} className="home-btn">
+            <button onClick={() => onNavigate('home')} className={styles.homeBtn}>
               Back to Home
             </button>
           </div>
@@ -63,89 +63,89 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
   }
 
   return (
-    <div className="confirmation-page">
+    <div className={styles.confirmationPage}>
       <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
 
-      <div className="confirmation-container">
-        <div className="confirmation-content">
-          <div className="confirmation-header">
-            <div className="success-animation">
-              <div className="checkmark">✓</div>
+      <div className={styles.confirmationContainer}>
+        <div className={styles.confirmationContent}>
+          <div className={styles.confirmationHeader}>
+            <div className={styles.successAnimation}>
+              <div className={styles.checkmark}>1</div>
             </div>
             <h1>Order Confirmed!</h1>
-            <p className="order-number">Order #{order.id}</p>
+            <p className={styles.orderNumber}>Order #{order.id}</p>
           </div>
-          <div className="confirmation-details">
-            <div className="status-timeline">
+          <div className={styles.confirmationDetails}>
+            <div className={styles.statusTimeline}>
               <h3>Order Status</h3>
-              <div className="timeline">
-                <div className="timeline-step completed">
-                  <div className="timeline-dot">✓</div>
-                  <div className="timeline-label">Order Placed</div>
+              <div className={styles.timeline}>
+                <div className={`${styles.timelineStep} ${styles.completed}`}>
+                  <div className={styles.timelineDot}>✓</div>
+                  <div className={styles.timelineLabel}>Order Placed</div>
                 </div>
-                <div className={`timeline-step ${order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready' || order.status === 'completed' ? 'completed' : ''}`}>
-                  <div className="timeline-dot">2</div>
-                  <div className="timeline-label">Confirmed</div>
+                <div className={`${styles.timelineStep} ${order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready' || order.status === 'completed' ? styles.completed : ''}`}>
+                  <div className={styles.timelineDot}>2</div>
+                  <div className={styles.timelineLabel}>Confirmed</div>
                 </div>
-                <div className={`timeline-step ${order.status === 'preparing' || order.status === 'ready' || order.status === 'completed' ? 'completed' : ''}`}>
-                  <div className="timeline-dot">3</div>
-                  <div className="timeline-label">Preparing</div>
+                <div className={`${styles.timelineStep} ${order.status === 'preparing' || order.status === 'ready' || order.status === 'completed' ? styles.completed : ''}`}>
+                  <div className={styles.timelineDot}>3</div>
+                  <div className={styles.timelineLabel}>Preparing</div>
                 </div>
-                <div className={`timeline-step ${order.status === 'ready' || order.status === 'completed' ? 'completed' : ''}`}>
-                  <div className="timeline-dot">4</div>
-                  <div className="timeline-label">Ready</div>
+                <div className={`${styles.timelineStep} ${order.status === 'ready' || order.status === 'completed' ? styles.completed : ''}`}>
+                  <div className={styles.timelineDot}>4</div>
+                  <div className={styles.timelineLabel}>Ready</div>
                 </div>
-                <div className={`timeline-step ${order.status === 'completed' ? 'completed' : ''}`}>
-                  <div className="timeline-dot">5</div>
-                  <div className="timeline-label">Completed</div>
+                <div className={`${styles.timelineStep} ${order.status === 'completed' ? styles.completed : ''}`}>
+                  <div className={styles.timelineDot}>5</div>
+                  <div className={styles.timelineLabel}>Completed</div>
                 </div>
               </div>
             </div>
-            <div className="items-summary">
+            <div className={styles.itemsSummary}>
               <h3>Order Items</h3>
-              <div className="items-list">
+              <div className={styles.itemsList}>
                 {order.items && order.items.map((item, idx) => (
-                  <div key={idx} className="item-row">
-                    <div className="item-details">
-                      <span className="item-name">{item.dishName}</span>
-                      <span className="item-qty">x{item.quantity}</span>
+                  <div key={idx} className={styles.itemRow}>
+                    <div className={styles.itemDetails}>
+                      <span className={styles.itemName}>{item.dishName}</span>
+                      <span className={styles.itemQty}>x{item.quantity}</span>
                     </div>
-                    <span className="item-price">
+                    <span className={styles.itemPrice}>
                       ${(item.price * item.quantity).toFixed(2)}
                     </span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="price-breakdown">
+            <div className={styles.priceBreakdown}>
               <h3>Order Summary</h3>
-              <div className="breakdown-row">
+              <div className={styles.breakdownRow}>
                 <span>Subtotal</span>
                 <span>${order.subtotal.toFixed(2)}</span>
               </div>
               {order.discount_amount > 0 && (
-                <div className="breakdown-row discount">
+                <div className={styles.breakdownRow}>
                   <span>Discount</span>
                   <span>-${order.discount_amount.toFixed(2)}</span>
                 </div>
               )}
-              <div className="breakdown-row">
+              <div className={styles.breakdownRow}>
                 <span>Tax</span>
                 <span>${order.tax_amount.toFixed(2)}</span>
               </div>
-                <div className="breakdown-row">
+                <div className={styles.breakdownRow}>
                   <span>Processing Fee</span>
                   <span>${order.processing_fee.toFixed(2)}</span>
                 </div>
-              <div className="breakdown-row total">
+              <div className={`${styles.breakdownRow} ${styles.total}`}>
                 <span>Total</span>
                 <span>${order.total_amount.toFixed(2)}</span>
               </div>
             </div>
 
-            <div className="delivery-info">
+            <div className={styles.deliveryInfo}>
               <h3>Delivery Information</h3>
-              <div className="info-box">
+              <div className={styles.infoBox}>
                 <p>
                   <strong>Pick Up Address:</strong>
                   <br />
@@ -162,27 +162,27 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
               </div>
             </div>
 
-            <div className="qr-code-section">
-              <p className="qr-code-description">Scan to track your order or show at pickup</p>
+            <div className={styles.qrCodeSection}>
+              <p className={styles.qrCodeDescription}>Scan to track your order or show at pickup</p>
               <OrderQRCode 
                 orderId={order.id}
               />
             </div>
 
-            <div className="order-info">
+            <div className={styles.orderInfo}>
               <p>
                 <strong>Order Placed:</strong> {new Date(order.created_at).toLocaleString()}
               </p>
               <p>
-                <strong>Status:</strong> <span className="status-badge-order">{order.status}</span>
+                <strong>Status:</strong> <span className={styles.statusBadgeOrder}>{order.status}</span>
               </p>
             </div>
           </div>
 
-          <div className="confirmation-actions">
+          <div className={styles.confirmationActions}>
             <button 
               onClick={() => onNavigate('orderHistory')}
-              className="action-btn secondary"
+              className={`${styles.actionBtn} ${styles.secondary}`}
             >
               View Orders
             </button>

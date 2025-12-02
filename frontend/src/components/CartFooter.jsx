@@ -1,5 +1,5 @@
 import { useCart } from '../context/CartContext';
-import '../styles/CartFooter.css';
+import styles from '../styles/CartFooter.module.css';
 
 const CartFooter = ({ onNavigate, businessId, businessName }) => {
   const { itemCount, cart } = useCart();
@@ -8,14 +8,14 @@ const CartFooter = ({ onNavigate, businessId, businessName }) => {
   }
 
   return (
-    <div className="cart-footer">
-      <div className="cart-footer-content">
-        <div className="cart-footer-info">
+    <div className={styles.cartFooter}>
+      <div className={styles.cartFooterContent}>
+        <div className={styles.cartFooterInfo}>
           <h3>{cart.businessName}</h3>
           <p>{itemCount} item{itemCount !== 1 ? 's' : ''} selected</p>
         </div>
         <button 
-          className="cart-footer-btn"
+          className={styles.cartFooterBtn}
           onClick={() => onNavigate('cart')}
         >
           View Cart

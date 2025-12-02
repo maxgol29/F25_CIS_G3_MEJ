@@ -1,4 +1,4 @@
-.home-container {
+.homeContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +11,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.home-content {
+.homeContent {
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -35,7 +35,7 @@
   }
 }
 
-.logout-button {
+.logoutButton {
   padding: 12px 30px;
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
   color: white;
@@ -48,28 +48,28 @@
   letter-spacing: 0.5px;
 }
 
-.logout-button:hover {
+.logoutButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(206, 206, 206, 0.5);
 }
-.logout-button:active {
+.logoutButton:active {
   transform: translateY(0);
 }
 
 @media (max-width: 768px) {
-  .home-content {
+  .homeContent {
     height: 400px;
     width: 95%;
   }
 }
 
 @media (max-width: 480px) {
-  .home-content {
+  .homeContent {
     height: 300px;
     width: 95%;
   }
 
-  .logout-button {
+  .logoutButton {
     padding: 10px 24px;
     font-size: 14px;
   }

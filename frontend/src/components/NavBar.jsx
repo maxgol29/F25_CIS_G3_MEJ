@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import '../styles/NavBar.css';
+import styles from '../styles/NavBar.module.css';
 
 const NavBar = ({ user, onLogoClick, onNavigate }) => {
   const [activeOrder, setActiveOrder] = useState(null);
@@ -40,74 +40,74 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
   const isOwner = user && (user.user_type === 'owner' || user.role === 'owner' || user.business_id);
 
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <div className="navbar-logo" onClick={onLogoClick}>
+    <nav className={styles.navbar}>
+      <div className={styles.navbarContainer}>
+        <div className={styles.navbarLogo} onClick={onLogoClick}>
           localPromo
         </div>
 
         {isOwner ? (
-          <ul className="nav-menu">
-            <li className="nav-item owner-dropdown">
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('dashboard')}>
+          <ul className={styles.navMenu}>
+            <li className={`${styles.navItem} ${styles.ownerDropdown}`}>
+                  <button className={`${styles.navLink} ${styles.navButton}`} onClick={() => handleNavigation('dashboard')}>
                     Dashboard
-                  </button>
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerMenu')}>
+                  </button> 
+                  <button className={`${styles.navLink} ${styles.navButton}`} onClick={() => handleNavigation('ownerMenu')}>
                     Manage Menu
                   </button>
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerOrders')}>
+                  <button className={`${styles.navLink} ${styles.navButton}`} onClick={() => handleNavigation('ownerOrders')}>
                     Orders
                   </button>
-                  <button className="nav-link nav-button" onClick={() => handleNavigation('ownerPromos')}>
+                  <button className={`${styles.navLink} ${styles.navButton}`} onClick={() => handleNavigation('ownerPromos')}>
                     Promos
                   </button>
             </li>
           </ul>
         ) : (
-          <ul className="nav-menu">
-            <li className="nav-item">
+          <ul className={styles.navMenu}>
+            <li className={styles.navItem}>
               <button 
-                className="nav-link nav-button" 
+                className={`${styles.navLink} ${styles.navButton}`} 
                 onClick={() => handleNavigation('home')}
               >
                 Home
               </button>
             </li>
-            <li className="nav-item">
+            <li className={styles.navItem}>
               <button 
-                className="nav-link nav-button" 
+                className={`${styles.navLink} ${styles.navButton}`} 
                 onClick={() => handleNavigation('map')}
               >
                 Map
               </button>
             </li>
-            <li className="nav-item">
+            <li className={styles.navItem}>
               <button 
-                className="nav-link nav-button" 
+                className={`${styles.navLink} ${styles.navButton}`} 
                 onClick={() => handleNavigation('browse')}
               >
                 Browse
               </button>
             </li>
-            <li className="nav-item">
+            <li className={styles.navItem}>
               <button 
-                className="nav-link nav-button" 
+                className={`${styles.navLink} ${styles.navButton}`} 
                 onClick={() => handleNavigation('profile')}
               >
                 Me
               </button>
             </li>
-            <li className="nav-item cart-item-nav-link">
+            <li className={`${styles.navItem} ${styles.cartItemNav}`}>
               <button 
-                className="nav-link nav-button" 
+                className={`${styles.navLink} ${styles.navButton}`} 
                 onClick={() => handleNavigation('cart')}
               >
                 Cart
               </button>
             </li>
-            <li className="nav-item">
+            <li className={styles.navItem}>
               <button 
-                className="nav-link nav-button" 
+                className={`${styles.navLink} ${styles.navButton}`} 
                 onClick={() => handleNavigation('orderHistory')}
               >
                 History
@@ -115,9 +115,9 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
             </li>
 
             {activeOrder && (
-              <li className="nav-item order-item">
+              <li className={styles.navItem}>
                 <button 
-                  className="nav-link nav-button active-order-link" 
+                  className={`${styles.navLink} ${styles.navButton} ${styles.activeOrderLink}`} 
                   onClick={() => handleNavigation('orderConfirmation', activeOrder.id)}
                 >
                   Active Order

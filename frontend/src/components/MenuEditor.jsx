@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/MenuEditor.css';
+import styles from '../styles/MenuEditor.module.css';
 import NavBar from './NavBar';
 
 const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -91,22 +91,22 @@ const MenuEditor = ({ user, onNavigate }) => {
   };
 
   return (
-    <div className="menu-editor-page">
+    <div className={styles.menuEditorPage}>
       <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
       <h2>Menu Editor</h2>
-      <div className="menu-content">
-        <div className="menu-list">
+      <div className={styles.menuContent}>
+        <div className={styles.menuList}>
           <h3>Your Items</h3>
           {loading ? <p>Loading...</p> : (
             items.length === 0 ? <p>No items found.</p> : (
               <ul>
                 {items.map((it) => (
-                  <li key={it.id} className="menu-item">
-                    <div className="menu-item-left">
+                  <li key={it.id} className={styles.menuItem}>
+                    <div className={styles.menuItemLeft}>
                       <strong>{it.dish_name}</strong>
-                      <div className="menu-item-meta">{it.food_type || ''} {it.portion_size ? `· ${it.portion_size}` : ''}</div>
+                      <div className={styles.menuItemMeta}>{it.food_type || ''} {it.portion_size ? `· ${it.portion_size}` : ''}</div>
                     </div>
-                    <div className="menu-item-right">{it.image_url ? <img src={it.image_url} alt={it.dish_name} /> : null}</div>
+                    <div className={styles.menuItemRight}>{it.image_url ? <img src={it.image_url} alt={it.dish_name} /> : null}</div>
                   </li>
                 ))}
               </ul>
@@ -114,10 +114,10 @@ const MenuEditor = ({ user, onNavigate }) => {
           )}
         </div>
 
-        <div className="menu-form">
+        <div className={styles.menuForm}>
           <h3>Add Item</h3>
-          {error && <div className="form-error">{error}</div>}
-          {successMsg && <div className="form-success">{successMsg}</div>}
+          {error && <div className={styles.formError}>{error}</div>}
+          {successMsg && <div className={styles.formSuccess}>{successMsg}</div>}
           <form onSubmit={handleAdd}>
             <label>Dish name *</label>
             <input name="dish_name" value={form.dish_name} onChange={handleChange} />

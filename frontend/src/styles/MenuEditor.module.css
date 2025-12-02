@@ -1,10 +1,10 @@
-.menu-editor-page {
+.menuEditorPage {
   min-height: 100vh;
   background: #f5f5f5;
   padding-bottom: 40px;
 }
 
-.menu-editor-page h2 {
+.menuEditorPage h2 {
   text-align: center;
   color: #333;
   font-size: 36px;
@@ -12,7 +12,7 @@
   font-weight: 600;
 }
 
-.menu-content {
+.menuContent {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -21,7 +21,7 @@
   gap: 30px;
 }
 
-.menu-list {
+.menuList {
   background: white;
   border-radius: 15px;
   padding: 40px;
@@ -29,7 +29,7 @@
   height: fit-content;
 }
 
-.menu-list h3 {
+.menuList h3 {
   color: #333;
   font-size: 20px;
   margin: 0 0 25px 0;
@@ -38,7 +38,7 @@
   border-bottom: 2px solid #60696b;
 }
 
-.menu-list p {
+.menuList p {
   text-align: center;
   color: #999;
   font-size: 15px;
@@ -46,13 +46,13 @@
   margin: 0;
 }
 
-.menu-list ul {
+.menuList ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.menu-item {
+.menuItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,41 +61,41 @@
   transition: all 0.2s ease;
 }
 
-.menu-item:last-child {
+.menuItem:last-child {
   border-bottom: none;
 }
 
-.menu-item:hover {
+.menuItem:hover {
   background: #f9f9f9;
   padding-left: 2px;
   padding-right: 2px;
   border-radius: 2px;
 }
 
-.menu-item-left {
+.menuItemLeft {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.menu-item-left strong {
+.menuItemLeft strong {
   color: #333;
   font-size: 15px;
   font-weight: 600;
 }
 
-.menu-item-meta {
+.menuItemMeta {
   color: #999;
   font-size: 12px;
   font-weight: 500;
 }
 
-.menu-item-right {
+.menuItemRight {
   margin-left: 20px;
 }
 
-.menu-item-right img {
+.menuItemRight img {
   width: 60px;
   height: 60px;
   border-radius: 8px;
@@ -104,7 +104,7 @@
 }
 
 
-.menu-form {
+.menuForm {
   background: white;
   border-radius: 15px;
   padding: 40px;
@@ -112,7 +112,7 @@
   height: fit-content;
 }
 
-.menu-form h3 {
+.menuForm h3 {
   color: #333;
   font-size: 20px;
   margin: 0 0 25px 0;
@@ -121,13 +121,13 @@
   border-bottom: 2px solid #60696b;
 }
 
-.menu-form form {
+.menuForm form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.menu-form label {
+.menuForm label {
   color: #333;
   font-weight: 600;
   font-size: 13px;
@@ -135,7 +135,7 @@
   margin-bottom: 0;
 }
 
-.menu-form input {
+.menuForm input {
   padding: 12px 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -147,19 +147,19 @@
   margin-top: 6px;
 }
 
-.menu-form input::placeholder {
+.menuForm input::placeholder {
   color: #bbb;
 }
 
-.menu-form input:focus {
+.menuForm input:focus {
   outline: none;
   border-color: #60696b;
   box-shadow: 0 0 0 3px rgba(96, 105, 107, 0.1);
 }
 
 
-.form-error,
-.form-success {
+.formError,
+.formSuccess {
   padding: 15px 20px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -179,20 +179,20 @@
   }
 }
 
-.form-error {
+.formError {
   background: #fff3cd;
   color: #cc0000;
   border-left: 4px solid #cc0000;
 }
 
-.form-success {
+.formSuccess {
   background: #d4edda;
   color: #28a745;
   border-left: 4px solid #28a745;
 }
 
 
-.menu-form button {
+.menuForm button {
   padding: 14px 32px;
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
   color: white;
@@ -207,205 +207,176 @@
   letter-spacing: 0.5px;
 }
 
-.menu-form button:hover {
+.menuForm button:hover {
   transform: translateY(1px);
 }
 
-.menu-form button:active {
+.menuForm button:active {
   transform: translateY(0);
 }
 
-.menu-list p {
+.menuList p {
   color: #28a745;
   font-weight: 500;
 }
 
 @media (max-width: 1024px) {
-  .menu-content {
+  .menuContent {
     grid-template-columns: 1fr;
     gap: 25px;
   }
 
-  .menu-list,
-  .menu-form {
+  .menuList,
+  .menuForm {
     height: auto;
   }
 }
 
 @media (max-width: 768px) {
-  .menu-editor-page {
+  .menuEditorPage {
     padding-bottom: 30px;
   }
 
-  .menu-editor-page h2 {
+  .menuEditorPage h2 {
     font-size: 28px;
     margin: 30px 0 30px 0;
   }
 
-  .menu-content {
+  .menuContent {
     padding: 0 15px;
     gap: 20px;
   }
 
-  .menu-list,
-  .menu-form {
+  .menuList,
+  .menuForm {
     padding: 25px;
     border-radius: 12px;
   }
 
-  .menu-list h3,
-  .menu-form h3 {
+  .menuList h3,
+  .menuForm h3 {
     font-size: 18px;
     margin-bottom: 20px;
   }
 
-  .menu-item {
+  .menuItem {
     padding: 15px 0;
   }
 
-  .menu-item-left strong {
+  .menuItemLeft strong {
     font-size: 14px;
   }
 
-  .menu-item-right img {
+  .menuItemRight img {
     width: 50px;
     height: 50px;
   }
 
-  .menu-form input {
+  .menuForm input {
     font-size: 16px;
   }
 
-  .menu-form button {
+  .menuForm button {
     padding: 12px 24px;
     font-size: 14px;
   }
 
-  .form-error,
-  .form-success {
+  .formError,
+  .formSuccess {
     font-size: 13px;
     padding: 12px 15px;
   }
 }
 
 @media (max-width: 480px) {
-  .menu-editor-page {
+  .menuEditorPage {
     padding-bottom: 20px;
   }
 
-  .menu-editor-page h2 {
+  .menuEditorPage h2 {
     font-size: 22px;
     margin: 20px 0 20px 0;
   }
 
-  .menu-content {
+  .menuContent {
     padding: 0 12px;
     gap: 15px;
   }
 
-  .menu-list,
-  .menu-form {
+  .menuList,
+  .menuForm {
     padding: 20px;
     border-radius: 10px;
   }
 
-  .menu-list h3,
-  .menu-form h3 {
+  .menuList h3,
+  .menuForm h3 {
     font-size: 16px;
     margin-bottom: 15px;
     padding-bottom: 12px;
   }
 
-  .menu-list p {
+  .menuList p {
     font-size: 14px;
     padding: 30px 15px;
   }
 
-  .menu-item {
+  .menuItem {
     padding: 12px 0;
     flex-wrap: wrap;
   }
 
-  .menu-item-left {
+  .menuItemLeft {
     flex: 1 0 100%;
     margin-bottom: 10px;
   }
 
-  .menu-item-left strong {
+  .menuItemLeft strong {
     font-size: 13px;
   }
 
-  .menu-item-meta {
+  .menuItemMeta {
     font-size: 11px;
   }
 
-  .menu-item-right {
+  .menuItemRight {
     margin-left: 0;
     flex: 0 0 100%;
   }
 
-  .menu-item-right img {
+  .menuItemRight img {
     width: 100%;
     height: 150px;
   }
 
-  .menu-item:hover {
+  .menuItem:hover {
     padding-left: 0;
     padding-right: 0;
   }
 
-  .menu-form label {
+  .menuForm label {
     font-size: 11px;
     margin-top: 3px;
   }
 
-  .menu-form input {
+  .menuForm input {
     padding: 10px 12px;
     font-size: 14px;
   }
 
-  .menu-form button {
+  .menuForm button {
     padding: 12px 20px;
     font-size: 13px;
   }
 
-  .form-error,
-  .form-success {
+  .formError,
+  .formSuccess {
     font-size: 12px;
     padding: 10px 12px;
     margin-bottom: 15px;
   }
 }
 
-
-@media print {
-  .menu-editor-page {
-    background: white;
-  }
-
-  .menu-form {
-    display: none;
-  }
-
-  .menu-list {
-    box-shadow: none;
-    border: 1px solid #ddd;
-    page-break-inside: avoid;
-  }
-
-  .menu-item {
-    page-break-inside: avoid;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 @keyframes slideUp {
   from {
@@ -418,14 +389,14 @@
   }
 }
 
-.menu-list,
-.menu-form {
+.menuList,
+.menuForm {
   animation: slideUp 0.5s ease-out;
 }
 
 
-.menu-form input:focus-visible,
-.menu-form button:focus-visible {
+.menuForm input:focus-visible,
+.menuForm button:focus-visible {
   outline: 2px solid #ff8b42;
   outline-offset: 2px;
 }
