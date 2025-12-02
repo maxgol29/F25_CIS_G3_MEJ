@@ -628,6 +628,24 @@ def validate_promo():
             'details': str(e)
         }), 500
     
+
+@promo_codes_bp.route('/users/<int:user_id>/savings', methods=['GET'])
+def get_user_savings(user_id):
+    try:
+        savings = promo_code_service.get_customer_savings_from_promos(user_id)
+        
+        return jsonify({
+            'success': True,
+            'total_savings': savings['total_savings']
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch savings for user {user_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch savings data',
+            'details': str(e)
+        }), 500
+    
 @api_bp.route('/places/nearby-search', methods=['POST'])
 def nearby_search():    
     data = request.get_json()

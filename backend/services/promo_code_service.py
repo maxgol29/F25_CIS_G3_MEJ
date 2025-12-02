@@ -30,5 +30,8 @@ class PromoCodeService:
     
     def get_promo_types(self):
         return db.get_promo_types()
+    
+    def get_customer_savings_from_promos(self, user_id):
+        return db.get_customer_savings_from_promos(user_id)
 
 promo_code_service = PromoCodeService()

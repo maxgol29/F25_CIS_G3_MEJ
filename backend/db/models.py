@@ -1646,4 +1646,32 @@ class Database:
             if conn:
                 self.return_conn(conn)
 
+    def get_customer_savings_from_promos(self, user_id):
+        conn = None
+        cursor = None
+
+        try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            cursor.execute('''
+                SELECT 
+                    COALESCE(SUM(discount_amount), 0) as total_savings
+                FROM "Promo_Code_Usage"
+                WHERE userID = %s
+            ''', (user_id,))
+            
+            result = cursor.fetchone()
+            
+            return {
+                'total_savings': float(result['total_savings']) if result else 0,
+            }
+            
+        except Exception as e:
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
+
 db = Database()
