@@ -16,7 +16,35 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [addedItemId, setAddedItemId] = useState(null);
+  const [promos, setPromos] = useState([]);
+  const [promosLoading, setPromosLoading] = useState(false);
+  
   const { addToCart, cart } = useCart(); 
+  useEffect(() => {
+    const fetchPromos = async () => {
+      setPromosLoading(true);
+      try {
+        const response = await fetch(`${REACT_APP_API_BASE_URL}/promo-codes/business/${businessId}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch promo codes');
+        }
+
+        const data = await response.json();
+        const activePromos = (data.promos || []).filter(promo => promo.is_active);
+        setPromos(activePromos);
+      } catch (err) {
+        console.error('Error fetching promos:', err);
+        setPromos([]);
+      } finally {
+        setPromosLoading(false);
+      }
+    };
+
+    if (businessId && REACT_APP_API_BASE_URL) {
+      fetchPromos();
+    }
+  }, [businessId, REACT_APP_API_BASE_URL]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,6 +102,9 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
     } catch (error) {
       alert(error.message);
     }
+  };
+  const copyPromoToClipboard = (code) => {
+    navigator.clipboard.writeText(code);
   };
 
   useEffect(() => {
@@ -196,6 +227,41 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
               </button>
             )}
           </div>
+          {!promosLoading && promos.length > 0 && (
+            <div className="promo-codes-section">
+              <div className="promo-codes-container">
+                {promos.map((promo) => (
+                  <div key={promo.id} className="promo-code-item">
+                    <div className="promo-code-badge">
+                      <span className="code">{promo.code}</span>
+                    </div>
+                    <div className="promo-info">
+                      <p className="promo-description">{promo.description}</p>
+                      <div className="promo-meta">
+                        {promo.discount_percentage > 0 && (
+                          <span className="promo-discount">{promo.discount_percentage}% Off</span>
+                        )}
+                        {promo.discount_fixed_amount > 0 && (
+                          <span className="promo-discount">${promo.discount_fixed_amount} Off</span>
+                        )}
+                        {promo.expiration_date && (
+                          <span className="promo-expires">
+                            Expires: {new Date(promo.expiration_date).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button 
+                      className="promo-copy-btn" 
+                      onClick={() => copyPromoToClipboard(promo.code)}
+                    >
+                      Copy Code
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {items.length === 0 ? (
             <div className="no-items">
