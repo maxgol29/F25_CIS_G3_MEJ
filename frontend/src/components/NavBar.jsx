@@ -14,7 +14,7 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
         
         if (response.ok) {
           const data = await response.json();
-          const activeOrders = data.orders?.filter(order => order.status !== 'completed');
+          const activeOrders = data.orders?.filter(order => order.status !== 'completed' && order.status !== 'cancelled');
           if (activeOrders && activeOrders.length > 0) {
             setActiveOrder(activeOrders[0]);
           } else {

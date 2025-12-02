@@ -423,6 +423,32 @@ def get_business_orders(business_id):
             'error': 'Failed to fetch orders',
             'details': str(e)
         }), 500
+    
+@orders_bp.route('/<int:order_id>/status', methods=['PUT'])
+def update_order_status(order_id):
+    try:
+        data = request.get_json()
+        if not data or 'status' not in data:
+            return jsonify({'error': 'Missing required field: status'}), 400
+        new_status = data['status'].lower()
+        updated_order = order_service.update_order_status(order_id, new_status)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Order status updated to {new_status}',
+            'order': updated_order
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({
+            'error': str(e)
+        }), 400
+    except Exception as e:
+        logger.error(f"Failed to update order {order_id} status", exc_info=True)
+        return jsonify({
+            'error': 'Failed to update order status',
+            'details': str(e)
+        }), 500
 
 # promo code endpoints
 

@@ -904,6 +904,38 @@ class Database:
             if conn:
                 self.return_conn(conn)
 
+    def update_order_status(self, order_id, new_status):
+        conn = None
+        cursor = None
+
+        try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            cursor.execute('''
+                UPDATE "Order"
+                SET status = %s, updated_at = CURRENT_TIMESTAMP
+                WHERE id = %s
+                RETURNING id, status
+            ''', (new_status, order_id))
+            
+            updated_order = cursor.fetchone()
+            conn.commit()
+            
+            return {
+                'id': updated_order['id'],
+                'status': updated_order['status']
+            }
+            
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
+
     def get_user_orders(self, user_id, limit=50):
         conn = None
         cursor = None
@@ -969,11 +1001,6 @@ class Database:
         try:
             conn = self.get_conn()
             cursor = conn.cursor(cursor_factory=RealDictCursor)
-            cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
-
-            if not cursor.fetchone():
-                raise ValueError("Business not found")
-            
             cursor.execute('''
                 SELECT id, userid, status, subtotal, discount_amount, 
                     tax_amount, total_amount, created_at
@@ -985,15 +1012,36 @@ class Database:
             
             orders = []
             for row in cursor.fetchall():
+                order_id = row['id']
+
+                cursor.execute('''
+                    SELECT 
+                        oi.quantity,
+                        oi.unit_price,
+                        i.dish_name
+                    FROM "Order_Item" oi
+                    JOIN "Item" i ON oi.itemID = i.id
+                    WHERE oi.orderID = %s
+                ''', (order_id,))
+                
+                items = []
+                for item_row in cursor.fetchall():
+                    items.append({
+                        'dish_name': item_row['dish_name'],
+                        'quantity': item_row['quantity'],
+                        'unit_price': float(item_row['unit_price'])
+                    })
+                
                 orders.append({
-                    'id': row['id'],
+                    'id': order_id,
                     'userID': row['userid'],
                     'status': row['status'],
                     'subtotal': float(row['subtotal']),
                     'discount_amount': float(row['discount_amount']),
                     'tax_amount': float(row['tax_amount']),
                     'total_amount': float(row['total_amount']),
-                    'created_at': str(row['created_at'])
+                    'created_at': str(row['created_at']),
+                    'items': items
                 })
             
             return orders

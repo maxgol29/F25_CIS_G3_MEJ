@@ -25,5 +25,8 @@ class OrderService:
     
     def get_business_orders(self, business_id, limit=50):
         return db.get_business_orders(business_id, limit)
+    
+    def update_order_status(self, order_id, new_status):
+        return db.update_order_status(order_id, new_status)
 
 order_service = OrderService()
