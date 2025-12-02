@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from './NavBar';
+import OrderQRCode from './OrderQRCode';
 import '../styles/OrderConfirmation.css';
 
 const OrderConfirmation = ({ orderId, user, onNavigate }) => {
@@ -14,7 +15,7 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
       try {
         setLoading(true);
         const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/${orderId}`);
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch order');
         }
@@ -132,10 +133,10 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
                 <span>Tax</span>
                 <span>${order.tax_amount.toFixed(2)}</span>
               </div>
-              <div className="breakdown-row">
-                <span>Processing Fee</span>
-                <span>${order.processing_fee.toFixed(2)}</span>
-              </div>
+                <div className="breakdown-row">
+                  <span>Processing Fee</span>
+                  <span>${order.processing_fee.toFixed(2)}</span>
+                </div>
               <div className="breakdown-row total">
                 <span>Total</span>
                 <span>${order.total_amount.toFixed(2)}</span>
@@ -159,6 +160,13 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
                   30-45 minutes
                 </p>
               </div>
+            </div>
+
+            <div className="qr-code-section">
+              <p className="qr-code-description">Scan to track your order or show at pickup</p>
+              <OrderQRCode 
+                orderId={order.id}
+              />
             </div>
 
             <div className="order-info">

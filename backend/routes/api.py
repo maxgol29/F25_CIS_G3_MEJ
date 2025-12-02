@@ -1,4 +1,5 @@
 import logging
+import os
 from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from services import *
@@ -335,21 +336,51 @@ def create_order():
         for field in required_fields:
             if field not in data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
-
-        if not isinstance(data['items'], list) or len(data['items']) == 0:
-            return jsonify({'error': 'Items must be a non-empty list'}), 400
+        
+        user_id = data.get('userID')
+        business_id = data.get('businessID')
+        items = data.get('items', [])
+        subtotal = float(data.get('subtotal', 0))
+        discount_amount = float(data.get('discountAmount', 0))
+        tax_amount = float(data.get('taxAmount', 0))
+        processing_fee = float(data.get('processingFee', 0))
+        total_amount = float(data.get('total_amount', 0))
+        promo_id = data.get('promoCodeId')
+        payment_method_type = data.get('paymentMethodType')
+        payment_method_id = None
+        try:
+            if payment_method_type == 'card':
+                card_data = {
+                    'token': data.get('cardToken', ''),
+                    'cardholder_name': data.get('cardholderName', ''),
+                    'last_four_digits': data.get('lastFourDigits', ''),
+                    'expiration_month': data.get('expirationMonth'),
+                    'expiration_year': data.get('expirationYear')
+                }
+                payment_method_id = order_service.create_payment_method(
+                    user_id, 'card', card_data
+                )
+                
+            else:
+                payment_method_id = order_service.create_payment_method(
+                    user_id, payment_method_type
+                )
+                
+        except Exception as e:
+            logger.error(f"Failed to create payment method for type {payment_method_type}: {e}", exc_info=True)
+            payment_method_id = None
 
         order = order_service.create_order(
-            promo_id=data.get('promoID'),
-            user_id=data['userID'],
-            business_id=data['businessID'],
-            items=data['items'],
-            subtotal=data['subtotal'],
-            discount_amount=data.get('discount_amount', 0),
-            tax_amount=data.get('tax_amount', 0),
-            processing_fee=data.get('processing_fee', 0),
-            total_amount=data['total_amount'],
-            promo_code=data.get('promoCode')
+            user_id=user_id,
+            business_id=business_id,
+            items=items,
+            subtotal=subtotal,
+            discount_amount=discount_amount,
+            tax_amount=tax_amount,
+            processing_fee=processing_fee,
+            total_amount=total_amount,
+            payment_method_id=payment_method_id,
+            promo_id=promo_id
         )   
         return jsonify({
             'message': 'Order created successfully',
@@ -421,6 +452,32 @@ def get_business_orders(business_id):
         logger.error(f"Failed to fetch orders for business {business_id}", exc_info=True)
         return jsonify({
             'error': 'Failed to fetch orders',
+            'details': str(e)
+        }), 500
+    
+@orders_bp.route('/<int:order_id>/status', methods=['PUT'])
+def update_order_status(order_id):
+    try:
+        data = request.get_json()
+        if not data or 'status' not in data:
+            return jsonify({'error': 'Missing required field: status'}), 400
+        new_status = data['status'].lower()
+        updated_order = order_service.update_order_status(order_id, new_status)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Order status updated to {new_status}',
+            'order': updated_order
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({
+            'error': str(e)
+        }), 400
+    except Exception as e:
+        logger.error(f"Failed to update order {order_id} status", exc_info=True)
+        return jsonify({
+            'error': 'Failed to update order status',
             'details': str(e)
         }), 500
 
@@ -571,6 +628,24 @@ def validate_promo():
             'details': str(e)
         }), 500
     
+
+@promo_codes_bp.route('/users/<int:user_id>/savings', methods=['GET'])
+def get_user_savings(user_id):
+    try:
+        savings = promo_code_service.get_customer_savings_from_promos(user_id)
+        
+        return jsonify({
+            'success': True,
+            'total_savings': savings['total_savings']
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch savings for user {user_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to fetch savings data',
+            'details': str(e)
+        }), 500
+    
 @api_bp.route('/places/nearby-search', methods=['POST'])
 def nearby_search():    
     data = request.get_json()
@@ -588,3 +663,28 @@ def nearby_search():
         return jsonify(result), 400
     
     return jsonify(result), 200
+
+# QR code endpoint
+
+@orders_bp.route('/<int:order_id>/qr-code', methods=['GET'])
+def get_order_qr_code(order_id):
+    try:
+
+        qr_code_base64 = order_service.generate_order_qr_code(order_id)
+
+        order_url = f"{os.getenv('API_BASE_URL')}/orders/{order_id}"
+        
+        return jsonify({
+            'success': True,
+            'order_id': order_id,
+            'qr_code': qr_code_base64,
+            'order_url': order_url
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Failed to generate QR code for order {order_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to generate QR code',
+            'details': str(e)
+        }), 500
+

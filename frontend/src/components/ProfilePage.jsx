@@ -4,6 +4,7 @@ import '../styles/ProfilePage.css';
 
 const ProfilePage = ({ user, onLogout, onNavigate }) => {
   const [userDetails, setUserDetails] = useState(null);
+  const [savings, setSavings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -29,11 +30,29 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
     }
   }, [user.id, REACT_APP_API_BASE_URL]);
 
+  const fetchSavings = useCallback(async () => {
+    try {
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/promo-codes/users/${user.id}/savings`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch savings');
+
+      const data = await response.json();
+      setSavings(data);
+    } catch (err) {
+      console.error('Failed to fetch savings:', err);
+      setSavings({ total_savings: 0 });
+    }
+  }, [user.id, REACT_APP_API_BASE_URL]);
+
   useEffect(() => {
     if (user?.id) {
       fetchUserDetails();
+      fetchSavings();
     }
-  }, [user?.id, fetchUserDetails]);
+  }, [user?.id, fetchUserDetails, fetchSavings]);
 
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
@@ -105,6 +124,17 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
             </section>
           )}
 
+          <section className="profile-section savings-section">
+            <div className="savings-box">
+              <div className="savings-content">
+                <h2>Total Savings</h2>
+                <p className="savings-amount">
+                  ${savings?.total_savings.toFixed(2) || '0.00'}
+                </p>
+              </div>
+            </div>
+          </section>
+          
           {/* Account Actions */}
           <section className="profile-section">
             <h2>Account</h2>

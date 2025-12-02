@@ -94,7 +94,7 @@ const PaymentPage = ({ user, onNavigate }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/promo-codes/validate`, { // NOT YET IMPLEMENTED
+      const response = await fetch(`${REACT_APP_API_BASE_URL}/promo-codes/validate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -105,7 +105,6 @@ const PaymentPage = ({ user, onNavigate }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Promo code validated:', data.promo_id);
         setPromoDiscount(data.discount_amount || 0);
         setFormData(prev => ({
           ...prev,
@@ -134,21 +133,30 @@ const PaymentPage = ({ user, onNavigate }) => {
     try {
       setLoading(true);
       setError('');
-
+      
+      const processingFee = parseFloat((totals.subtotal * 0.02).toFixed(2));
+      const finalTotal = parseFloat((totals.total - promoDiscount + processingFee).toFixed(2));
       const orderData = {
-        promoID: promoApplied ? formData.promo_id : null,
         userID: user.id,
         businessID: cart.businessId,
         items: cart.items,
         subtotal: totals.subtotal,
-        discount_amount: totals.totalDiscount + promoDiscount,
-        tax_amount: totals.tax.toFixed(2),
-        processing_fee: (totals.subtotal - totals.totalDiscount) * 0.02, // 2% processing fee
-        total_amount: totals.total - promoDiscount + ((totals.subtotal - totals.totalDiscount) * 0.02),
-        promoCode: promoApplied ? formData.promoCode : null
+        discountAmount: totals.totalDiscount + promoDiscount,
+        taxAmount: parseFloat(totals.tax.toFixed(2)),
+        processingFee: processingFee,
+        total_amount: finalTotal,
+        paymentMethodType: formData.paymentMethod,
+        promoCodeId: promoApplied ? formData.promo_id : null
       };
 
-      console.log('Submitting order data:', orderData);
+      if (formData.paymentMethod === 'card') {
+        const [month, year] = formData.expiryDate.split('/');
+        orderData.cardToken = formData.cardNumber;
+        orderData.cardholderName = formData.cardName;
+        orderData.lastFourDigits = formData.cardNumber.slice(-4);
+        orderData.expirationMonth = parseInt(month);
+        orderData.expirationYear = 2000 + parseInt(year);
+      }
 
       const response = await fetch(`${REACT_APP_API_BASE_URL}/orders/create`, {
         method: 'POST',
@@ -174,7 +182,8 @@ const PaymentPage = ({ user, onNavigate }) => {
     }
   };
 
-  const finalTotal = totals.total - promoDiscount + (totals.subtotal * 0.02);
+  const processingFee = parseFloat((totals.subtotal * 0.02).toFixed(2));
+  const finalTotal = parseFloat((totals.total - promoDiscount + processingFee).toFixed(2));
 
   if (success) {
     return (
@@ -305,6 +314,13 @@ const PaymentPage = ({ user, onNavigate }) => {
                 </div>
               )}
 
+              {formData.paymentMethod === 'cash' && (
+                <div className="form-section cash-notice">
+                  <h3>Cash Payment</h3>
+                  <p className="cash-total">Amount to pay: <strong>${finalTotal.toFixed(2)}</strong></p>
+                </div>
+              )}
+
               <div className="form-section">
                 <h3>Promo Code (Optional)</h3>
                 <div className="promo-group">
@@ -394,7 +410,7 @@ const PaymentPage = ({ user, onNavigate }) => {
 
               <div className="total-row">
                 <span>Processing Fee (2%)</span>
-                <span>${(totals.subtotal * 0.02).toFixed(2)}</span>
+                <span>${processingFee.toFixed(2)}</span>
               </div>
 
               <div className="total-row final">
