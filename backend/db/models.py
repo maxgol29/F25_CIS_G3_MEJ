@@ -751,7 +751,7 @@ class Database:
                 self.return_conn(conn)
 
     def create_order(self, user_id, business_id, items, subtotal, discount_amount, 
-                    tax_amount, processing_fee, total_amount, promo_code=None, promo_id=None): 
+                    tax_amount, processing_fee, total_amount, promo_code=None, promo_id=None, payment_method_id=None): 
         conn = None
         cursor = None
 
@@ -759,23 +759,15 @@ class Database:
             conn = self.get_conn()
             cursor = conn.cursor(cursor_factory=RealDictCursor)
 
-            cursor.execute('SELECT id FROM "User" WHERE id = %s', (user_id,))
-            if not cursor.fetchone():
-                raise ValueError("User not found")
-            
-            cursor.execute('SELECT id FROM "Business" WHERE id = %s', (business_id,))
-            if not cursor.fetchone():
-                raise ValueError("Business not found")
-
             cursor.execute('''
                 INSERT INTO "Order" 
-                (userID, businessID, promoID, status, subtotal, discount_amount, tax_amount, 
-                processing_fee, total_amount, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-                RETURNING id, userID, businessID, status, subtotal, discount_amount, 
+                (userID, businessID, paymentMethodID, promoID, status, subtotal, discount_amount, 
+                tax_amount, processing_fee, total_amount, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                RETURNING id, userID, businessID, paymentMethodID, status, subtotal, discount_amount, 
                         tax_amount, processing_fee, total_amount, created_at
-            ''', (user_id, business_id, promo_id, 'pending', subtotal, discount_amount, 
-                tax_amount, processing_fee, total_amount))
+            ''', (user_id, business_id, payment_method_id, promo_id, 'pending', subtotal, 
+                discount_amount, tax_amount, processing_fee, total_amount))
             
             order = cursor.fetchone()
             order_id = order['id']
@@ -809,6 +801,7 @@ class Database:
                 'id': order['id'],
                 'userID': order['userid'],
                 'businessID': order['businessid'],
+                'paymentMethodID': order['paymentmethodid'],
                 'status': order['status'],
                 'subtotal': float(order['subtotal']),
                 'discount_amount': float(order['discount_amount']),
@@ -827,6 +820,65 @@ class Database:
             if conn:
                 self.return_conn(conn)
 
+    def create_payment_method(self, user_id, payment_type, payment_data=None):
+        conn = None
+        cursor = None
+
+        try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            if payment_type == 'cash':
+                cursor.execute('''
+                    INSERT INTO "Payment_Method" 
+                    (userID, "type", "token", is_default)
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING id
+                ''', (user_id, 'cash', 'cash_token_future', False))
+
+            elif payment_type == 'card':
+                card_data = payment_data or {}
+                cursor.execute('''
+                    INSERT INTO "Payment_Method" 
+                    (userID, "type", "token", "cardholder_name", "last_four_digits", 
+                    "expiration_month", "expiration_year", is_default)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING id
+                ''', (
+                    user_id,
+                    'card',
+                    card_data.get('token'),
+                    card_data.get('cardholder_name'),
+                    card_data.get('last_four_digits'),
+                    card_data.get('expiration_month'),
+                    card_data.get('expiration_year'),
+                    True
+                ))
+
+            elif payment_type == 'apple_pay':
+                cursor.execute('''
+                    INSERT INTO "Payment_Method" 
+                    (userID, "type", "token", is_default)
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING id
+                ''', (user_id, 'apple_pay', 'apple_token_future', False))
+
+            else:
+                raise ValueError(f"Unknown payment type: {payment_type}")
+
+            result = cursor.fetchone()
+            conn.commit()
+            return result['id']
+
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
+
     def get_order(self, order_id):
         conn = None
         cursor = None
@@ -834,16 +886,17 @@ class Database:
         try:
             conn = self.get_conn()
             cursor = conn.cursor(cursor_factory=RealDictCursor)
-
             cursor.execute('''
-                SELECT o.id, o.userID, o.businessID, o.status, o.subtotal, o.discount_amount, 
+                SELECT o.id, o.userID, o.businessID, o.paymentMethodID, o.status, o.subtotal, o.discount_amount, 
                     o.tax_amount, o.processing_fee, o.total_amount, o.created_at,
                     b.name as business_name, b.phone as business_phone, b.email as business_email,
                     a.street, a.building_number, a.apartment_number, a.zip_code, 
-                    a.city, a.state, a.country, a.latitude, a.longitude
+                    a.city, a.state, a.country, a.latitude, a.longitude,
+                    pm."type" as payment_method
                 FROM "Order" o
                 JOIN "Business" b ON o.businessID = b.id
                 LEFT JOIN "Address" a ON b.addressID = a.id
+                LEFT JOIN "Payment_Method" pm ON o.paymentMethodID = pm.id
                 WHERE o.id = %s
             ''', (order_id,))
             
@@ -875,6 +928,7 @@ class Database:
                 'id': order['id'],
                 'userID': order['userid'],
                 'businessID': order['businessid'],
+                'paymentMethodID': order['paymentmethodid'],
                 'status': order['status'],
                 'subtotal': float(order['subtotal']),
                 'discount_amount': float(order['discount_amount']),
@@ -882,6 +936,7 @@ class Database:
                 'processing_fee': float(order['processing_fee']),
                 'total_amount': float(order['total_amount']),
                 'created_at': str(order['created_at']),
+                'payment_method': order['payment_method'], 
                 'business': {
                     'address': {
                         'street': order['street'],

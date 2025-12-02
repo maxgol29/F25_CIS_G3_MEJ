@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 CREATE TABLE IF NOT EXISTS "Payment_Method" (
     id SERIAL PRIMARY KEY,
     userID INTEGER REFERENCES "User"(id) ON DELETE CASCADE NOT NULL,
-    "type" VARCHAR(50) NOT NULL CHECK ("type" IN ('credit_card', 'debit_card', 'paypal', 'apple_pay', 'google_pay')),
+    "type" VARCHAR(50) NOT NULL CHECK ("type" IN ('card', 'cash', 'apple_pay')),
     "last_four_digits" VARCHAR(4),
     "token" VARCHAR(255) NOT NULL, 
     "cardholder_name" VARCHAR(100),

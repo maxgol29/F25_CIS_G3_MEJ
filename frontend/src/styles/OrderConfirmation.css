@@ -400,6 +400,23 @@
   .action-btn {
     width: 100%;
   }
+  .cash-payment-alert {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .cash-alert-icon {
+    font-size: 32px;
+  }
+
+  .cash-alert-content h2 {
+    font-size: 16px;
+  }
+
+  .cash-alert-message {
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -473,4 +490,111 @@
     padding: 12px;
     font-size: 14px;
   }
+  .cash-payment-alert {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .cash-alert-icon {
+    font-size: 28px;
+  }
+
+  .cash-alert-content h2 {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .cash-alert-message {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .cash-payment-details {
+    padding: 10px;
+  }
+
+  .detail-row {
+    padding: 6px 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .detail-row .amount,
+  .detail-row .time {
+    width: 100%;
+    text-align: right;
+  }
+}
+
+.cash-payment-alert {
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  border: 2px solid #60696b;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.cash-alert-content {
+  flex: 1;
+}
+
+.cash-alert-content h2 {
+  color: white;
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cash-alert-message {
+  color: white;
+  font-size: 14px;
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.cash-payment-details {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row .label {
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.detail-row .amount {
+  color: #60696b;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.detail-row .time {
+  color: #60696b;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 8px;
+  background: #ffffff;
+  border-radius: 4px;
 }

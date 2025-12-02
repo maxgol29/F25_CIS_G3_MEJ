@@ -345,11 +345,11 @@ const Dashboard = ({ user, onNavigate }) => {
         </div>
         <div className="stat-card">
           <h3>Total Discounts Given</h3>
-          <p className="stat-value">${totalDiscounts}</p>
+          <p className="stat-value">${totalDiscounts.toFixed(2)}</p>
         </div>
         <div className="stat-card">
           <h3>Avg Discount/Use</h3>
-          <p className="stat-value">${avgDiscountPerUse}</p>
+          <p className="stat-value">${avgDiscountPerUse.toFixed(2)}</p>
         </div>
       </div>
 
