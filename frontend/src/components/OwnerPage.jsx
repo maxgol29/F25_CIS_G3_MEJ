@@ -1,4 +1,4 @@
-import '../styles/OwnerPage.css';
+import styles from '../styles/OwnerPage.module.css';
 import NavBar from './NavBar';
 
 const OwnerPage = ({ user, onLogout, onNavigate }) => {
@@ -7,35 +7,35 @@ const OwnerPage = ({ user, onLogout, onNavigate }) => {
   };
 
   return (
-    <div className="owner-page">
+    <div className={styles.ownerPage}>
       <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
 
-      <div className="owner-container">
-        <div className="owner-card">
+      <div className={styles.ownerContainer}>
+        <div className={styles.ownerCard}>
           <h1>Business Owner Dashboard</h1>
           
-          <div className="owner-info">
-            <div className="info-item">
+          <div className={styles.ownerInfo}>
+            <div className={styles.infoItem}>
               <label>Name</label>
               <p>{user.first_name} {user.last_name}</p>
             </div>
 
-            <div className="info-item">
+            <div className={styles.infoItem}>
               <label>Email</label>
               <p>{user.email}</p>
             </div>
 
             {user.phone && (
-              <div className="info-item">
+              <div className={styles.infoItem}>
                 <label>Phone</label>
                 <p>{user.phone}</p>
               </div>
             )}
           </div>
 
-          <div className="owner-actions">
+          <div className={styles.ownerActions}>
             <button 
-              className="logout-btn"
+              className={styles.logoutBtn}
               onClick={onLogout}
             >
               Logout

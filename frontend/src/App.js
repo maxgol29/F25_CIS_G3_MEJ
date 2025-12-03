@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { CartProvider } from './context/CartContext';
-import AuthPage from './components/AuthPage';
-import HomePage from './components/HomePage';
-import ProfilePage from './components/ProfilePage';
-import MapPage from './components/Mappage';
-import BrowsePage from './components/BrowsePage';
-import BusinessDetailPage from './components/BusinessDetailPage';
-import CartPage from './components/CartPage';
-import PaymentPage from './components/PaymentPage'; 
-import OrderConfirmation from './components/OrderConfirmation';
-import OrderHistory from './components/OrderHistory';
-import OwnerPage from './components/OwnerPage';
-import MenuEditor from './components/MenuEditor';
-import OwnerOrders from './components/OwnerOrders';
-import PromoManager from './components/PromoManager';
-import Dashboard from './components/Dashboard';
 import './App.css';
+import {
+  AuthPage,
+  HomePage,
+  ProfilePage,
+  MapPage,
+  BrowsePage,
+  BusinessDetailPage,
+  CartPage,
+  PaymentPage,
+  OrderConfirmation,
+  OrderHistory,
+  OwnerPage,
+  MenuEditor,
+  OwnerOrders,
+  PromoManager,
+  Dashboard
+} from './lazyPages';
+
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -123,13 +127,11 @@ function App() {
 
   return (
     <CartProvider>
-      <div className="App">
-        {isLoggedIn && user ? (
-          renderPage()
-        ) : (
-          <AuthPage onLoginSuccess={handleLoginSuccess} />
-        )}
-      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="App">
+          {isLoggedIn ? renderPage() : <AuthPage onLoginSuccess={handleLoginSuccess} />}
+        </div>
+      </Suspense>
     </CartProvider>
   );
 }

@@ -127,7 +127,7 @@ const NavBar = ({ user, onLogoClick, onNavigate }) => {
           </ul>
         )}
 
-        <div className="navbar-user">
+        <div className={styles.navbarUser}>
           Welcome, {user.last_name}
         </div>
       </div>

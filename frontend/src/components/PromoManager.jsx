@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/PromoManager.css';
+import styles from  '../styles/PromoManager.module.css';
 import NavBar from './NavBar';
 
 const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -122,18 +122,18 @@ const PromoManager = ({ user, onNavigate }) => {
   };
 
   return (
-    <div className="promo-manager-page">
+    <div className={styles.promoManagerPage}>
       <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
       
-      <div className="promo-container">
-        <div className="promo-list-section">
+      <div className={styles.promoContainer}>
+        <div className={styles.promoListSection}>
           <h2>Existing Promo Codes</h2>
           {loading ? (
-            <p className="loading">Loading promo codes...</p>
+            <p className={styles.loading}>Loading promo codes...</p>
           ) : promos.length === 0 ? (
-            <p className="no-promos">No promo codes yet</p>
+            <p className={styles.noPromos}>No promo codes yet</p>
           ) : (
-            <div className="promos-table">
+            <div className={styles.promosTable}>
               <table>
                 <thead>
                   <tr>
@@ -159,12 +159,12 @@ const PromoManager = ({ user, onNavigate }) => {
             </div>
           )}
         </div>
-        <div className="promo-form-section">
+        <div className={styles.promoFormSection}>
           <h2>Create New Promo Code</h2>
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
-          <form onSubmit={handleCreate} className="promo-form">
-            <div className="form-group">
+          {error && <div className={styles.errorMessage}>{error}</div>}
+          {success && <div className={styles.successMessage}>{success}</div>}
+          <form onSubmit={handleCreate} className={styles.promoForm}>
+            <div className={styles.formGroup}>
               <label htmlFor="code">Promo Code *</label>
               <input
                 id="code"
@@ -177,12 +177,12 @@ const PromoManager = ({ user, onNavigate }) => {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="typeID">Discount Type *</label>
               {typesLoading ? (
-                <p className="loading-small">Loading types...</p>
+                <p className={styles.loadingSmall}>Loading types...</p>
               ) : promoTypes.length === 0 ? (
-                <p className="error-small">No promo types available</p>
+                <p className={styles.errorSmall}>No promo types available</p>
               ) : (
                 <select
                   id="typeID"
@@ -200,7 +200,7 @@ const PromoManager = ({ user, onNavigate }) => {
                 </select>
               )}
             </div>
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="description">Description *</label>
               <textarea 
                 id="description"
@@ -212,7 +212,7 @@ const PromoManager = ({ user, onNavigate }) => {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="max_uses">Max Uses (Optional)</label>
               <input
                 id="max_uses"
@@ -224,7 +224,7 @@ const PromoManager = ({ user, onNavigate }) => {
                 min="1"
               />
             </div>
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="expiration_date">Expiration Date (Optional)</label>
               <input
                 id="expiration_date"
@@ -234,7 +234,7 @@ const PromoManager = ({ user, onNavigate }) => {
                 onChange={handleChange}
               />
             </div>
-            <button type="submit" className="btn-create" disabled={typesLoading}>
+            <button type="submit" className={styles.btnCreate} disabled={typesLoading}>
               {typesLoading ? 'Loading...' : 'Create Promo Code'}
             </button>
           </form>

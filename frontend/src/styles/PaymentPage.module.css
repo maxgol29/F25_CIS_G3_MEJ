@@ -1,19 +1,16 @@
-/* styles/PaymentPage.css */
-
-.payment-page {
+.paymentPage {
   min-height: 100vh;
   background: #f5f5f5;
   padding-bottom: 40px;
 }
 
-.payment-container {
+.paymentContainer {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
 }
 
-/* Empty Cart */
-.empty-payment {
+.emptyPayment {
   text-align: center;
   background: white;
   border-radius: 15px;
@@ -21,19 +18,19 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.empty-payment h2 {
+.emptyPayment h2 {
   color: #333;
   font-size: 28px;
   margin-bottom: 10px;
 }
 
-.empty-payment p {
+.emptyPayment p {
   color: #999;
   font-size: 16px;
   margin-bottom: 30px;
 }
 
-.empty-payment .back-btn {
+.emptyPayment .backBtn {
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
   color: white;
   border: none;
@@ -44,13 +41,12 @@
   transition: all 0.3s ease;
 }
 
-.empty-payment .back-btn:hover {
+.emptyPayment .backBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* Success Message */
-.success-message {
+.successMessage {
   text-align: center;
   background: white;
   border-radius: 15px;
@@ -58,52 +54,44 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.success-icon {
-  font-size: 80px;
-  color: #28a745;
-  margin-bottom: 20px;
-}
-
-.success-message h2 {
+.successMessage h2 {
   color: #333;
   font-size: 28px;
   margin-bottom: 10px;
 }
 
-.success-message p {
+.successMessage p {
   color: #666;
   font-size: 16px;
   margin-bottom: 10px;
 }
 
-.success-message .small {
+.successMessage .small {
   color: #999;
   font-size: 14px;
 }
 
-/* Payment Content Layout */
-.payment-content {
+.paymentContent {
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 30px;
   align-items: start;
 }
 
-/* Payment Form Section */
-.payment-form-section {
+.paymentFormSection {
   background: white;
   border-radius: 12px;
   padding: 40px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.payment-form-section h1 {
+.paymentFormSection h1 {
   color: #333;
   font-size: 32px;
   margin: 0 0 30px 0;
 }
 
-.error-message {
+.errorMessage {
   background: #ffe5e5;
   color: #cc0000;
   padding: 15px 20px;
@@ -112,32 +100,30 @@
   font-weight: 500;
 }
 
-/* Form Sections */
-.form-section {
+.formSection {
   margin-bottom: 30px;
   padding-bottom: 30px;
   border-bottom: 1px solid #eee;
 }
 
-.form-section h3 {
+.formSection h3 {
   color: #333;
   font-size: 18px;
   margin: 0 0 20px 0;
   font-weight: 600;
 }
 
-.form-section:last-child {
+.formSection:last-child {
   border-bottom: none;
 }
 
-/* Payment Methods */
-.payment-methods {
+.paymentMethods {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.payment-method {
+.paymentMethod {
   display: flex;
   align-items: center;
   padding: 15px 20px;
@@ -147,34 +133,33 @@
   transition: all 0.3s ease;
 }
 
-.payment-method:hover {
+.paymentMethod:hover {
   border-color: #858e96;
   background: #f8f9ff;
 }
 
-.payment-method input[type="radio"] {
+.paymentMethod input[type="radio"] {
   margin-right: 12px;
   cursor: pointer;
   width: 18px;
   height: 18px;
 }
 
-.payment-method input[type="radio"]:checked + span {
+.paymentMethod input[type="radio"]:checked + span {
   color: #60696b;
   font-weight: 600;
 }
 
-.payment-method span {
+.paymentMethod span {
   font-size: 16px;
   color: #333;
 }
 
-/* Form Groups */
-.form-group {
+.formGroup {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.formGroup label {
   display: block;
   font-weight: 500;
   color: #333;
@@ -182,7 +167,7 @@
   font-size: 14px;
 }
 
-.form-group input {
+.formGroup input {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #ddd;
@@ -191,30 +176,30 @@
   transition: border 0.3s ease;
 }
 
-.form-group input:focus {
+.formGroup input:focus {
   outline: none;
   border-color: #60696b;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-group input:disabled {
+.formGroup input:disabled {
   background: #f5f5f5;
   color: #999;
   cursor: not-allowed;
 }
 
-.form-row {
+.formRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-.promo-group {
+.promoGroup {
   display: flex;
   gap: 10px;
 }
 
-.promo-group input {
+.promoGroup input {
   flex: 1;
   padding: 12px 15px;
   border: 1px solid #ddd;
@@ -222,8 +207,8 @@
   font-size: 15px;
 }
 
-.apply-promo-btn,
-.remove-promo-btn {
+.applyPromoBtn,
+.removePromoBtn {
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
@@ -233,40 +218,39 @@
   white-space: nowrap;
 }
 
-.apply-promo-btn {
+.applyPromoBtn {
   background: #60696b;
   color: white;
 }
 
-.apply-promo-btn:hover:not(:disabled) {
+.applyPromoBtn:hover:not(:disabled) {
   background: #60696b;
   transform: translateY(-2px);
 }
 
-.apply-promo-btn:disabled {
+.applyPromoBtn:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
-.remove-promo-btn {
+.removePromoBtn {
   background: #ff6b6b;
   color: white;
 }
 
-.remove-promo-btn:hover {
+.removePromoBtn:hover {
   background: #ff5252;
   transform: translateY(-2px);
 }
 
-.promo-success {
+.promoSuccess {
   color: #28a745;
   font-size: 14px;
   margin-top: 10px;
   font-weight: 500;
 }
 
-/* Address Display */
-.address-display {
+.addressDisplay {
   background: #f9f9f9;
   padding: 15px 20px;
   border-radius: 8px;
@@ -276,8 +260,7 @@
   margin: 0;
 }
 
-/* Submit Button */
-.submit-payment-btn {
+.submitPaymentBtn {
   width: 100%;
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
   color: white;
@@ -291,18 +274,17 @@
   margin-top: 20px;
 }
 
-.submit-payment-btn:hover:not(:disabled) {
+.submitPaymentBtn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.submit-payment-btn:disabled {
+.submitPaymentBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* Order Summary Sidebar */
-.order-summary-sidebar {
+.orderSummarySidebar {
   background: white;
   border-radius: 12px;
   padding: 30px;
@@ -312,19 +294,19 @@
   height: fit-content;
 }
 
-.order-summary-sidebar h2 {
+.orderSummarySidebar h2 {
   color: #333;
   font-size: 24px;
   margin: 0 0 25px 0;
 }
 
-.summary-items {
+.summaryItems {
   margin-bottom: 25px;
   padding-bottom: 25px;
   border-bottom: 1px solid #eee;
 }
 
-.summary-items h3 {
+.summaryItems h3 {
   color: #666;
   font-size: 14px;
   text-transform: uppercase;
@@ -332,7 +314,7 @@
   font-weight: 600;
 }
 
-.summary-item {
+.summaryItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -341,11 +323,11 @@
   font-size: 14px;
 }
 
-.summary-item:last-child {
+.summaryItem:last-child {
   border-bottom: none;
 }
 
-.item-info {
+.itemInfo {
   flex: 1;
   display: flex;
   flex-direction: row;
@@ -353,29 +335,28 @@
   gap: 10px;
 }
 
-.item-name {
+.itemName {
   color: #333;
   font-weight: 500;
 }
 
-.item-qty {
+.itemQty {
   color: #999;
   font-size: 12px;
 }
 
-.item-price {
+.itemPrice {
   color: #60696b;
   font-weight: 600;
 }
 
-/* Summary Totals */
-.summary-totals {
+.summaryTotals {
   margin-bottom: 25px;
   padding-bottom: 25px;
   border-bottom: 1px solid #eee;
 }
 
-.total-row {
+.totalRow {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
@@ -383,16 +364,16 @@
   color: #666;
 }
 
-.total-row.discount {
+.totalRow.discount {
   color: #28a745;
 }
 
-.total-row.discount span:last-child {
+.totalRow.discount span:last-child {
   color: #28a745;
   font-weight: 600;
 }
 
-.total-row.final {
+.totalRow.final {
   border-top: 2px solid #60696b;
   padding-top: 15px;
   font-size: 18px;
@@ -400,126 +381,124 @@
   color: #333;
 }
 
-.total-row.final span:last-child {
+.totalRow.final span:last-child {
   color: #60696b;
 }
 
-/* Restaurant Info */
-.restaurant-info {
+.restaurantInfo {
   background: #f9f9f9;
   padding: 15px 20px;
   border-radius: 8px;
 }
 
-.restaurant-info h3 {
+.restaurantInfo h3 {
   color: #333;
   font-size: 16px;
   margin: 0 0 5px 0;
   font-weight: 600;
 }
 
-.restaurant-info p {
+.restaurantInfo p {
   color: #999;
   font-size: 14px;
   margin: 0;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
-  .payment-content {
+  .paymentContent {
     grid-template-columns: 1fr;
   }
 
-  .order-summary-sidebar {
+  .orderSummarySidebar {
     position: relative;
     top: 0;
   }
 }
 
 @media (max-width: 768px) {
-  .payment-container {
+  .paymentContainer {
     padding: 20px;
   }
 
-  .payment-form-section {
+  .paymentFormSection {
     padding: 25px;
   }
 
-  .payment-form-section h1 {
+  .paymentFormSection h1 {
     font-size: 24px;
   }
 
-  .form-row {
+  .formRow {
     grid-template-columns: 1fr;
   }
 
-  .order-summary-sidebar {
+  .orderSummarySidebar {
     padding: 20px;
   }
 
-  .order-summary-sidebar h2 {
+  .orderSummarySidebar h2 {
     font-size: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .payment-container {
+  .paymentContainer {
     padding: 15px;
   }
 
-  .payment-form-section {
+  .paymentFormSection {
     padding: 15px;
   }
 
-  .payment-form-section h1 {
+  .paymentFormSection h1 {
     font-size: 20px;
     margin-bottom: 20px;
   }
 
-  .form-section {
+  .formSection {
     margin-bottom: 20px;
     padding-bottom: 20px;
   }
 
-  .form-section h3 {
+  .formSection h3 {
     font-size: 16px;
   }
 
-  .payment-methods {
+  .paymentMethods {
     gap: 10px;
   }
 
-  .payment-method {
+  .paymentMethod {
     padding: 12px 15px;
   }
 
-  .promo-group {
+  .promoGroup {
     flex-direction: column;
   }
 
-  .apply-promo-btn,
-  .remove-promo-btn {
+  .applyPromoBtn,
+  .removePromoBtn {
     width: 100%;
   }
 
-  .order-summary-sidebar {
+  .orderSummarySidebar {
     padding: 15px;
   }
 
-  .summary-items h3 {
+  .summaryItems h3 {
     font-size: 13px;
   }
 
-  .summary-item {
+  .summaryItem {
     padding: 10px 0;
     font-size: 13px;
   }
 
-  .total-row {
+  .totalRow {
     font-size: 13px;
   }
 
-  .total-row.final {
+  .totalRow.final {
     font-size: 16px;
   }
 }

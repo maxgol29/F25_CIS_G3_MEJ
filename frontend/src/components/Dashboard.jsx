@@ -388,7 +388,7 @@ const Dashboard = ({ user, onNavigate }) => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, value }) => `${name}: $${value}`}
+                label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
                 outerRadius={120}
                 fill="#03021bff"
                 dataKey="value"
@@ -397,7 +397,7 @@ const Dashboard = ({ user, onNavigate }) => {
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => `$${value}`} />
+              <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -415,7 +415,7 @@ const Dashboard = ({ user, onNavigate }) => {
                       <div className={styles.customTooltip}>
                         <p>{`Promo: ${payload[0].payload.name}`}</p>
                         <p>{`Uses: ${payload[0].value}`}</p>
-                        <p>{`Total Discount: $${payload[0].payload.totalDiscount}`}</p>
+                        <p>{`Total Discount: $${payload[0].payload.totalDiscount.toFixed(2)}`}</p>
                       </div>
                     );
                   }

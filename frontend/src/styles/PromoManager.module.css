@@ -1,16 +1,16 @@
-.promo-manager-page {
+.promoManagerPage {
   min-height: 100vh;
   background: #f5f5f5;
   padding-bottom: 40px;
 }
 
-.promo-container {
+.promoContainer {
   max-width: 1000px;
   margin: 0 auto;
   padding: 40px 20px;
 }
 
-.promo-container h1 {
+.promoContainer h1 {
   text-align: center;
   color: #333;
   font-size: 36px;
@@ -18,7 +18,7 @@
   font-weight: 600;
 }
 
-.promo-list-section {
+.promoListSection {
   background: white;
   border-radius: 15px;
   padding: 40px;
@@ -26,7 +26,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.promo-list-section h2 {
+.promoListSection h2 {
   color: #333;
   font-size: 20px;
   margin: 0 0 25px 0;
@@ -35,22 +35,22 @@
   border-bottom: 2px solid #60696b;
 }
 
-.promos-table {
+.promosTable {
   width: 100%;
   border-collapse: collapse;
   overflow-x: auto;
 }
 
-.promos-table table {
+.promosTable table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.promos-table thead {
+.promosTable thead {
   background: #f9f9f9;
 }
 
-.promos-table th {
+.promosTable th {
   padding: 15px;
   text-align: left;
   color: #333;
@@ -60,27 +60,27 @@
   border-bottom: 2px solid #eee;
 }
 
-.promos-table td {
+.promosTable td {
   padding: 15px;
   border-bottom: 1px solid #eee;
   font-size: 14px;
   color: #666;
 }
 
-.promos-table tbody tr:last-child td {
+.promosTable tbody tr:last-child td {
   border-bottom: none;
 }
 
-.promos-table td strong {
+.promosTable td strong {
   color: #333;
   font-weight: 600;
 }
 
-.promos-table td:nth-child(1) strong {
+.promosTable td:nth-child(1) strong {
   color: #28a745;
 }
 
-.no-promos {
+.noPromos {
   text-align: center;
   padding: 60px 40px;
   color: #999;
@@ -95,14 +95,14 @@
   font-weight: 500;
 }
 
-.promo-form-section {
+.promoFormSection {
   background: white;
   border-radius: 15px;
   padding: 40px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.promo-form-section h2 {
+.promoFormSection h2 {
   color: #333;
   font-size: 20px;
   margin: 0 0 30px 0;
@@ -111,7 +111,7 @@
   border-bottom: 2px solid #333;
 }
 
-.error-message {
+.errorMessage {
   background: #fff3cd;
   color: #cc0000;
   padding: 15px 20px;
@@ -122,7 +122,7 @@
   font-weight: 500;
 }
 
-.success-message {
+.successMessage {
   background: #d4edda;
   color: #28a745;
   padding: 15px 20px;
@@ -145,18 +145,18 @@
   }
 }
 
-.promo-form {
+.promoForm {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 25px;
 }
 
-.form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
 }
 
-.form-group label {
+.formGroup label {
   color: #333;
   font-weight: 600;
   font-size: 13px;
@@ -164,9 +164,9 @@
   text-transform: uppercase;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
   padding: 12px 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -177,36 +177,31 @@
   background: white;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: #999;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
   outline: none;
   border-color: #28a745;
   box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
 }
 
-.form-group textarea {
+.formGroup textarea {
   resize: vertical;
   min-height: 80px;
 }
 
-.form-group small {
+.formGroup small {
   color: #999;
   font-size: 12px;
   margin-top: 6px;
   font-weight: 400;
 }
 
-.form-group:nth-child(n + 5) {
+.formGroup:nth-child(n + 5) {
   grid-column: 1 / -1;
 }
 
-.btn-create {
+.btnCreate {
   grid-column: 1 / -1;
   padding: 14px 32px;
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
@@ -220,121 +215,115 @@
   margin-top: 10px;
 }
 
-.btn-create:hover:not(:disabled) {
+.btnCreate:hover:not(:disabled) {
   transform: translateY(1px);
 }
 
-.btn-create:active:not(:disabled) {
+.btnCreate:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.btn-create:disabled {
+.btnCreate:disabled {
   background: #ddd;
   color: #999;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-.loading-small {
+.loadingSmall {
   color: #60696b;
   font-size: 12px;
   margin-top: 6px;
   font-style: italic;
 }
 
-.error-small {
+.errorSmall {
   color: #cc0000;
   font-size: 12px;
   margin-top: 6px;
   font-weight: 500;
 }
 @media (max-width: 768px) {
-  .promo-container {
+  .promoContainer {
     padding: 20px;
   }
 
-  .promo-container h1 {
+  .promoContainer h1 {
     font-size: 28px;
     margin-bottom: 30px;
   }
 
-  .promo-list-section,
-  .promo-form-section {
+  .promoListSection,
+  .promoFormSection {
     padding: 25px;
     margin-bottom: 25px;
   }
 
-  .promo-list-section h2,
-  .promo-form-section h2 {
+  .promoListSection h2,
+  .promoFormSection h2 {
     font-size: 18px;
     margin-bottom: 20px;
   }
 
-  .promo-form {
+  .promoForm {
     grid-template-columns: 1fr;
     gap: 20px;
   }
 
-  .form-group:nth-child(n + 5) {
+  .formGroup:nth-child(n + 5) {
     grid-column: auto;
   }
 
-  .promos-table th {
+  .promosTable th {
     font-size: 12px;
     padding: 12px;
   }
 
-  .promos-table td {
+  .promosTable td {
     padding: 12px;
     font-size: 13px;
   }
 }
 
 @media (max-width: 480px) {
-  .promo-container {
+  .promoContainer {
     padding: 15px;
   }
 
-  .promo-container h1 {
+  .promoContainer h1 {
     font-size: 22px;
     margin-bottom: 20px;
   }
 
-  .promo-list-section,
-  .promo-form-section {
+  .promoListSection,
+  .promoFormSection {
     padding: 20px;
     border-radius: 12px;
   }
 
-  .promo-list-section h2,
-  .promo-form-section h2 {
+  .promoListSection h2,
+  .promoFormSection h2 {
     font-size: 16px;
     margin-bottom: 15px;
   }
 
-  .promos-table th {
+  .promosTable th {
     font-size: 11px;
     padding: 10px;
   }
 
-  .promos-table td {
+  .promosTable td {
     padding: 10px;
     font-size: 12px;
   }
 
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    font-size: 16px; 
-  }
-
-  .btn-create {
+  .btnCreate {
     padding: 12px 20px;
     font-size: 14px;
   }
 
-  .error-message,
-  .success-message {
+  .errorMessage,
+  .successMessage {
     font-size: 13px;
     padding: 12px 15px;
   }

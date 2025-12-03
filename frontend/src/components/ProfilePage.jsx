@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import NavBar from './NavBar';
-import '../styles/ProfilePage.css';
+import styles from '../styles/ProfilePage.module.css';
 
 const ProfilePage = ({ user, onLogout, onNavigate }) => {
   const [userDetails, setUserDetails] = useState(null);
@@ -60,44 +60,44 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
 
   if (loading) {
     return (
-      <div className="profile-page">
+      <div className={styles.profilePage}>
         <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
-        <div className="profile-container">
-          <div className="loading">Loading profile...</div>
+        <div className={styles.profileContainer}>
+          <div className={styles.loading}>Loading profile...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="profile-page">
+    <div className={styles.profilePage}>
       <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
 
-      <div className="profile-container">
-        <div className="profile-header">
+      <div className={styles.profileContainer}>
+        <div className={styles.profileHeader}>
           <h1>Profile</h1>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className={styles.errorMessage}>{error}</div>}
 
-        <div className="profile-content">
+        <div className={styles.profileContent}>
           {/* Personal Information */}
-          <section className="profile-section">
+          <section className={styles.profileSection}>
             <h2>Personal Information</h2>
-            <div className="info-grid">
-              <div className="info-item">
+            <div className={styles.infoGrid}>
+              <div className={styles.infoItem}>
                 <label>First Name</label>
                 <p>{userDetails?.first_name || user?.first_name || 'N/A'}</p>
               </div>
-              <div className="info-item">
+              <div className={styles.infoItem}>
                 <label>Last Name</label>
                 <p>{userDetails?.last_name || user?.last_name || 'N/A'}</p>
               </div>
-              <div className="info-item">
+              <div className={styles.infoItem}>
                 <label>Email</label>
                 <p>{userDetails?.email || user?.email || 'N/A'}</p>
               </div>
-              <div className="info-item">
+              <div className={styles.infoItem}>
                 <label>Phone</label>
                 <p>{userDetails?.phone || 'Not provided'}</p>
               </div>
@@ -106,29 +106,29 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
 
           {/* Address Information */}
           {userDetails?.street && (
-            <section className="profile-section">
+            <section className={styles.profileSection}>
               <h2>Address</h2>
-              <div className="address-block">
-                <p className="street">
+              <div className={styles.addressBlock}>
+                <p className={styles.street}>
                   {userDetails.street}
                   {userDetails.building_number && ` ${userDetails.building_number}`}
                   {userDetails.apartment_number && ` Apt ${userDetails.apartment_number}`}
                 </p>
-                <p className="city-state">
+                <p className={styles.cityState}>
                   {userDetails.city}
                   {userDetails.state && `, ${userDetails.state}`}
                   {userDetails.zip_code && ` ${userDetails.zip_code}`}
                 </p>
-                <p className="country">{userDetails.country}</p>
+                <p className={styles.country}>{userDetails.country}</p>
               </div>
             </section>
           )}
 
-          <section className="profile-section savings-section">
-            <div className="savings-box">
-              <div className="savings-content">
+          <section className={`${styles.profileSection} ${styles.savingsSection}`}>
+            <div className={styles.savingsBox}>
+              <div className={styles.savingsContent}>
                 <h2>Total Savings</h2>
-                <p className="savings-amount">
+                <p className={styles.savingsAmount}>
                   ${savings?.total_savings.toFixed(2) || '0.00'}
                 </p>
               </div>
@@ -136,12 +136,12 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
           </section>
           
           {/* Account Actions */}
-          <section className="profile-section">
+          <section className={styles.profileSection}>
             <h2>Account</h2>
-            <div className="actions">
-              <button className="action-button secondary">Edit Profile</button>
-              <button className="action-button secondary">Change Password</button>
-              <button className="action-button danger" onClick={onLogout}>
+            <div className={styles.actions}>
+              <button className={`${styles.actionButton} ${styles.secondary}`}>Edit Profile</button>
+              <button className={`${styles.actionButton} ${styles.secondary}`}>Change Password</button>
+              <button className={`${styles.actionButton} ${styles.danger}`} onClick={onLogout}>
                 Log Out
               </button>
             </div>

@@ -1,11 +1,11 @@
-.owner-page {
+.ownerPage {
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-.owner-container {
+.ownerContainer {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@
   gap: 40px;
 }
 
-.owner-card {
+.ownerCard {
   background: white;
   border-radius: 20px;
   padding: 50px 40px;
@@ -37,20 +37,14 @@
   }
 }
 
-.owner-icon {
-  font-size: 80px;
-  margin-bottom: 20px;
-  display: inline-block;
-}
-
-.owner-card h1 {
+.ownerCard h1 {
   color: #333;
   font-size: 28px;
   margin: 20px 0 30px 0;
   font-weight: 700;
 }
 
-.owner-info {
+.ownerInfo {
   background: #f9f9f9;
   border-radius: 15px;
   padding: 30px;
@@ -58,19 +52,19 @@
   text-align: left;
 }
 
-.info-item {
+.infoItem {
   margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 1px solid #eee;
 }
 
-.info-item:last-child {
+.infoItem:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
   border-bottom: none;
 }
 
-.info-item label {
+.infoItem label {
   display: block;
   font-size: 12px;
   font-weight: 600;
@@ -80,48 +74,20 @@
   letter-spacing: 0.5px;
 }
 
-.info-item p {
+.infoItem p {
   font-size: 16px;
   color: #333;
   margin: 0;
   font-weight: 500;
 }
 
-.status-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-  color: #155724;
-  padding: 15px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 16px;
-  margin-top: 20px;
-}
-
-.status-indicator {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  background: #28a745;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.owner-actions {
+.ownerActions {
   display: flex;
   gap: 15px;
   justify-content: center;
 }
 
-.logout-btn {
+.logoutBtn {
   background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
   color: white;
   border: none;
@@ -143,79 +109,60 @@
   transform: translateY(0);
 }
 
-.coming-soon {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 16px;
-}
-
-.coming-soon p {
-  margin: 0;
-  font-style: italic;
-  opacity: 0.8;
-}
 
 /* Responsive */
 @media (max-width: 768px) {
-  .owner-card {
+  .ownerCard {
     padding: 40px 30px;
   }
 
-  .owner-card h1 {
+  .ownerCard h1 {
     font-size: 24px;
   }
 
-  .owner-icon {
-    font-size: 60px;
-  }
-
-  .owner-info {
+  .ownerInfo {
     padding: 20px;
   }
 
-  .info-item label {
+  .infoItem label {
     font-size: 11px;
   }
 
-  .info-item p {
+  .infoItem p {
     font-size: 15px;
   }
 
-  .logout-btn {
+  .logoutBtn {
     padding: 12px 30px;
     font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
-  .owner-container {
+  .ownerContainer {
     padding: 20px;
     gap: 20px;
   }
 
-  .owner-card {
+  .ownerCard {
     padding: 30px 20px;
   }
 
-  .owner-card h1 {
+  .ownerCard h1 {
     font-size: 20px;
     margin: 15px 0 20px 0;
   }
 
-  .owner-icon {
-    font-size: 50px;
-  }
-
-  .owner-info {
+  .ownerInfo {
     padding: 15px;
   }
 
-  .info-item {
+  .infoItem {
     margin-bottom: 15px;
     padding-bottom: 15px;
   }
 
-  .logout-btn {
+  .logoutBtn {
     width: 100%;
   }
 }

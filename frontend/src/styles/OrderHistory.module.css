@@ -76,12 +76,12 @@
   transition: all 0.3s ease;
 }
 
-.order-card:hover {
+.orderCard:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-color: #60696b;
 }
 
-.order-card-header {
+.orderCardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -90,23 +90,23 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
-.order-info h3 {
+.orderInfo h3 {
   margin: 0 0 5px 0;
   font-size: 18px;
   color: #333;
 }
 
-.order-date {
+.orderDate {
   margin: 0;
   font-size: 13px;
   color: #999;
 }
 
-.order-status {
+.orderStatus {
   text-align: right;
 }
 
-.status-badge {
+.statusBadge {
   display: inline-block;
   padding: 6px 12px;
   border-radius: 20px;
@@ -116,68 +116,68 @@
   letter-spacing: 0.5px;
 }
 
-.status-completed {
+.statusCompleted {
   background: #d4edda;
   color: #155724;
 }
 
-.status-ready {
+.statusReady {
   background: #cfe2ff;
   color: #084298;
 }
 
-.status-preparing {
+.statusPreparing {
   background: #fff3cd;
   color: #664d03;
 }
 
-.status-confirmed {
+.statusConfirmed {
   background: #e2e3e5;
   color: #383d41;
 }
 
-.status-pending {
+.statusPending {
   background: #f8d7da;
   color: #842029;
 }
 
-.status-cancelled {
+.statusCancelled {
   background: #f5c2c7;
   color: #842029;
 }
 
-.business-section {
+.businessSection {
   margin-bottom: 15px;
 }
 
-.business-section h4 {
+.businessSection h4 {
   margin: 0 0 5px 0;
   font-size: 16px;
   color: #333;
   font-weight: 600;
 }
 
-.business-address {
+.businessAddress {
   margin: 0;
   font-size: 13px;
   color: #666;
   line-height: 1.4;
 }
 
-.items-section {
+.itemsSection {
   margin-bottom: 15px;
   padding: 10px 0;
   border-top: 1px solid #f0f0f0;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.items-details {
+.itemsDetails {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.item-line {
+.itemLine {
   margin: 0;
   font-size: 14px;
   color: #555;
@@ -186,20 +186,20 @@
   align-items: center;
 }
 
-.item-qty {
+.itemQty {
   margin-left: 10px;
   font-size: 12px;
   color: #999;
   font-weight: 600;
 }
 
-.items-count {
+.itemsCount {
   margin: 0;
   font-size: 13px;
   color: #999;
 }
 
-.order-card-footer {
+.orderCardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -225,7 +225,7 @@
   font-weight: 700;
 }
 
-.view-details-btn {
+.viewDetailsBtn {
   padding: 10px 20px;
   background: #60696b;
   color: white;
@@ -237,30 +237,30 @@
   transition: all 0.3s ease;
 }
 
-.view-details-btn:hover {
+.viewDetailsBtn:hover {
   background: #60696b;
   transform: translateY(1px);
   box-shadow: 0 4px 12px rgba(96, 105, 107, 0.3);
 }
 
-.empty-orders {
+.emptyOrders {
   padding: 60px 20px;
   text-align: center;
 }
 
-.empty-orders h2 {
+.emptyOrders h2 {
   margin: 0 0 10px 0;
   font-size: 24px;
   color: #333;
 }
 
-.empty-orders p {
+.emptyOrders p {
   margin: 0 0 20px 0;
   font-size: 16px;
   color: #999;
 }
 
-.action-btn {
+.actionBtn {
   padding: 12px 30px;
   background: #60696b;
   color: white;
@@ -272,27 +272,27 @@
   transition: all 0.3s ease;
 }
 
-.action-btn:hover {
+.actionBtn:hover {
   background: #60696b;
   transform: translateY(1px);
 }
 
-.error-box {
+.errorBox {
   padding: 40px 20px;
   text-align: center;
 }
 
-.error-box h2 {
+.errorBox h2 {
   margin: 0 0 10px 0;
   color: #d32f2f;
 }
 
-.error-box p {
+.errorBox p {
   margin: 0 0 20px 0;
   color: #666;
 }
 
-.back-btn {
+.backBtn {
   padding: 10px 20px;
   background: #60696b;
   color: white;
@@ -304,16 +304,16 @@
 }
 
 @media (max-width: 600px) {
-  .history-header h1 {
+  .historyHeader h1 {
     font-size: 24px;
   }
 
-  .order-card-header {
+  .orderCardHeader {
     flex-direction: column;
     gap: 10px;
   }
 
-  .order-card-footer {
+  .orderCardFooter {
     flex-direction: column;
     gap: 15px;
   }
@@ -322,25 +322,25 @@
     width: 100%;
   }
 
-  .view-details-btn {
+  .viewDetailsBtn {
     width: 100%;
   }
 
-  .filter-buttons {
+  .filterButtons {
     gap: 8px;
   }
 
-  .filter-btn {
+  .filterBtn {
     padding: 8px 14px;
     font-size: 12px;
   }
 
-  .item-line {
+  .itemLine {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .item-qty {
+  .itemQty {
     margin-left: 0;
     margin-top: 3px;
   }

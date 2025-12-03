@@ -168,7 +168,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
 
           <div className={styles.businessMeta}>
             <div className={styles.metaItem}>
-              <span className={styles.value}>{business.type}</span>
+              <span className={styles.value}>{business.type.charAt(0).toUpperCase() + business.type.slice(1)}</span>
             </div>
 
             <div className={styles.metaItem}>
@@ -196,7 +196,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
 
             {business.opening_hours && (
               <div className={styles.metaItem}>
-                <span className={`status ${business.opening_hours.open_now ? 'open' : 'closed'}`}>
+                <span className={`${styles.status} ${business.opening_hours.open_now ? styles.open : styles.closed}`}>
                   {business.opening_hours.open_now ? 'Open Now' : 'Closed'}
                 </span>
               </div>

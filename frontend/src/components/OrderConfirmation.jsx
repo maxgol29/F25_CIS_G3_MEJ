@@ -69,38 +69,10 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
       <div className={styles.confirmationContainer}>
         <div className={styles.confirmationContent}>
           <div className={styles.confirmationHeader}>
-            <div className={styles.successAnimation}>
-              <div className={styles.checkmark}>1</div>
-            </div>
             <h1>Order Confirmed!</h1>
             <p className={styles.orderNumber}>Order #{order.id}</p>
           </div>
           <div className={styles.confirmationDetails}>
-            <div className={styles.statusTimeline}>
-              <h3>Order Status</h3>
-              <div className={styles.timeline}>
-                <div className={`${styles.timelineStep} ${styles.completed}`}>
-                  <div className={styles.timelineDot}>✓</div>
-                  <div className={styles.timelineLabel}>Order Placed</div>
-                </div>
-                <div className={`${styles.timelineStep} ${order.status === 'confirmed' || order.status === 'preparing' || order.status === 'ready' || order.status === 'completed' ? styles.completed : ''}`}>
-                  <div className={styles.timelineDot}>2</div>
-                  <div className={styles.timelineLabel}>Confirmed</div>
-                </div>
-                <div className={`${styles.timelineStep} ${order.status === 'preparing' || order.status === 'ready' || order.status === 'completed' ? styles.completed : ''}`}>
-                  <div className={styles.timelineDot}>3</div>
-                  <div className={styles.timelineLabel}>Preparing</div>
-                </div>
-                <div className={`${styles.timelineStep} ${order.status === 'ready' || order.status === 'completed' ? styles.completed : ''}`}>
-                  <div className={styles.timelineDot}>4</div>
-                  <div className={styles.timelineLabel}>Ready</div>
-                </div>
-                <div className={`${styles.timelineStep} ${order.status === 'completed' ? styles.completed : ''}`}>
-                  <div className={styles.timelineDot}>5</div>
-                  <div className={styles.timelineLabel}>Completed</div>
-                </div>
-              </div>
-            </div>
             <div className={styles.itemsSummary}>
               <h3>Order Items</h3>
               <div className={styles.itemsList}>
