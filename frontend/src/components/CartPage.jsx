@@ -1,6 +1,6 @@
 import { useCart } from '../context/CartContext';
 import NavBar from './NavBar';
-import '../styles/CartPage.css';
+import styles from '../styles/CartPage.module.css';
 
 const CartPage = ({ user, onNavigate }) => {
   const { cart, removeFromCart, updateQuantity, clearCart, calculateTotals } = useCart();
@@ -13,14 +13,14 @@ const CartPage = ({ user, onNavigate }) => {
 
   if (cart.items.length === 0) {
     return (
-      <div className="cart-page">
+      <div className={styles.cartPage}>
         <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
-        <div className="cart-container">
-          <div className="empty-cart">
+        <div className={styles.cartContainer}>
+          <div className={styles.emptyCart}>
             <h2>Your cart is empty</h2>
             <p>Add items from restaurants to get started</p>
             <button
-              className="continue-shopping-btn"
+              className={styles.continueShoppingBtn}
               onClick={() => onNavigate('map')}
             >
               Continue Shopping
@@ -32,40 +32,50 @@ const CartPage = ({ user, onNavigate }) => {
   }
 
   return (
-    <div className="cart-page">
+    <div className={styles.cartPage}>
       <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
 
-      <div className="cart-container">
-        <div className="cart-header">
+      <div className={styles.cartContainer}>
+        <div className={styles.cartHeader}>
           <h1>Order from {cart.businessName}</h1>
-          <button className="clear-cart-btn" onClick={clearCart}>
+          <button className={styles.clearCartBtn} onClick={clearCart}>
             Clear Cart
           </button>
         </div>
 
-        <div className="cart-content">
+        <div className={styles.cartContent}>
           {/* Cart Items */}
-          <div className="cart-items-section">
+          <div className={styles.cartItemsSection}>
             <h2>Items ({cart.items.length})</h2>
-            <div className="cart-items-list">
+            <div className={styles.cartItemsList}>
               {cart.items.map(item => (
-                <div key={item.itemId} className="cart-item">
+                <div key={item.itemId} className={styles.cartItem}>
                   {item.imageUrl && (
-                    <img src={item.imageUrl} alt={item.dishName} className="item-image-cart" />
+                    <img src={item.imageUrl} alt={item.dishName} className={styles.itemImageCart} />
                   )}
 
-                  <div className="item-details">
+                  <div className={styles.itemDetails}>
                     <h3>{item.dishName}</h3>
-                    <div className="item-pricing">
+                    <div className={styles.itemPricing}>
                       {item.discountPercentage > 0 ? (
                         <>
-                          <span className="original-price">
+                          <span className={styles.originalPrice}>
                             ${item.price.toFixed(2)}
                           </span>
-                          <span className="discount-badge">
+                          <span className={styles.discountBadge}>
                             -{item.discountPercentage}%
                           </span>
-                          <span className="price">
+                          <span className={styles.price}>
+                            ${(
+                              item.price *
+                              (1 - item.discountPercentage / 100)
+                            ).toFixed(2)}
+                            ${item.price.toFixed(2)}
+                          </span>
+                          <span className={styles.discountBadge}>
+                            -{item.discountPercentage}%
+                          </span>
+                          <span className={styles.price}>
                             ${(
                               item.price *
                               (1 - item.discountPercentage / 100)
@@ -73,14 +83,14 @@ const CartPage = ({ user, onNavigate }) => {
                           </span>
                         </>
                       ) : (
-                        <span className="price">${item.price.toFixed(2)}</span>
+                        <span className={styles.price}>${item.price.toFixed(2)}</span>
                       )}
                     </div>
                   </div>
 
-                  <div className="item-controls">
+                  <div className={styles.itemControls}>
                     <button
-                      className="qty-btn"
+                      className={styles.qtyBtn}
                       onClick={() =>
                         updateQuantity(item.itemId, item.quantity - 1)
                       }
@@ -89,7 +99,7 @@ const CartPage = ({ user, onNavigate }) => {
                     </button>
                     <input
                       type="number"
-                      className="qty-input"
+                      className={styles.qtyInput}
                       value={item.quantity}
                       onChange={e =>
                         updateQuantity(
@@ -100,7 +110,7 @@ const CartPage = ({ user, onNavigate }) => {
                       min="1"
                     />
                     <button
-                      className="qty-btn"
+                      className={styles.qtyBtn}
                       onClick={() =>
                         updateQuantity(item.itemId, item.quantity + 1)
                       }
@@ -109,7 +119,7 @@ const CartPage = ({ user, onNavigate }) => {
                     </button>
                   </div>
 
-                  <div className="item-total">
+                  <div className={styles.itemTotal}>
                     ${(
                       item.price *
                       item.quantity *
@@ -118,7 +128,7 @@ const CartPage = ({ user, onNavigate }) => {
                   </div>
 
                   <button
-                    className="remove-btn"
+                    className={styles.removeBtn}
                     onClick={() => removeFromCart(item.itemId)}
                     title="Remove item"
                   >
@@ -128,33 +138,33 @@ const CartPage = ({ user, onNavigate }) => {
               ))}
             </div>
           </div>
-          <div className="order-summary">
+          <div className={styles.orderSummary}>
             <h2>Order Summary</h2>
 
-            <div className="summary-row">
+            <div className={styles.summaryRow}>
               <span>Subtotal</span>
               <span>${totals.subtotal.toFixed(2)}</span>
             </div>
 
             {totals.totalDiscount > 0 && (
-              <div className="summary-row discount">
+              <div className={styles.summaryRow}>
                 <span>Discount</span>
                 <span>-${totals.totalDiscount.toFixed(2)}</span>
               </div>
             )}
 
-            <div className="summary-row">
+            <div className={styles.summaryRow}>
               <span>Tax (8%)</span>
               <span>${totals.tax.toFixed(2)}</span>
             </div>
 
-            <div className="summary-row total">
+            <div className={`${styles.summaryRow} ${styles.total}`}>
               <span>Total</span>
               <span>${totals.total.toFixed(2)}</span>
             </div>
 
             <button 
-              className="checkout-btn"
+              className={styles.checkoutBtn}
               onClick={() => onNavigate('payment')}
               disabled={cart.items.length === 0}
             >
@@ -162,7 +172,7 @@ const CartPage = ({ user, onNavigate }) => {
             </button>
 
             <button
-              className="continue-shopping-btn"
+              className={styles.continueShoppingBtn}
               onClick={() => onNavigate('businessDetail', cart.businessId)}
             >
               Continue Shopping

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import NavBar from './NavBar';
-import '../styles/PaymentPage.css';
+import styles from '../styles/PaymentPage.module.css';
 
 const PaymentPage = ({ user, onNavigate }) => {
   const { cart, calculateTotals, clearCart } = useCart();
@@ -26,13 +26,13 @@ const PaymentPage = ({ user, onNavigate }) => {
 
   if (!cart.items || cart.items.length === 0) {
     return (
-      <div className="payment-page">
+      <div className={styles.paymentPage}>
         <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
-        <div className="payment-container">
-          <div className="empty-payment">
+        <div className={styles.paymentContainer}>
+          <div className={styles.emptyPayment}>
             <h2>Your cart is empty</h2>
             <p>Please add items before checkout</p>
-            <button onClick={() => onNavigate('map')} className="back-btn">
+            <button onClick={() => onNavigate('map')} className={styles.backBtn}>
               Continue Shopping
             </button>
           </div>
@@ -187,14 +187,13 @@ const PaymentPage = ({ user, onNavigate }) => {
 
   if (success) {
     return (
-      <div className="payment-page">
+      <div className={styles.paymentPage}>
         <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
-        <div className="payment-container">
-          <div className="success-message">
-            <div className="success-icon">✓</div>
+        <div className={styles.paymentContainer}>
+          <div className={styles.successMessage}>
             <h2>Payment Successful!</h2>
             <p>Your order has been placed</p>
-            <p className="small">Redirecting to confirmation...</p>
+            <p className={styles.small}>Redirecting to confirmation...</p>
           </div>
         </div>
       </div>
@@ -202,21 +201,20 @@ const PaymentPage = ({ user, onNavigate }) => {
   }
 
   return (
-    <div className="payment-page">
+    <div className={styles.paymentPage}>
       <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
 
-      <div className="payment-container">
-        <div className="payment-content">
-          <div className="payment-form-section">
+      <div className={styles.paymentContainer}>
+        <div className={styles.paymentContent}>
+          <div className={styles.paymentFormSection}>
             <h1>Checkout</h1>
 
-            {error && <div className="error-message">{error}</div>}
-
-            <form onSubmit={handleSubmit} className="payment-form">
-              <div className="form-section">
+            {error && <div className={styles.errorMessage}>{error}</div>}
+            <form onSubmit={handleSubmit} className={styles.paymentForm}>
+              <div className={styles.formSection}>
                 <h3>Payment Method</h3>
-                <div className="payment-methods">
-                  <label className="payment-method">
+                <div className={styles.paymentMethods}>
+                  <label className={styles.paymentMethod}>
                     <input
                       type="radio"
                       name="paymentMethod"
@@ -226,7 +224,7 @@ const PaymentPage = ({ user, onNavigate }) => {
                     />
                     <span>Credit/Debit Card</span>
                   </label>
-                  <label className="payment-method">
+                  <label className={styles.paymentMethod}>
                     <input
                       type="radio"
                       name="paymentMethod"
@@ -236,7 +234,7 @@ const PaymentPage = ({ user, onNavigate }) => {
                     />
                     <span>Cash</span>
                   </label>
-                  <label className="payment-method">
+                  <label className={styles.paymentMethod}>
                     <input
                       type="radio"
                       name="paymentMethod"
@@ -250,10 +248,10 @@ const PaymentPage = ({ user, onNavigate }) => {
               </div>
 
               {formData.paymentMethod === 'card' && (
-                <div className="form-section">
+                <div className={styles.formSection}>
                   <h3>Card Details</h3>
 
-                  <div className="form-group">
+                  <div className={styles.formGroup}>
                     <label>Cardholder Name</label>
                     <input
                       type="text"
@@ -265,7 +263,7 @@ const PaymentPage = ({ user, onNavigate }) => {
                     />
                   </div>
 
-                  <div className="form-group">
+                  <div className={styles.formGroup}>
                     <label>Card Number</label>
                     <input
                       type="text"
@@ -281,8 +279,8 @@ const PaymentPage = ({ user, onNavigate }) => {
                     />
                   </div>
 
-                  <div className="form-row">
-                    <div className="form-group">
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
                       <label>Expiry Date</label>
                       <input
                         type="text"
@@ -298,7 +296,7 @@ const PaymentPage = ({ user, onNavigate }) => {
                       />
                     </div>
 
-                    <div className="form-group">
+                    <div className={styles.formGroup}>
                       <label>CVV</label>
                       <input
                         type="text"
@@ -314,16 +312,9 @@ const PaymentPage = ({ user, onNavigate }) => {
                 </div>
               )}
 
-              {formData.paymentMethod === 'cash' && (
-                <div className="form-section cash-notice">
-                  <h3>Cash Payment</h3>
-                  <p className="cash-total">Amount to pay: <strong>${finalTotal.toFixed(2)}</strong></p>
-                </div>
-              )}
-
-              <div className="form-section">
+              <div className={styles.formSection}>
                 <h3>Promo Code (Optional)</h3>
-                <div className="promo-group">
+                <div className={styles.promoGroup}>
                   <input
                     type="text"
                     name="promoCode"
@@ -337,7 +328,7 @@ const PaymentPage = ({ user, onNavigate }) => {
                       type="button"
                       onClick={applyPromoCode}
                       disabled={loading || !formData.promoCode.trim()}
-                      className="apply-promo-btn"
+                      className={styles.applyPromoBtn}
                     >
                       Apply
                     </button>
@@ -349,76 +340,76 @@ const PaymentPage = ({ user, onNavigate }) => {
                         setPromoDiscount(0);
                         setFormData(prev => ({ ...prev, promoCode: '' }));
                       }}
-                      className="remove-promo-btn"
+                      className={styles.removePromoBtn}
                     >
                       Remove
                     </button>
                   )}
                 </div>
                 {promoApplied && (
-                  <p className="promo-success">✓ Promo applied: -${promoDiscount.toFixed(2)}</p>
+                  <p className={styles.promoSuccess}>Promo applied: -${promoDiscount.toFixed(2)}</p>
                 )}
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="submit-payment-btn"
+                className={styles.submitPaymentBtn}
               >
                 {loading ? 'Processing...' : `Pay $${finalTotal.toFixed(2)}`}
               </button>
             </form>
           </div>
-          <div className="order-summary-sidebar">
+          <div className={styles.orderSummarySidebar}>
             <h2>Order Summary</h2>
-            <div className="summary-items">
+            <div className={styles.summaryItems}>
               {cart.items.map((item, idx) => (
-                <div key={idx} className="summary-item">
-                  <div className="item-info">
-                    <span className="item-name">{item.dishName}</span>
-                    <span className="item-qty">x{item.quantity}</span>
+                <div key={idx} className={styles.summaryItem}>
+                  <div className={styles.itemInfo}>
+                    <span className={styles.itemName}>{item.dishName}</span>
+                    <span className={styles.itemQty}>x{item.quantity}</span>
                   </div>
-                  <span className="item-price">
+                  <span className={styles.itemPrice}>
                     ${(item.price * item.quantity * (1 - item.discountPercentage / 100)).toFixed(2)}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="summary-totals">
-              <div className="total-row">
+            <div className={styles.summaryTotals}>
+              <div className={styles.totalRow}>
                 <span>Subtotal</span>
                 <span>${totals.subtotal.toFixed(2)}</span>
               </div>
 
               {totals.totalDiscount > 0 && (
-                <div className="total-row discount">
+                <div className={`${styles.totalRow} ${styles.discount}`}>
                   <span>Item Discount</span>
                   <span>-${totals.totalDiscount.toFixed(2)}</span>
                 </div>
               )}
 
               {promoDiscount > 0 && (
-                <div className="total-row discount">
+                <div className={`${styles.totalRow} ${styles.discount}`}>
                   <span>Promo Discount</span>
                   <span>-${promoDiscount.toFixed(2)}</span>
                 </div>
               )}
 
-              <div className="total-row">
+              <div className={styles.totalRow}>
                 <span>Tax</span>
                 <span>${totals.tax.toFixed(2)}</span>
               </div>
 
-              <div className="total-row">
+              <div className={styles.totalRow}>
                 <span>Processing Fee (2%)</span>
                 <span>${processingFee.toFixed(2)}</span>
               </div>
 
-              <div className="total-row final">
+              <div className={`${styles.totalRow} ${styles.final}`}>
                 <span>Total</span>
                 <span>${finalTotal.toFixed(2)}</span>
               </div>
             </div>
-            <div className="restaurant-info">
+            <div className={styles.restaurantInfo}>
               <h3>{cart.businessName}</h3>
               <p>{cart.items.length} items</p>
             </div>

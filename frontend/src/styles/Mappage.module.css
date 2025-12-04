@@ -1,11 +1,11 @@
-.map-page-fullscreen {
+.mapPageFullscreen {
   display: flex;
   flex-direction: column;
   width: 100%;
   background: #fff;
 }
 
-.error-message-floating {
+.errorMessageFloating {
   position: fixed;
   top: 70px;
   left: 15px;
@@ -20,18 +20,18 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.fullscreen-map-section {
+.fullscreenMapSection {
   width: 100%;
   height: 100vh;
   flex-shrink: 0;
 }
 
-.google-map-wrapper {
+.googleMapWrapper {
   width: 100%;
   height: 100%;
 }
 
-.api-key-error {
+.apiKeyError {
   width: 100%;
   height: 100vh;
   display: flex;
@@ -41,13 +41,13 @@
   border: 2px dashed #ff6b6b;
 }
 
-.api-key-error h3 {
+.apiKeyError h3 {
   color: #ff6b6b;
   font-size: 20px;
   margin: 0;
 }
 
-.fullscreen-businesses-section {
+.fullscreenBusinessesSection {
   width: 100%;
   min-height: 100vh;
   flex-shrink: 0;
@@ -58,25 +58,25 @@
   box-sizing: border-box;
 }
 
-.businesses-header {
+.businessesHeader {
   margin-bottom: 15px;
   text-align: center;
 }
 
-.businesses-header h2 {
+.businessesHeader h2 {
   color: #333;
   font-size: 24px;
   margin: 0 0 5px 0;
   font-weight: 700;
 }
 
-.scroll-hint {
+.scrollHint {
   color: #999;
   font-size: 12px;
   margin: 0;
 }
 
-.businesses-grid {
+.businessesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 12px;
@@ -84,7 +84,7 @@
   align-content: start;
 }
 
-.businesses-card {
+.businessesCard {
   width: 200px;
   height: 200px;
   padding: 12px;
@@ -101,7 +101,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.businesses-card:hover {
+.businessesCard:hover {
   background: #f9f9f9;
   border-color: #60696b;
   box-shadow: 0 4px 12px #60696b;
@@ -109,14 +109,14 @@
 }
 
 
-.businesses-card.active {
+.businessesCard.active {
   background: linear-gradient(135deg, #60696b15 0%, #60696b15 100%);
   border-color: #60696b;
   border-width: 3px;
   box-shadow: 0 4px 15px rgba(96, 105, 107, 0.3);
 }
 
-.businesses-name {
+.businessesName {
   color: #333;
   font-size: 13px;
   font-weight: 600;
@@ -127,11 +127,11 @@
   overflow: hidden;
 }
 
-.businesses-card.active .businesses-name {
+.businessesCard.active .businessesName {
   color: #27ae60;
 }
 
-.businesses-rating {
+.businessesRating {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -149,13 +149,13 @@
   font-size: 10px;
 }
 
-.no-rating {
+.noRating {
   color: #aaa;
   font-style: italic;
   font-size: 10px;
 }
 
-.businesses-status {
+.businessesStatus {
   margin-top: auto;
 }
 
@@ -189,7 +189,7 @@
   font-weight: 600;
 }
 
-.loading-businesses {
+.loadingBusinesses {
   padding: 20px;
   text-align: center;
   color: #666;
@@ -206,98 +206,98 @@
 }
 
 @media (max-width: 1024px) {
-  .businesses-grid {
+  .businessesGrid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
 
-  .businesses-card {
+  .businessesCard {
     width: 160px;
     height: 160px;
   }
 
-  .businesses-header h2 {
+  .businessesHeader h2 {
     font-size: 20px;
   }
 }
 
 @media (max-width: 768px) {
-  .fullscreen-map-section {
+  .fullscreenMapSection {
     height: 50vh;
   }
 
-  .fullscreen-businesses-section {
+  .fullscreenBusinessesSection {
     min-height: 50vh;
     padding: 12px;
   }
 
-  .businesses-grid {
+  .businessesGrid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
   }
 
-  .businesses-card {
+  .businessesCard {
     width: 140px;
     height: 140px;
     padding: 10px;
   }
 
-  .businesses-header h2 {
+  .businessesHeader h2 {
     font-size: 18px;
     margin: 0 0 8px 0;
   }
 
-  .businesses-name {
+  .businessesName {
     font-size: 12px;
     margin-bottom: 4px;
   }
 
-  .businesses-rating {
+  .businessesRating {
     font-size: 10px;
     margin-bottom: 4px;
   }
 
-  .error-message-floating {
+  .errorMessageFloating {
     top: 60px;
     font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .fullscreen-map-section {
+  .fullscreenMapSection {
     height: 45vh;
   }
 
-  .fullscreen-businesses-section {
+  .fullscreenBusinessesSection {
     min-height: 55vh;
     padding: 10px;
   }
 
-  .businesses-grid {
+  .businessesGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
 
-  .businesses-card {
+  .businessesCard {
     width: auto;
     height: 120px;
     padding: 8px;
   }
 
-  .businesses-header h2 {
+  .businessesHeader h2 {
     font-size: 16px;
     margin: 0 0 5px 0;
   }
 
-  .businesses-header {
+  .businessesHeader {
     margin-bottom: 10px;
   }
 
-  .businesses-name {
+  .businessesName {
     font-size: 11px;
     margin-bottom: 3px;
   }
 
-  .businesses-rating {
+  .businessesRating {
     font-size: 9px;
     margin-bottom: 3px;
   }
@@ -309,7 +309,7 @@
     font-size: 10px;
   }
 
-  .error-message-floating {
+  .errorMessageFloating {
     top: 55px;
     padding: 8px 12px;
     font-size: 11px;

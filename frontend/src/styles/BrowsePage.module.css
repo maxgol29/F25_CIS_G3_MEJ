@@ -1,30 +1,30 @@
 /* pages/BrowsePage.css */
 
-.browse-page {
+.browsePage {
   min-height: 100vh;
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);  padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.browse-header {
+.browseHeader {
   text-align: center;
   color: white;
   margin-bottom: 40px;
 }
 
-.browse-header h1 {
+.browseHeader h1 {
   font-size: 2.5rem;
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.browse-header p {
+.browseHeader p {
   font-size: 1.1rem;
   opacity: 0.9;
   margin: 10px 0 0 0;
 }
 
-.filters-section {
+.filtersSection {
   display: flex;
   gap: 15px;
   margin-bottom: 40px;
@@ -34,13 +34,13 @@
   margin-right: auto;
 }
 
-.search-bar {
+.searchBar {
   flex: 1;
   min-width: 250px;
   position: relative;
 }
 
-.search-input {
+.searchInput {
   width: 100%;
   padding: 12px 40px 12px 15px;
   border: none;
@@ -50,12 +50,12 @@
   transition: all 0.3s ease;
 }
 
-.search-input:focus {
+.searchInput:focus {
   outline: none;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-.clear-btn {
+.clearBtn {
   position: absolute;
   right: 15px;
   top: 50%;
@@ -68,25 +68,25 @@
   transition: color 0.2s;
 }
 
-.clear-btn:hover {
+.clearBtn:hover {
   color: #333;
 }
 
 /* Filter Groups */
-.filter-group {
+.filterGroup {
   display: flex;
   gap: 8px;
   min-width: 150px;
 }
 
-.filter-group label {
+.filterGroup label {
   color: white;
   font-weight: 600;
   font-size: 0.9rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.filter-select {
+.filterSelect {
   padding: 10px 15px;
   border: none;
   border-radius: 8px;
@@ -97,22 +97,22 @@
   transition: all 0.3s ease;
 }
 
-.filter-select:hover {
+.filterSelect:hover {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-.filter-select:focus {
+.filterSelect:focus {
   outline: none;
 }
 
 /* Rating Filter */
-.rating-filter {
+.ratingFilter {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-.rating-slider {
+.ratingSlider {
   flex: 1;
   height: 6px;
   border-radius: 3px;
@@ -121,7 +121,7 @@
   cursor: pointer;
 }
 
-.rating-display {
+.ratingDisplay {
   color: white;
   font-weight: 600;
   font-size: 0.9rem;
@@ -138,7 +138,7 @@
 }
 
 /* No Results */
-.no-results {
+.noResults {
   text-align: center;
   padding: 60px 20px;
   background: rgba(255, 255, 255, 0.1);
@@ -149,12 +149,12 @@
   margin-right: auto;
 }
 
-.no-results p {
+.noResults p {
   font-size: 1.3rem;
   margin-bottom: 20px;
 }
 
-.no-results button {
+.noResults button {
   padding: 12px 30px;
   background: white;
   color: #858e96;
@@ -166,12 +166,12 @@
   transition: all 0.3s ease;
 }
 
-.no-results button:hover {
+.noResults button:hover {
   transform: scale(1.01);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.businesses-grid {
+.businessesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
@@ -180,7 +180,7 @@
   margin-right: auto;
 }
 
-.business-card {
+.businessCard {
   background: white;
   border-radius: 15px;
   padding: 20px;
@@ -190,12 +190,12 @@
   flex-direction: column;
 }
 
-.business-card:hover {
+.businessCard:hover {
   transform: translateY(-1px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
-.card-header {
+.cardHeader {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -205,7 +205,7 @@
   margin: 0 auto;
 }
 
-.type-badge {
+.typeBadge {
   background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
   color: white;
   padding: 4px 12px;
@@ -216,7 +216,7 @@
   text-transform: capitalize;
 }
 
-.rating-section {
+.ratingSection {
   margin-bottom: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid #eee;
@@ -225,19 +225,19 @@
   flex-direction: row;
 }
 
-.rating-value {
+.ratingValue {
   color: #666;
   font-size: 0.9rem;
 }
 
-.card-info {
+.cardInfo {
   display: flex;
   flex-direction: column;
   gap: 10px;
   flex: 1;
 }
 
-.info-item {
+.infoItem {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -245,41 +245,41 @@
   font-size: 0.95rem;
 }
 
-.info-item .icon {
+.infoItem .icon {
   font-size: 1.1rem;
   min-width: 20px;
 }
 
-.info-item a {
+.infoItem a {
   color: #60696b;
   text-decoration: none;
   transition: color 0.2s;
   word-break: break-all;
 }
 
-.info-item a:hover {
+.infoItem a:hover {
   color: #60696b;
   text-decoration: underline;
 }
 
 @media (max-width: 768px) {
-  .browse-header h1 {
+  .browseHeader h1 {
     font-size: 1.8rem;
   }
 
-  .filters-section {
+  .filtersSection {
     flex-direction: row;
   }
 
-  .search-bar {
+  .searchBar {
     min-width: 100%;
   }
 
-  .filter-group {
+  .filterGroup {
     min-width: 100%;
   }
 
-  .businesses-grid {
+  .businessesGrid {
     grid-template-columns: 1fr;
   }
 }

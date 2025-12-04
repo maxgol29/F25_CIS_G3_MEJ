@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/OrderQRCode.css';
+import styles from '../styles/OrderQRCode.module.css';
 
 const OrderQRCode = ({ orderId }) => {
   const [qrCode, setQrCode] = useState(null);
@@ -36,11 +36,11 @@ const OrderQRCode = ({ orderId }) => {
   }, [orderId, REACT_APP_API_BASE_URL]);
 
   if (loading) {
-    return <div className="qr-code-loading">Generating QR code...</div>;
+    return <div className={styles.qrCodeLoading}>Generating QR code...</div>;
   }
 
   if (error) {
-    return <div className="qr-code-error">Error: {error}</div>;
+    return <div className={styles.qrCodeError}>Error: {error}</div>;
   }
 
   if (!qrCode) {
@@ -48,11 +48,11 @@ const OrderQRCode = ({ orderId }) => {
   }
 
   return (
-    <div className="qr-code-container">
-      <div className="qr-code-card">
+    <div className={styles.qrCodeContainer}>
+      <div className={styles.qrCodeCard}>
         <h3>Order QR Code</h3>
-        <p className="qr-code-id">Order #{orderId}</p>       
-        <div className="qr-code-image">
+        <p className={styles.qrCodeId}>Order #{orderId}</p>       
+        <div className={styles.qrCodeImage}>
           <img src={qrCode} alt={`QR Code for Order ${orderId}`} />
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/BusinessDetailPage.css';
+import styles from '../styles/BusinessDetailPage.module.css';
 import NavBar from './NavBar';
 import CartFooter from './CartFooter'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -125,7 +125,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
 
   if (loading) {
     return (
-      <div className="detail-page loading-page">
+      <div className={`${styles.detailPage} ${styles.loadingPage}`}>
         <p>Loading restaurant...</p>
       </div>
     );
@@ -133,7 +133,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
 
   if (error || !business) {
     return (
-      <div className="detail-page error-page">
+      <div className={`${styles.detailPage} ${styles.errorPage}`}>
         <h2>{error || 'Restaurant not found'}</h2>
         <button onClick={() => onNavigate('browse')}>← Back to Browse</button>
       </div>
@@ -158,21 +158,21 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
     <div>
       <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
 
-      <div className="detail-page">
-        <div className="detail-header">
-          <button className="back-btn" onClick={() => onNavigate('browse')}>← Back</button>
+      <div className={`${styles.detailPage} ${styles.detailPage}`}>
+        <div className={styles.detailHeader}>
+          <button className={styles.backBtn} onClick={() => onNavigate('browse')}>← Back</button>
         </div>
 
-        <div className="business-header">
+        <div className={styles.businessHeader}>
           <h1>{business.name}</h1>
-          
-          <div className="business-meta">
-            <div className="meta-item">
-              <span className="value">{business.type}</span>
+
+          <div className={styles.businessMeta}>
+            <div className={styles.metaItem}>
+              <span className={styles.value}>{business.type.charAt(0).toUpperCase() + business.type.slice(1)}</span>
             </div>
 
-            <div className="meta-item">
-              <span className="value">
+            <div className={styles.metaItem}>
+              <span className={styles.value}>
                 {[...Array(Math.floor(business.rating || 0))].map((_, i) => (
                   <FontAwesomeIcon key={i} icon={faStar} size="sm" style={{color: "#FFD43B",}} />
                 ))} {business.rating || 'N/A'}
@@ -181,13 +181,13 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
             </div>
 
             {business.phone && (
-              <div className="meta-item">
+              <div className={styles.metaItem}>
                 <a href={`tel:${business.phone}`}>{business.phone}</a>
               </div>
             )}
 
             {business.website && (
-              <div className="meta-item">
+              <div className={styles.metaItem}>
                 <a href={business.website} target="_blank" rel="noopener noreferrer">
                   Visit Website
                 </a>
@@ -195,8 +195,8 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
             )}
 
             {business.opening_hours && (
-              <div className="meta-item">
-                <span className={`status ${business.opening_hours.open_now ? 'open' : 'closed'}`}>
+              <div className={styles.metaItem}>
+                <span className={`${styles.status} ${business.opening_hours.open_now ? styles.open : styles.closed}`}>
                   {business.opening_hours.open_now ? 'Open Now' : 'Closed'}
                 </span>
               </div>
@@ -204,23 +204,23 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
           </div>
         </div>
 
-        <div className="menu-section">
-          <div className="menu-header">
+        <div className={styles.menuSection}>
+          <div className={styles.menuHeader}>
             <h2>Menu</h2>
-            <span className="item-count">({filteredItems.length} items)</span>
+            <span className={styles.itemCount}>({filteredItems.length} items)</span>
           </div>
 
-          <div className="menu-search">
+          <div className={styles.menuSearch}>
             <input
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
+              className={styles.searchInput}
             />
             {searchQuery && (
               <button 
-                className="clear-btn"
+                className={styles.clearBtn}
                 onClick={() => setSearchQuery('')}
               >
                 ✕
@@ -228,31 +228,31 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
             )}
           </div>
           {!promosLoading && promos.length > 0 && (
-            <div className="promo-codes-section">
-              <div className="promo-codes-container">
+            <div className={styles.promoCodesSection}>
+              <div className={styles.promoCodesContainer}>
                 {promos.map((promo) => (
-                  <div key={promo.id} className="promo-code-item">
-                    <div className="promo-code-badge">
-                      <span className="code">{promo.code}</span>
+                  <div key={promo.id} className={styles.promoCodeItem}>
+                    <div className={styles.promoCodeBadge}>
+                      <span className={styles.code}>{promo.code}</span>
                     </div>
-                    <div className="promo-info">
-                      <p className="promo-description">{promo.description}</p>
-                      <div className="promo-meta">
+                    <div className={styles.promoInfo}>
+                      <p className={styles.promoDescription}>{promo.description}</p>
+                      <div className={styles.promoMeta}>
                         {promo.discount_percentage > 0 && (
-                          <span className="promo-discount">{promo.discount_percentage}% Off</span>
+                          <span className={styles.promoDiscount}>{promo.discount_percentage}% Off</span>
                         )}
                         {promo.discount_fixed_amount > 0 && (
-                          <span className="promo-discount">${promo.discount_fixed_amount} Off</span>
+                          <span className={styles.promoDiscount}>${promo.discount_fixed_amount} Off</span>
                         )}
                         {promo.expiration_date && (
-                          <span className="promo-expires">
+                          <span className={styles.promoExpires}>
                             Expires: {new Date(promo.expiration_date).toLocaleDateString()}
                           </span>
                         )}
                       </div>
                     </div>
                     <button 
-                      className="promo-copy-btn" 
+                      className={styles.promoCopyBtn} 
                       onClick={() => copyPromoToClipboard(promo.code)}
                     >
                       Copy Code
@@ -264,81 +264,81 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
           )}
 
           {items.length === 0 ? (
-            <div className="no-items">
+            <div className={styles.noItems}>
               <p>No items available for this restaurant</p>
             </div>
           ) : filteredItems.length === 0 ? (
-            <div className="no-items">
+            <div className={styles.noItems}>
               <p>No items match your search</p>
               <button onClick={() => setSearchQuery('')}>Clear Search</button>
             </div>
           ) : (
-            <div className="categories-container">
+            <div className={styles.categoriesContainer}>
               {categories.map((category) => (
-                <div key={category} className="category-section">
-                  <h3 className="category-title">{category} ({itemsByCategory[category].length})</h3>
-                  
-                  <div className="items-grid">
+                <div key={category} className={styles.categorySection}>
+                  <h3 className={styles.categoryTitle}>{category} ({itemsByCategory[category].length})</h3>
+
+                  <div className={styles.itemsGrid}>
                     {itemsByCategory[category].map((item) => (
-                      <div key={item.id} className="item-card">
+                      <div key={item.id} className={styles.itemCard}>
                         {item.image_url && (
-                          <div className="item-image">
+                          <div className={styles.itemImage}>
                             <img src={item.image_url} alt={item.dish_name} />
                           </div>
                         )}
-                        <div className="item-info">
+                        <div className={styles.itemInfo}>
                           <h4>{item.dish_name}</h4>
-                          <div className="price-section">
+                          <div className={styles.priceSection}>
                             {item.discount_percentage > 0 ? (
                               <>
-                                <span className="original-price">${item.price.toFixed(2)}</span>
-                                <span className="discount-badge">-{item.discount_percentage}%</span>
-                                <span className="final-price">
+                                <span className={styles.originalPrice}>${item.price.toFixed(2)}</span>
+                                <span className={styles.discountBadge}>-{item.discount_percentage}%</span>
+                                <span className={styles.finalPrice}>
                                   ${(item.price * (1 - item.discount_percentage / 100)).toFixed(2)}
                                 </span>
                               </>
                             ) : (
-                              <span className="final-price">${item.price.toFixed(2)}</span>
+                              <span className={styles.finalPrice}>${item.price.toFixed(2)}</span>
                             )}
                           </div>
                           <button 
-                            className={`add-to-cart-btn ${addedItemId === item.id ? 'added' : ''}`}
+                            className={`${styles.addToCartBtn} ${addedItemId === item.id ? styles.added : ''}`}
                             disabled={!item.is_available}
                             onClick={() => handleAddToCart(item)}
                           >
                             {addedItemId === item.id ? 'Added!' : (item.is_available ? 'Add to Cart' : 'Unavailable')}
                           </button>
                         </div>
-                        <div className="item-details-overlay">
-                          <div className="item-details">
-                            {item.portion_size && <span className="detail">{item.portion_size}</span>}
-                            {item.cooking_method && <span className="detail">{item.cooking_method}</span>}
+                        <div className={styles.itemDetailsOverlay}>
+                          <div className={styles.itemDetails}>
+                            {item.portion_size && <span className={styles.detail}>{item.portion_size}</span>}
+                            {item.cooking_method && <span className={styles.detail}>{item.cooking_method}</span>}
                             {item.available_quantity > 0 && (
-                              <span className="detail available">{item.available_quantity} in stock</span>
+                              <span className={styles.detail}> {item.available_quantity} in stock</span>
                             )}
-                            {!item.is_available && <span className="detail unavailable">Unavailable</span>}
+                            {!item.is_available && <span className={styles.detail}>Unavailable</span>}
                           </div>
                           {item.ingredients && item.ingredients.length > 0 && (
-                            <div className="ingredients">
-                              <span className="ingredients-label">Ingredients:</span>
-                              <div className="ingredients-list">
+                            <div className={styles.ingredients}>
+                              <span className={styles.ingredientsLabel}>Ingredients:</span>
+                              <div className={styles.ingredientsList}>
                                 {Array.isArray(item.ingredients) ? (
                                   item.ingredients.map((ing, idx) => (
-                                    <span key={idx} className="ingredient-tag">{ing}</span>
+                                    <span key={idx} className={styles.ingredientTag}>{ing}</span>
                                   ))
                                 ) : (
-                                  <span className="ingredient-tag">{JSON.stringify(item.ingredients)}</span>
+                                  <span className={styles.ingredientTag}>{JSON.stringify(item.ingredients)}</span>
                                 )}
                               </div>
                             </div>
                           )}
                         </div>
                         {item.description && (
-                          <div className="description-overlay-wrapper">
+                          <div className={styles.descriptionOverlayWrapper}>
                             <p>{item.description}</p>
-                            <div className="overlay-button-container">
+                            <div className={styles.overlayButtonContainer}>
                               <button
-                                className={`add-to-cart-btn ${addedItemId === item.id ? 'added' : ''}`}
+                                className={`${styles.addToCartBtn} ${addedItemId === item.id ? styles.added : ''}`}
                                 onClick={() => handleAddToCart(item)}
                                 disabled={!item.is_available}
                               >

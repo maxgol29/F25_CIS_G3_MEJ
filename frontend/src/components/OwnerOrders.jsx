@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/OwnerOrders.css';
+import styles from '../styles/OwnerOrders.module.css';
 import NavBar from './NavBar';
 
 const OwnerOrders = ({ user, onNavigate }) => {
@@ -106,27 +106,26 @@ const OwnerOrders = ({ user, onNavigate }) => {
 
 
   return (
-    <div className="owner-orders-page">
+    <div className={styles.ownerOrdersPage}>
       <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
       <h2>Orders</h2>
       {loading ? <p>Loading...</p> : null}
-      {error && <div className="error">{error}</div>}
-
+      {error && <div className={styles.error}>{error}</div>}
       {!loading && !error && (
-        <div className="orders-list">
+        <div className={styles.ordersList}>
           {orders.length === 0 ? <p>No orders found.</p> : (
             <ul>
               {orders.map((o) => (
-                <li key={o.id} className="order-item">
+                <li key={o.id} className={styles.orderItem}>
                   <div>
                     <strong>Order #{o.id}</strong> {o.status?.toUpperCase() || 'unknown'} ${o.total_amount}
-                    <div className="order-items">
+                    <div className={styles.orderItems}>
                       {o.items && o.items.map((it, idx) => (
-                        <div key={idx} className="order-line">{it.dish_name || it.name || 'item'} x {it.quantity || 1}</div>
+                        <div key={idx} className={styles.orderLine}>{it.dish_name || it.name || 'item'} x {it.quantity || 1}</div>
                       ))}
                     </div>
                   </div>
-                  <div className="order-actions">
+                  <div className={styles.orderActions}>
                     <button 
                       onClick={() => handleStatusClick(o.id, 'confirmed')}
                       disabled={isStatusDisabled(o.status, 'confirmed') || updatingOrderId === o.id}
@@ -164,8 +163,10 @@ const OwnerOrders = ({ user, onNavigate }) => {
                     </button>
                   </div>
                 </li>
+                
               ))}
             </ul>
+            
           )}
         </div>
       )}

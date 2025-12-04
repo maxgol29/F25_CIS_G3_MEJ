@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/AuthPage.css';
+import styles from '../styles/AuthPage.module.css';
 
 const AuthPage = ({ onLoginSuccess }) => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -228,41 +228,41 @@ const AuthPage = ({ onLoginSuccess }) => {
   };
   if (isSignUp && !userType) {
     return (
-      <div className="auth-container">
-        <div className="auth-box">
-          <h1 className="auth-title">Create Account</h1>
-          <p className="auth-subtitle">Are you a customer or business owner?</p>
+      <div className={styles.authContainer}>
+        <div className={styles.authBox}>
+          <h1 className={styles.authTitle}>Create Account</h1>
+          <p className={styles.authSubtitle}>Are you a customer or business owner?</p>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && <div className={styles.errorMessage}>{error}</div>}
 
-          <div className="user-type-selection">
+          <div className={styles.userTypeSelection}>
             <button
-              className="user-type-button customer"
+              className={`${styles.userTypeButton} ${styles.customer}`}
               onClick={() => setUserType('customer')}
             >
-              <div className="user-type-text">
+              <div className={styles.userTypeText}>
                 <strong>Customer</strong>
                 <p>Order from restaurants</p>
               </div>
             </button>
 
             <button
-              className="user-type-button owner"
+              className={`${styles.userTypeButton} ${styles.owner}`}
               onClick={() => setUserType('owner')}
             >
-              <div className="user-type-text">
+              <div className={styles.userTypeText}>
                 <strong>Business Owner</strong>
                 <p>Manage your restaurant</p>
               </div>
             </button>
           </div>
 
-          <div className="toggle-mode">
+          <div className={styles.toggleMode}>
             <p>
               Already have an account?{' '}
               <button
                 type="button"
-                className="toggle-button"
+                className={styles.toggleButton}
                 onClick={toggleMode}
               >
                 Log In
@@ -275,32 +275,32 @@ const AuthPage = ({ onLoginSuccess }) => {
   }
   if (isSignUp && userType === 'owner' && !selectedBusinessId) {
     return (
-      <div className="auth-container">
-        <div className="auth-box">
-          <h1 className="auth-title">Select Your Business</h1>
+      <div className={styles.authContainer}>
+        <div className={styles.authBox}>
+          <h1 className={styles.authTitle}>Select Your Business</h1>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && <div className={styles.errorMessage}>{error}</div>}
 
           {loadingBusinesses ? (
-            <div className="loading">Loading businesses...</div>
+            <div className={styles.loading}>Loading businesses...</div>
           ) : businesses.length === 0 ? (
-            <div className="no-results">
+            <div className={styles.noBusinesses}>
               <p>No businesses found. Please contact support.</p>
             </div>
           ) : (
-            <div className="business-selection">
+            <div className={styles.businessSelection}>
               {businesses.map(business => (
                 <button
                   key={business.id}
-                  className="business-card"
+                  className={styles.businessCard}
                   onClick={() => setSelectedBusinessId(business.id)}
                 >
-                  <div className="business-card-header">
+                  <div className={styles.businessCardHeader}>
                     <h3>{business.name}</h3>
                   </div>
-                  <div className="business-card-info">
-                    <p className="type">{business.type}</p>
-                    {business.phone && <p className="phone">{business.phone}</p>}
+                  <div className={styles.businessCardInfo}>
+                    <p className={styles.type}>{business.type}</p>
+                    {business.phone && <p className={styles.phone}>{business.phone}</p>}
                   </div>
                 </button>
               ))}
@@ -308,7 +308,7 @@ const AuthPage = ({ onLoginSuccess }) => {
           )}
 
           <button
-            className="back-button"
+            className={styles.backButton}
             onClick={() => {
               setUserType(null);
               setSelectedBusinessId(null);
@@ -321,15 +321,15 @@ const AuthPage = ({ onLoginSuccess }) => {
     );
   }
   return (
-    <div className="auth-container">
-      <div className="auth-box">
-        <h1 className="auth-title">{isSignUp ? 'Sign Up' : 'Log In'}</h1>
+    <div className={styles.authContainer}>
+      <div className={styles.authBox}>
+        <h1 className={styles.authTitle}>{isSignUp ? 'Sign Up' : 'Log In'}</h1>
 
         {isSignUp && userType === 'owner' && (
-          <div className="selected-business">
+          <div className={styles.selectedBusiness}>
             Selected Business: <strong>{businesses.find(b => b.id === selectedBusinessId)?.name}</strong>
             <button
-              className="change-button"
+              className={styles.changeButton}
               onClick={() => setSelectedBusinessId(null)}
             >
               Change
@@ -337,13 +337,13 @@ const AuthPage = ({ onLoginSuccess }) => {
           </div>
         )}
 
-        {error && <div className="error-message">{error}</div>}
-        {success && <div className="success-message">{success}</div>}
+        {error && <div className={styles.errorMessage}>{error}</div>}
+        {success && <div className={styles.successMessage}>{success}</div>}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className={styles.authForm}>
           {!isSignUp ? (
             <>
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="email">Email</label>
                 <input
                   type="email"
@@ -356,7 +356,7 @@ const AuthPage = ({ onLoginSuccess }) => {
                 />
               </div>
 
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="password">Password</label>
                 <input
                   type="password"
@@ -371,8 +371,8 @@ const AuthPage = ({ onLoginSuccess }) => {
             </>
           ) : (
             <>
-              <div className="form-row">
-                <div className="form-group">
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
                   <label htmlFor="first_name">First Name *</label>
                   <input
                     type="text"
@@ -384,7 +384,7 @@ const AuthPage = ({ onLoginSuccess }) => {
                     disabled={loading}
                   />
                 </div>
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label htmlFor="last_name">Last Name *</label>
                   <input
                     type="text"
@@ -398,7 +398,7 @@ const AuthPage = ({ onLoginSuccess }) => {
                 </div>
               </div>
 
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="email">Email *</label>
                 <input
                   type="email"
@@ -411,7 +411,7 @@ const AuthPage = ({ onLoginSuccess }) => {
                 />
               </div>
 
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="phone">Phone (Optional)</label>
                 <input
                   type="tel"
@@ -424,7 +424,7 @@ const AuthPage = ({ onLoginSuccess }) => {
                 />
               </div>
 
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="password">Password *</label>
                 <input
                   type="password"
@@ -437,11 +437,11 @@ const AuthPage = ({ onLoginSuccess }) => {
                 />
               </div>
 
-              <div className="form-divider">
+              <div className={styles.formDivider}>
                 <span>Address Information</span>
               </div>
 
-              <div className="form-group">
+              <div className={styles.formGroup}>
                 <label htmlFor="street">Street Address *</label>
                 <input
                   type="text"
@@ -454,8 +454,8 @@ const AuthPage = ({ onLoginSuccess }) => {
                 />
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
                   <label htmlFor="building_number">Building #</label>
                   <input
                     type="text"
@@ -467,7 +467,7 @@ const AuthPage = ({ onLoginSuccess }) => {
                     disabled={loading}
                   />
                 </div>
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label htmlFor="apartment_number">Apt #</label>
                   <input
                     type="text"
@@ -481,8 +481,8 @@ const AuthPage = ({ onLoginSuccess }) => {
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
                   <label htmlFor="city">City *</label>
                   <input
                     type="text"
@@ -494,7 +494,7 @@ const AuthPage = ({ onLoginSuccess }) => {
                     disabled={loading}
                   />
                 </div>
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label htmlFor="state">State</label>
                   <input
                     type="text"
@@ -508,8 +508,8 @@ const AuthPage = ({ onLoginSuccess }) => {
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
                   <label htmlFor="zip_code">ZIP Code *</label>
                   <input
                     type="text"
@@ -521,7 +521,7 @@ const AuthPage = ({ onLoginSuccess }) => {
                     disabled={loading}
                   />
                 </div>
-                <div className="form-group">
+                <div className={styles.formGroup}>
                   <label htmlFor="country">Country *</label>
                   <input
                     type="text"
@@ -539,19 +539,19 @@ const AuthPage = ({ onLoginSuccess }) => {
 
           <button
             type="submit"
-            className="submit-button"
+            className={styles.submitButton}
             disabled={loading}
           >
             {loading ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Log In')}
           </button>
         </form>
 
-        <div className="toggle-mode">
+        <div className={styles.toggleMode}>
           <p>
             {isSignUp ? "Already have an account? " : "Don't have an account? "}
             <button
               type="button"
-              className="toggle-button"
+              className={styles.toggleButton}
               onClick={toggleMode}
             >
               {isSignUp ? 'Log In' : 'Sign Up'}

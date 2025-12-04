@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart, Treemap, AreaChart, Area } from 'recharts';
-import '../styles/Dashboard.css';
+import styles from '../styles/Dashboard.module.css';
 import NavBar from './NavBar';
 
 const COLORS = [
@@ -298,8 +298,8 @@ const Dashboard = ({ user, onNavigate }) => {
 
   if (loading) {
     return (
-      <div className="charts-container">
-        <div className="loading-spinner">
+      <div className={styles.chartsContainer}>
+        <div className={styles.loadingSpinner}>
           <p>Loading...</p>
         </div>
       </div>
@@ -308,7 +308,7 @@ const Dashboard = ({ user, onNavigate }) => {
 
   if (error) {
     return (
-      <div className="charts-container error">
+      <div className={`${styles.chartsContainer} ${styles.error}`}>
         <h2>Error Loading Data</h2>
       </div>
     );
@@ -316,7 +316,7 @@ const Dashboard = ({ user, onNavigate }) => {
 
   if (!businessPromoUsage || businessPromoUsage.length === 0) {
     return (
-      <div className="charts-container">
+      <div className={styles.chartsContainer}>
         <p>No promo usage data available for business</p>
       </div>
     );
@@ -333,28 +333,28 @@ const Dashboard = ({ user, onNavigate }) => {
   const avgDiscountPerUse = (totalDiscounts / totalUsage);
 
   return (
-    <div className="charts-container">
+    <div className={styles.chartsContainer}>
       <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
 
       <h1>Analytics</h1>
 
-      <div className="statistics-grid">
-        <div className="stat-card">
+      <div className={styles.statisticsGrid}>
+        <div className={styles.statCard}>
           <h3>Total Promo Usage</h3>
-          <p className="stat-value">{totalUsage}</p>
+          <p className={styles.statValue}>{totalUsage}</p>
         </div>
-        <div className="stat-card">
+        <div className={styles.statCard}>
           <h3>Total Discounts Given</h3>
-          <p className="stat-value">${totalDiscounts.toFixed(2)}</p>
+          <p className={styles.statValue}>${totalDiscounts.toFixed(2)}</p>
         </div>
-        <div className="stat-card">
+        <div className={styles.statCard}>
           <h3>Avg Discount/Use</h3>
-          <p className="stat-value">${avgDiscountPerUse.toFixed(2)}</p>
+          <p className={styles.statValue}>${avgDiscountPerUse.toFixed(2)}</p>
         </div>
       </div>
 
-      <div className="chart-section">
-        <div className="chart-container">
+      <div className={styles.chartSection}>
+        <div className={styles.chartContainer}>
           <h2>Daily Promo Usage Trend</h2>
           <ResponsiveContainer width="100%" height={400}>
             <ComposedChart data={dailyData}>
@@ -379,7 +379,7 @@ const Dashboard = ({ user, onNavigate }) => {
             </ComposedChart>
           </ResponsiveContainer>
         </div>
-        <div className="chart-container">
+        <div className={styles.chartContainer}>
           <h2>Discount Distribution by Promo</h2>
           <ResponsiveContainer width="100%" height={400}>
             <PieChart>
@@ -388,7 +388,7 @@ const Dashboard = ({ user, onNavigate }) => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, value }) => `${name}: $${value}`}
+                label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
                 outerRadius={120}
                 fill="#03021bff"
                 dataKey="value"
@@ -397,11 +397,11 @@ const Dashboard = ({ user, onNavigate }) => {
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => `$${value}`} />
+              <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div className="chart-container">
+        <div className={styles.chartContainer}>
           <h2>Most Popular Promo Codes (Top 5)</h2>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={promoPopularityData}>
@@ -412,10 +412,10 @@ const Dashboard = ({ user, onNavigate }) => {
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="custom-tooltip">
+                      <div className={styles.customTooltip}>
                         <p>{`Promo: ${payload[0].payload.name}`}</p>
                         <p>{`Uses: ${payload[0].value}`}</p>
-                        <p>{`Total Discount: $${payload[0].payload.totalDiscount}`}</p>
+                        <p>{`Total Discount: $${payload[0].payload.totalDiscount.toFixed(2)}`}</p>
                       </div>
                     );
                   }
@@ -428,8 +428,8 @@ const Dashboard = ({ user, onNavigate }) => {
         </div>
       </div>
       {popularItems && popularItems.children && popularItems.children.length > 0 ? (
-        <div className="chart-section">
-          <div className="chart-container full-width">
+        <div className={styles.chartSection}>
+          <div className={`${styles.chartContainer} ${styles.fullWidth}`}>
             <h2>Most Popular Items by Food Type</h2>
             <ResponsiveContainer width="100%" height={700}>
               <Treemap
@@ -442,15 +442,15 @@ const Dashboard = ({ user, onNavigate }) => {
           </div>
         </div>
       ) : (
-        <div className="chart-section">
-          <div className="chart-container full-width">
+        <div className={styles.chartSection}>
+          <div className={`${styles.chartContainer} ${styles.fullWidth}`}>
             <p>No items with orders to display</p>
           </div>
         </div>
       )}
       {dailyOrders && dailyOrders.length > 0 ? (
-        <div className="chart-section">
-          <div className="chart-container full-width">
+        <div className={styles.chartSection}>
+          <div className={`${styles.chartContainer} ${styles.fullWidth}`}>
             <h2>Daily Orders Overview</h2>
             <ResponsiveContainer width="100%" height={400}>
               <AreaChart data={dailyOrders}>
@@ -517,8 +517,8 @@ const Dashboard = ({ user, onNavigate }) => {
         </div>
       ) : null}
       {dailyOrders && dailyOrders.length > 0 ? (
-        <div className="chart-section">
-          <div className="chart-container full-width">
+        <div className={styles.chartSection}>
+          <div className={`${styles.chartContainer} ${styles.fullWidth}`}>
             <h2>Daily Orders Metrics</h2>
             <ResponsiveContainer width="100%" height={400}>
               <ComposedChart data={dailyOrders}>

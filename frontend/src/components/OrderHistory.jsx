@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from './NavBar';
-import '../styles/OrderHistory.css';
+import styles from '../styles/OrderHistory.module.css';
 
 const OrderHistory = ({ user, onNavigate, onLogout }) => {
   const [orders, setOrders] = useState([]);
@@ -50,19 +50,19 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
   const getStatusBadgeClass = (status) => {
     switch (status) {
       case 'completed':
-        return 'status-completed';
+        return '{styles.statusCompleted}';
       case 'ready':
-        return 'status-ready';
+        return '{styles.statusReady}';
       case 'preparing':
-        return 'status-preparing';
+        return '{styles.statusPreparing}';
       case 'confirmed':
-        return 'status-confirmed';
+        return '{styles.statusConfirmed}';
       case 'pending':
-        return 'status-pending';
+        return '{styles.statusPending}';
       case 'cancelled':
-        return 'status-cancelled';
+        return '{styles.statusCancelled}';
       default:
-        return 'status-pending';
+        return '{styles.statusPending}';
     }
   };
 
@@ -72,9 +72,9 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
 
   if (loading) {
     return (
-      <div className="order-history-page">
+      <div className={styles.orderHistoryPage}>
         <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
-        <div className="history-container">
+        <div className={styles.historyContainer}>
           <p>Loading your orders...</p>
         </div>
       </div>
@@ -83,13 +83,13 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
 
   if (error) {
     return (
-      <div className="order-history-page">
+      <div className={styles.orderHistoryPage}>
         <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
-        <div className="history-container">
-          <div className="error-box">
+        <div className={styles.historyContainer}>
+          <div className={styles.errorBox}>
             <h2>Error</h2>
             <p>{error}</p>
-            <button onClick={() => onNavigate('home')} className="back-btn">
+            <button onClick={() => onNavigate('home')} className={styles.backBtn}>
               Back to Home
             </button>
           </div>
@@ -99,54 +99,54 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
   }
 
   return (
-    <div className="order-history-page">
+    <div className={styles.orderHistoryPage}>
       <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
 
-      <div className="history-container">
-        <div className="history-content">
-          <div className="history-header">
+      <div className={styles.historyContainer}>
+        <div className={styles.historyContent}>
+          <div className={styles.historyHeader}>
             <h1>Order History</h1>
             <p>{sortedOrders.length} {sortedOrders.length === 1 ? 'order' : 'orders'}</p>
           </div>
-          <div className="filter-buttons">
+          <div className={styles.filterButtons}>
             <button
-              className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+              className={`${styles.filterBtn} ${filter === 'all' ? 'active' : ''}`}
               onClick={() => setFilter('all')}
             >
               All Orders
             </button>
             <button
-              className={`filter-btn ${filter === 'processing' ? 'active' : ''}`}
+              className={`${styles.filterBtn} ${filter === 'processing' ? 'active' : ''}`}
               onClick={() => setFilter('processing')}
             >
               Processing
             </button>
             <button
-              className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
+              className={`${styles.filterBtn} ${filter === 'completed' ? 'active' : ''}`}
               onClick={() => setFilter('completed')}
             >
               Completed
             </button>
           </div>
           {sortedOrders.length === 0 ? (
-            <div className="empty-orders">
+            <div className={styles.emptyOrders}>
               <h2>No orders yet</h2>
               <p>Start by ordering from your favorite restaurants!</p>
               <button 
                 onClick={() => onNavigate('map')}
-                className="action-btn"
+                className={styles.actionBtn}
               >
                 Browse Restaurants
               </button>
             </div>
           ) : (
-            <div className="orders-list">
+            <div className={styles.ordersList}>
               {sortedOrders.map((order) => (
-                <div key={order.id} className="order-card">
-                  <div className="order-card-header">
-                    <div className="order-info">
+                <div key={order.id} className={styles.orderCard}>
+                  <div className={styles.orderCardHeader}>
+                    <div className={styles.orderInfo}>
                       <h3>Order #{order.id}</h3>
-                      <p className="order-date">
+                      <p className={styles.orderDate}>
                         {new Date(order.created_at).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -156,36 +156,36 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
                         })}
                       </p>
                     </div>
-                    <div className="order-status">
-                      <span className={`status-badge ${getStatusBadgeClass(order.status)}`}>
+                    <div className={styles.orderStatus}>
+                      <span className={`${styles.statusBadge} ${getStatusBadgeClass(order.status)}`}>
                         {getStatusLabel(order.status)}
                       </span>
                     </div>
                   </div>
-                  <div className="business-section">
+                  <div className={styles.businessSection}>
                     <h4>{order.businessName || 'Unknown Restaurant'}</h4>
                   </div>
-                  <div className="items-section">
+                  <div className={styles.itemsSection}>
                     {order.items && order.items.length > 0 ? (
-                      <div className="items-details">
+                      <div className={styles.itemsDetails}>
                         {order.items.map((item, idx) => (
-                          <p key={idx} className="item-line">
-                            {item.name} <span className="item-qty">x{item.quantity}</span>
+                          <p key={idx} className={styles.itemLine}>
+                            {item.name} <span className={styles.itemQty}>x{item.quantity}</span>
                           </p>
                         ))}
                       </div>
                     ) : (
-                      <p className="items-count">No items</p>
+                      <p className={styles.itemsCount}>No items</p>
                     )}
                   </div>
-                  <div className="order-card-footer">
-                    <div className="total">
-                      <span className="label">Total:</span>
-                      <span className="amount">${parseFloat(order.total_amount).toFixed(2)}</span>
+                  <div className={styles.orderCardFooter}>
+                    <div className={styles.total}>
+                      <span className={styles.label}>Total:</span>
+                      <span className={styles.amount}>${parseFloat(order.total_amount).toFixed(2)}</span>
                     </div>
                     <button
                       onClick={() => onNavigate('orderConfirmation', order.id)}
-                      className="view-details-btn"
+                      className={styles.viewDetailsBtn}
                     >
                       View Details
                     </button>
