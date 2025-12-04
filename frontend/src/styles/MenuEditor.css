@@ -1,48 +1,48 @@
 .menu-editor-page {
   min-height: 100vh;
-  background: var(--bg-light);
-  padding-bottom: var(--spacing-3xl);
+  background: #f5f5f5;
+  padding-bottom: 40px;
 }
 
 .menu-editor-page h2 {
   text-align: center;
-  color: var(--text-primary);
-  font-size: var(--font-size-6xl);
-  margin: var(--spacing-3xl) 0 var(--spacing-3xl) 0;
-  font-weight: var(--font-weight-semibold);
+  color: #333;
+  font-size: 36px;
+  margin: 40px 0 40px 0;
+  font-weight: 600;
 }
 
 .menu-content {
-  max-width: var(--max-width-container);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--spacing-lg);
+  padding: 0 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-2xl);
+  gap: 30px;
 }
 
 .menu-list {
-  background: var(--bg-white);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-3xl);
-  box-shadow: var(--shadow-md);
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   height: fit-content;
 }
 
 .menu-list h3 {
-  color: var(--text-primary);
-  font-size: var(--font-size-2xl);
-  margin: 0 0 var(--spacing-xl) 0;
-  font-weight: var(--font-weight-semibold);
-  padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--primary-dark);
+  color: #333;
+  font-size: 20px;
+  margin: 0 0 25px 0;
+  font-weight: 600;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #60696b;
 }
 
 .menu-list p {
   text-align: center;
-  color: var(--text-tertiary);
-  font-size: var(--font-size-base);
-  padding: var(--spacing-2xl) var(--spacing-lg);
+  color: #999;
+  font-size: 15px;
+  padding: 40px 20px;
   margin: 0;
 }
 
@@ -56,9 +56,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-lg) 0;
-  border-bottom: 1px solid var(--border-light);
-  transition: var(--transition-fast);
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  transition: all 0.2s ease;
 }
 
 .menu-item:last-child {
@@ -66,104 +66,105 @@
 }
 
 .menu-item:hover {
-  background: var(--bg-lighter);
+  background: #f9f9f9;
   padding-left: 2px;
   padding-right: 2px;
-  border-radius: var(--radius-sm);
+  border-radius: 2px;
 }
 
 .menu-item-left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 5px;
 }
 
 .menu-item-left strong {
-  color: var(--text-primary);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
+  color: #333;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .menu-item-meta {
-  color: var(--text-tertiary);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  color: #999;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .menu-item-right {
-  margin-left: var(--spacing-lg);
+  margin-left: 20px;
 }
 
 .menu-item-right img {
   width: 60px;
   height: 60px;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   object-fit: cover;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 
 .menu-form {
-  background: var(--bg-white);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-3xl);
-  box-shadow: var(--shadow-md);
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   height: fit-content;
 }
 
 .menu-form h3 {
-  color: var(--text-primary);
-  font-size: var(--font-size-2xl);
-  margin: 0 0 var(--spacing-xl) 0;
-  font-weight: var(--font-weight-semibold);
-  padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--primary-dark);
+  color: #333;
+  font-size: 20px;
+  margin: 0 0 25px 0;
+  font-weight: 600;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #60696b;
 }
 
 .menu-form form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: 20px;
 }
 
 .menu-form label {
-  color: var(--text-primary);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-xs);
+  color: #333;
+  font-weight: 600;
+  font-size: 13px;
   text-transform: uppercase;
   margin-bottom: 0;
 }
 
 .menu-form input {
-  padding: var(--spacing-base) var(--spacing-md);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
   font-family: inherit;
-  color: var(--text-primary);
-  transition: var(--transition-base);
-  background: var(--bg-white);
-  margin-top: var(--spacing-xs);
+  color: #333;
+  transition: all 0.3s ease;
+  background: white;
+  margin-top: 6px;
 }
 
 .menu-form input::placeholder {
-  color: var(--text-light);
+  color: #bbb;
 }
 
 .menu-form input:focus {
   outline: none;
-  border-color: var(--primary-dark);
+  border-color: #60696b;
   box-shadow: 0 0 0 3px rgba(96, 105, 107, 0.1);
 }
 
+
 .form-error,
 .form-success {
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-lg);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
   animation: slideDown 0.3s ease;
 }
 
@@ -180,27 +181,28 @@
 
 .form-error {
   background: #fff3cd;
-  color: var(--error-red);
-  border-left: 4px solid var(--error-red);
+  color: #cc0000;
+  border-left: 4px solid #cc0000;
 }
 
 .form-success {
   background: #d4edda;
-  color: var(--success-green);
-  border-left: 4px solid var(--success-green);
+  color: #28a745;
+  border-left: 4px solid #28a745;
 }
 
+
 .menu-form button {
-  padding: var(--spacing-base) var(--spacing-2xl);
-  background: var(--primary-gradient);
-  color: var(--bg-white);
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
   border: none;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: var(--transition-base);
-  margin-top: var(--spacing-md);
+  transition: all 0.3s ease;
+  margin-top: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -213,15 +215,15 @@
   transform: translateY(0);
 }
 
-.menu-list p.success-message {
-  color: var(--success-green);
-  font-weight: var(--font-weight-medium);
+.menu-list p {
+  color: #28a745;
+  font-weight: 500;
 }
 
 @media (max-width: 1024px) {
   .menu-content {
     grid-template-columns: 1fr;
-    gap: var(--spacing-2xl);
+    gap: 25px;
   }
 
   .menu-list,
@@ -232,37 +234,37 @@
 
 @media (max-width: 768px) {
   .menu-editor-page {
-    padding-bottom: var(--spacing-2xl);
+    padding-bottom: 30px;
   }
 
   .menu-editor-page h2 {
-    font-size: var(--font-size-3xl);
-    margin: var(--spacing-2xl) 0 var(--spacing-2xl) 0;
+    font-size: 28px;
+    margin: 30px 0 30px 0;
   }
 
   .menu-content {
-    padding: 0 var(--spacing-md);
-    gap: var(--spacing-lg);
+    padding: 0 15px;
+    gap: 20px;
   }
 
   .menu-list,
   .menu-form {
-    padding: var(--spacing-xl);
-    border-radius: var(--radius-lg);
+    padding: 25px;
+    border-radius: 12px;
   }
 
   .menu-list h3,
   .menu-form h3 {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-lg);
+    font-size: 18px;
+    margin-bottom: 20px;
   }
 
   .menu-item {
-    padding: var(--spacing-md) 0;
+    padding: 15px 0;
   }
 
   .menu-item-left strong {
-    font-size: var(--font-size-base);
+    font-size: 14px;
   }
 
   .menu-item-right img {
@@ -271,70 +273,70 @@
   }
 
   .menu-form input {
-    font-size: var(--font-size-lg);
+    font-size: 16px;
   }
 
   .menu-form button {
-    padding: var(--spacing-base) var(--spacing-lg);
-    font-size: var(--font-size-base);
+    padding: 12px 24px;
+    font-size: 14px;
   }
 
   .form-error,
   .form-success {
-    font-size: var(--font-size-sm);
-    padding: var(--spacing-md) var(--spacing-base);
+    font-size: 13px;
+    padding: 12px 15px;
   }
 }
 
 @media (max-width: 480px) {
   .menu-editor-page {
-    padding-bottom: var(--spacing-lg);
+    padding-bottom: 20px;
   }
 
   .menu-editor-page h2 {
-    font-size: var(--font-size-2xl);
-    margin: var(--spacing-lg) 0 var(--spacing-lg) 0;
+    font-size: 22px;
+    margin: 20px 0 20px 0;
   }
 
   .menu-content {
-    padding: 0 var(--spacing-sm);
-    gap: var(--spacing-lg);
+    padding: 0 12px;
+    gap: 15px;
   }
 
   .menu-list,
   .menu-form {
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
+    padding: 20px;
+    border-radius: 10px;
   }
 
   .menu-list h3,
   .menu-form h3 {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-lg);
-    padding-bottom: var(--spacing-md);
+    font-size: 16px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
   }
 
   .menu-list p {
-    font-size: var(--font-size-base);
-    padding: var(--spacing-xl) var(--spacing-md);
+    font-size: 14px;
+    padding: 30px 15px;
   }
 
   .menu-item {
-    padding: var(--spacing-md) 0;
+    padding: 12px 0;
     flex-wrap: wrap;
   }
 
   .menu-item-left {
     flex: 1 0 100%;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 10px;
   }
 
   .menu-item-left strong {
-    font-size: var(--font-size-sm);
+    font-size: 13px;
   }
 
   .menu-item-meta {
-    font-size: var(--font-size-xs);
+    font-size: 11px;
   }
 
   .menu-item-right {
@@ -353,31 +355,32 @@
   }
 
   .menu-form label {
-    font-size: var(--font-size-xs);
-    margin-top: var(--spacing-xs);
+    font-size: 11px;
+    margin-top: 3px;
   }
 
   .menu-form input {
-    padding: var(--spacing-sm) var(--spacing-base);
-    font-size: var(--font-size-base);
+    padding: 10px 12px;
+    font-size: 14px;
   }
 
   .menu-form button {
-    padding: var(--spacing-base) var(--spacing-lg);
-    font-size: var(--font-size-sm);
+    padding: 12px 20px;
+    font-size: 13px;
   }
 
   .form-error,
   .form-success {
-    font-size: var(--font-size-xs);
-    padding: var(--spacing-sm) var(--spacing-base);
-    margin-bottom: var(--spacing-lg);
+    font-size: 12px;
+    padding: 10px 12px;
+    margin-bottom: 15px;
   }
 }
 
+
 @media print {
   .menu-editor-page {
-    background: var(--bg-white);
+    background: white;
   }
 
   .menu-form {
@@ -386,7 +389,7 @@
 
   .menu-list {
     box-shadow: none;
-    border: 1px solid var(--border-medium);
+    border: 1px solid #ddd;
     page-break-inside: avoid;
   }
 
@@ -419,6 +422,7 @@
 .menu-form {
   animation: slideUp 0.5s ease-out;
 }
+
 
 .menu-form input:focus-visible,
 .menu-form button:focus-visible {

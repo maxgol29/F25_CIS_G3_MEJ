@@ -1,5 +1,5 @@
 .owner-page {
-  background: var(--primary-gradient);
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,17 +11,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-3xl) var(--spacing-lg);
-  gap: var(--spacing-3xl);
+  padding: 40px 20px;
+  gap: 40px;
 }
 
 .owner-card {
-  background: var(--bg-white);
-  border-radius: var(--radius-2xl);
-  padding: var(--spacing-3xl) var(--spacing-3xl);
+  background: white;
+  border-radius: 20px;
+  padding: 50px 40px;
   max-width: 500px;
   width: 100%;
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   text-align: center;
   animation: slideUp 0.5s ease;
 }
@@ -38,30 +38,30 @@
 }
 
 .owner-icon {
-  font-size: var(--spacing-5xl);
-  margin-bottom: var(--spacing-lg);
+  font-size: 80px;
+  margin-bottom: 20px;
   display: inline-block;
 }
 
 .owner-card h1 {
-  color: var(--text-primary);
-  font-size: var(--font-size-4xl);
-  margin: var(--spacing-lg) 0 var(--spacing-2xl) 0;
-  font-weight: var(--font-weight-bold);
+  color: #333;
+  font-size: 28px;
+  margin: 20px 0 30px 0;
+  font-weight: 700;
 }
 
 .owner-info {
-  background: var(--bg-lighter);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-2xl);
-  margin-bottom: var(--spacing-2xl);
+  background: #f9f9f9;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
   text-align: left;
 }
 
 .info-item {
-  margin-bottom: var(--spacing-lg);
-  padding-bottom: var(--spacing-lg);
-  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
 }
 
 .info-item:last-child {
@@ -72,65 +72,65 @@
 
 .info-item label {
   display: block;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
   text-transform: uppercase;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 8px;
   letter-spacing: 0.5px;
 }
 
 .info-item p {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
+  font-size: 16px;
+  color: #333;
   margin: 0;
-  font-weight: var(--font-weight-medium);
+  font-weight: 500;
 }
 
 .status-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-md);
+  gap: 10px;
   background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
   color: #155724;
-  padding: var(--spacing-lg) var(--spacing-lg);
-  border-radius: var(--radius-lg);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-lg);
-  margin-top: var(--spacing-lg);
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 20px;
 }
 
 .status-indicator {
   display: inline-block;
   width: 24px;
   height: 24px;
-  background: var(--success-green);
-  color: var(--bg-white);
+  background: #28a745;
+  color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .owner-actions {
   display: flex;
-  gap: var(--spacing-md);
+  gap: 15px;
   justify-content: center;
 }
 
 .logout-btn {
-  background: linear-gradient(135deg, var(--error-red) 0%, var(--error-red-hover) 100%);
-  color: var(--bg-white);
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+  color: white;
   border: none;
-  padding: var(--spacing-base) var(--spacing-2xl);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  padding: 14px 40px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: var(--transition-base);
+  transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
 }
 
@@ -146,7 +146,7 @@
 .coming-soon {
   text-align: center;
   color: rgba(255, 255, 255, 0.8);
-  font-size: var(--font-size-lg);
+  font-size: 16px;
 }
 
 .coming-soon p {
@@ -156,79 +156,66 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .owner-container {
-    padding: var(--spacing-2xl) var(--spacing-lg);
-    gap: var(--spacing-2xl);
-  }
-}
-
 @media (max-width: 768px) {
   .owner-card {
-    padding: var(--spacing-2xl) var(--spacing-xl);
+    padding: 40px 30px;
   }
 
   .owner-card h1 {
-    font-size: var(--font-size-3xl);
+    font-size: 24px;
   }
 
   .owner-icon {
-    font-size: var(--spacing-3xl);
+    font-size: 60px;
   }
 
   .owner-info {
-    padding: var(--spacing-lg);
+    padding: 20px;
   }
 
   .info-item label {
-    font-size: var(--font-size-xs);
+    font-size: 11px;
   }
 
   .info-item p {
-    font-size: var(--font-size-base);
+    font-size: 15px;
   }
 
   .logout-btn {
-    padding: var(--spacing-base) var(--spacing-lg);
-    font-size: var(--font-size-base);
+    padding: 12px 30px;
+    font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
   .owner-container {
-    padding: var(--spacing-lg);
-    gap: var(--spacing-lg);
+    padding: 20px;
+    gap: 20px;
   }
 
   .owner-card {
-    padding: var(--spacing-lg) var(--spacing-lg);
+    padding: 30px 20px;
   }
 
   .owner-card h1 {
-    font-size: var(--font-size-2xl);
-    margin: var(--spacing-base) 0 var(--spacing-lg) 0;
+    font-size: 20px;
+    margin: 15px 0 20px 0;
   }
 
   .owner-icon {
-    font-size: var(--spacing-3xl);
+    font-size: 50px;
   }
 
   .owner-info {
-    padding: var(--spacing-base);
+    padding: 15px;
   }
 
   .info-item {
-    margin-bottom: var(--spacing-base);
-    padding-bottom: var(--spacing-base);
+    margin-bottom: 15px;
+    padding-bottom: 15px;
   }
 
   .logout-btn {
     width: 100%;
-    padding: var(--spacing-base);
-    font-size: var(--font-size-base);
-  }
-
-  .coming-soon {
-    font-size: var(--font-size-base);
   }
 }

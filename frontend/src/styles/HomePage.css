@@ -3,17 +3,18 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: var(--primary-gradient);
-  font-family: var(--font-family-base);
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding: var(--spacing-lg);
 }
 
 .home-content {
-  background: var(--bg-white);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 90%;
   max-width: 1000px;
   height: 500px;
@@ -35,15 +36,15 @@
 }
 
 .logout-button {
-  padding: var(--spacing-base) var(--spacing-2xl);
-  background: var(--primary-gradient);
-  color: var(--bg-white);
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
   border: none;
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: var(--transition-base);
+  transition: all 0.3s ease;
   letter-spacing: 0.5px;
 }
 
@@ -51,49 +52,25 @@
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(206, 206, 206, 0.5);
 }
-
 .logout-button:active {
   transform: translateY(0);
 }
 
-/* ============================================
-   RESPONSIVE HOMEPAGE
-   ============================================ */
-
-@media (max-width: 1024px) {
-  .home-content {
-    height: 450px;
-  }
-}
-
 @media (max-width: 768px) {
-  .home-container {
-    padding: var(--spacing-md);
-  }
-
   .home-content {
     height: 400px;
     width: 95%;
   }
-
-  .logout-button {
-    padding: var(--spacing-md) var(--spacing-xl);
-    font-size: var(--font-size-base);
-  }
 }
 
 @media (max-width: 480px) {
-  .home-container {
-    padding: var(--spacing-base);
-  }
-
   .home-content {
     height: 300px;
-    width: 100%;
+    width: 95%;
   }
 
   .logout-button {
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: var(--font-size-base);
+    padding: 10px 24px;
+    font-size: 14px;
   }
 }
