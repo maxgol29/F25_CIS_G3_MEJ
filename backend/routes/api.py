@@ -2,13 +2,17 @@ import logging
 import os
 from flask import Blueprint, request, jsonify
 from flask_cors import CORS
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, set_access_cookies, set_refresh_cookies
 from services import *
+from flask_bcrypt import Bcrypt
 
 api_bp = Blueprint('api', __name__)
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 orders_bp = Blueprint('orders', __name__, url_prefix='/api/orders')
 businesses_bp = Blueprint('businesses', __name__, url_prefix='/api/businesses')
 promo_codes_bp = Blueprint('promo', __name__, url_prefix='/api/promo_codes')
+
+bcrypt = Bcrypt()
 
 CORS(api_bp)
 
@@ -140,6 +144,9 @@ def signup():
         data = request.get_json()
         user_type = data.get('user_type', 'customer')
         business_id = data.get('business_id')
+
+        
+
         user = auth_user_service.signup(
             first_name=data.get('first_name'),
             last_name=data.get('last_name'),
@@ -163,7 +170,19 @@ def login():
     try:
         data = request.get_json()
         user = auth_user_service.login(data.get('email'), data.get('password'))
-        return jsonify({'message': 'Login successful', 'user': user}), 200
+
+        access_token = create_access_token(identity=str(user["id"]))
+        refresh_token = create_refresh_token(identity=str(user["id"]))
+
+        response = jsonify({
+            'message': 'Login successful',
+            'user': user
+        })
+
+        set_access_cookies(response, access_token)
+        set_refresh_cookies(response, refresh_token)
+        return response, 200
+    
     except ValueError as e:
         return jsonify({'error': str(e)}), 401
     except Exception as e:
@@ -171,8 +190,14 @@ def login():
         return jsonify({'error': 'Login failed'}), 500
 
 @auth_bp.route('/users/<int:user_id>', methods=['GET'])
+@jwt_required()
 def get_user(user_id):
     try:
+        requester_id = get_jwt_identity()
+
+        if requester_id != user_id:
+            return jsonify({'error': 'Unauthorized'}), 403
+        
         user = auth_user_service.get_user_details(user_id)
         return jsonify({
             'success': True,
