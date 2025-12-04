@@ -291,12 +291,6 @@
   border-color: #ff9800;
 }
 
-.userTypeIcon {
-  font-size: 40px;
-  min-width: 50px;
-  text-align: center;
-}
-
 .userTypeText {
   flex: 1;
 }
@@ -466,10 +460,6 @@
     text-align: center;
   }
 
-  .userTypeIcon {
-    font-size: 35px;
-  }
-
   .userTypeText strong {
     font-size: 16px;
   }
@@ -506,10 +496,6 @@
   .userTypeButton {
     padding: 12px 15px;
     gap: 15px;
-  }
-
-  .userTypeIcon {
-    font-size: 30px;
   }
 
   .userTypeText strong {

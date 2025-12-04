@@ -226,18 +226,6 @@
   text-overflow: ellipsis;
 }
 
-.detail.available {
-  background: #d4edda;
-  color: #155724;
-  opacity: 0.9;
-}
-
-.detail.unavailable {
-  background: #f8d7da;
-  color: #721c24;
-  opacity: 0.9;
-}
-
 .ingredients {
   margin: 12px 0 0 0;
   padding-top: 12px;
@@ -485,8 +473,7 @@
   opacity: 1;
 }
 
-.backBtn,
-.logoutBtn {
+.backBtn {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -504,15 +491,6 @@
 
 .backBtn:hover {
   background: #e0e0e0;
-}
-
-.logoutBtn {
-  background: #ff6b6b;
-  color: white;
-}
-
-.logoutBtn:hover {
-  background: #ff5252;
 }
 
 .detailPage {
@@ -583,8 +561,7 @@
     flex-direction: column;
   }
 
-  .backBtn,
-  .logoutBtn {
+  .backBtn {
     width: 100%;
   }
   .promoCodesContainer {
