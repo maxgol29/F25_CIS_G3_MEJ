@@ -75,14 +75,13 @@
 
 .businessesCard {
   width: 200px;
-  height: 200px;
+  height: 250px;
   padding: 12px;
   background: white;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  border-left: 4px solid #858e96;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -93,8 +92,6 @@
 .businessesCard:hover {
   background: #f9f9f9;
   border-color: #60696b;
-  box-shadow: 0 4px 12px #60696b;
-  transform: translateY(-3px);
 }
 
 
@@ -102,7 +99,6 @@
   background: linear-gradient(135deg, #60696b15 0%, #60696b15 100%);
   border-color: #60696b;
   border-width: 3px;
-  box-shadow: 0 4px 15px rgba(96, 105, 107, 0.3);
 }
 
 .businessesName {
@@ -111,8 +107,6 @@
   font-weight: 600;
   margin-bottom: 6px;
   line-height: 1.3;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 

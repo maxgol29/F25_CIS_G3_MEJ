@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from './NavBar';
 import styles from '../styles/OrderHistory.module.css';
+import { useNavigate } from 'react-router-dom';
 
-const OrderHistory = ({ user, onNavigate, onLogout }) => {
+const OrderHistory = ({ user }) => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -73,7 +75,7 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
   if (loading) {
     return (
       <div className={styles.orderHistoryPage}>
-        <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+        <NavBar user={user} onLogoClick={() => navigate('/home')} />
         <div className={styles.historyContainer}>
           <p>Loading your orders...</p>
         </div>
@@ -84,12 +86,12 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
   if (error) {
     return (
       <div className={styles.orderHistoryPage}>
-        <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+        <NavBar user={user} onLogoClick={() => navigate('/home')} />
         <div className={styles.historyContainer}>
           <div className={styles.errorBox}>
             <h2>Error</h2>
             <p>{error}</p>
-            <button onClick={() => onNavigate('home')} className={styles.backBtn}>
+            <button onClick={() => navigate('/home')} className={styles.backBtn}>
               Back to Home
             </button>
           </div>
@@ -100,7 +102,7 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
 
   return (
     <div className={styles.orderHistoryPage}>
-      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={() => navigate('/home')} />
 
       <div className={styles.historyContainer}>
         <div className={styles.historyContent}>
@@ -116,13 +118,13 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
               All Orders
             </button>
             <button
-              className={`${styles.filterBtn} ${filter === 'processing' ? 'active' : ''}`}
+              className={`${styles.filterBtn} ${filter === `${styles.processing}` ? `${styles.active}`: ''}`}
               onClick={() => setFilter('processing')}
             >
               Processing
             </button>
             <button
-              className={`${styles.filterBtn} ${filter === 'completed' ? 'active' : ''}`}
+              className={`${styles.filterBtn} ${filter === `${styles.completed}` ? `${styles.active}` : ''}`}
               onClick={() => setFilter('completed')}
             >
               Completed
@@ -133,7 +135,7 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
               <h2>No orders yet</h2>
               <p>Start by ordering from your favorite restaurants!</p>
               <button 
-                onClick={() => onNavigate('map')}
+                onClick={() => navigate('/map')}
                 className={styles.actionBtn}
               >
                 Browse Restaurants
@@ -163,7 +165,7 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
                     </div>
                   </div>
                   <div className={styles.businessSection}>
-                    <h4>{order.businessName || 'Unknown Restaurant'}</h4>
+                    <h4>{order.businessName}</h4>
                   </div>
                   <div className={styles.itemsSection}>
                     {order.items && order.items.length > 0 ? (
@@ -184,7 +186,7 @@ const OrderHistory = ({ user, onNavigate, onLogout }) => {
                       <span className={styles.amount}>${parseFloat(order.total_amount).toFixed(2)}</span>
                     </div>
                     <button
-                      onClick={() => onNavigate('orderConfirmation', order.id)}
+                      onClick={() => navigate(`/order/${order.id}`)}
                       className={styles.viewDetailsBtn}
                     >
                       View Details

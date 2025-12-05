@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from "react-router-dom";
 import styles from '../styles/BrowsePage.module.css';
 import NavBar from './NavBar';
 
-const BrowsePage = ({ user, onNavigate, onLogout}) => {
+const BrowsePage = ({ user }) => {
+  const navigate = useNavigate();
   const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [businesses, setBusinesses] = useState([]);
   const [filteredBusinesses, setFilteredBusinesses] = useState([]);
@@ -10,7 +12,6 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('all');
   const [minRating, setMinRating] = useState(1);
-
   const businessTypes = ['all', ...new Set(businesses.map(b => b.type))];
   const fetchBusinesses = useCallback(async () => {
     setLoading(true);
@@ -19,14 +20,15 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
       if (!response.ok) {
         throw new Error(`Failed to fetch: ${response.status}`);
       }
-      const data = await response.json();      if (!data.businesses || !Array.isArray(data.businesses)) {
+      const data = await response.json();
+      if (!data.businesses) {
         setBusinesses([]);
         return;
       }
 
-      setBusinesses(data.businesses || []);
+      setBusinesses(data.businesses);
     } catch (err) {
-      console.error('Error fetching businesses:', err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -39,11 +41,9 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
   useEffect(() => {
     let filtered = businesses.filter(business => {
       const matchesSearch =
-        business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (business.phone && business.phone.includes(searchQuery));
+        business.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesType = selectedType === 'all' || business.type === selectedType;
       const matchesRating = (business.rating || 0) >= minRating;
-
       return matchesSearch && matchesType && matchesRating;
     });
 
@@ -51,57 +51,56 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
     setFilteredBusinesses(filtered);
   }, [businesses, searchQuery, selectedType, minRating]);
 
+  const handleLogoClick = () => {
+    window.scrollTo(0, 0);
+  };
 
-    const handleLogoClick = () => {
-        window.scrollTo(0, 0);
-    };
-
-    const handleBusinessClick = (business) => {
-        onNavigate('businessDetail', business.id);
-    };
+  const handleBusinessClick = (business) => {
+    navigate(`/business/${business.id}`);
+  };
   return (
     <div>
-        <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={handleLogoClick} />
 
-        <div className={styles.browsePage}>
+      <div className={styles.browsePage}>
         <div className={styles.browseHeader}>
-            <h1>Discover Restaurants</h1>
+          <h1>Discover Restaurants</h1>
         </div>
         <div className={styles.filtersSection}>
-            {/* Search Bar */}
-            <div className={styles.searchBar}>
+          {/* Search Bar */}
+          <div className={styles.searchBar}>
             <input
-                type="text"
-                placeholder="Search restaurants..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchInput}
+              type="text"
+              placeholder="Search restaurants..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput}
             />
             {searchQuery && (
-                <button
+              <button
                 className={styles.clearBtn}
                 onClick={() => setSearchQuery('')}
-                >
+              >
                 ✕
-                </button>
+              </button>
             )}
-            </div>
-            <div className={styles.filterGroup}>
+          </div>
+          <div className={styles.filterGroup}>
             <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className={styles.filterSelect}
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className={styles.filterSelect}
             >
-                {businessTypes.map(type => (
+              {businessTypes.map(type => (
                 <option key={type} value={type}>
-                    {type === 'all' ? 'All Types' : type.charAt(0).toUpperCase() + type.slice(1)}
+                  {type === 'all' ? 'All Types' : type.charAt(0).toUpperCase() + type.slice(1)}
                 </option>
-                ))}
+              ))}
             </select>
-            </div>
-            <div className={styles.filterGroup}>
+          </div>
+          <div className={styles.filterGroup}>
             <div className={styles.ratingFilter}>
-                <input
+              <input
                 type="range"
                 min="1.0"
                 max="5"
@@ -109,81 +108,62 @@ const BrowsePage = ({ user, onNavigate, onLogout}) => {
                 value={minRating}
                 onChange={(e) => setMinRating(parseFloat(e.target.value))}
                 className={styles.ratingSlider}
-                />
-                <span className={styles.ratingDisplay}>{minRating.toFixed(1)}</span>
+              />
+              <span className={styles.ratingDisplay}>{minRating.toFixed(1)}</span>
             </div>
-            </div>
+          </div>
         </div>
         {loading && (
-            <div className={styles.loading}>
+          <div className={styles.loading}>
             <p>Loading restaurants...</p>
-            </div>
+          </div>
         )}
         {!loading && filteredBusinesses.length === 0 && (
-            <div className={styles.noResults}>
+          <div className={styles.noResults}>
             <p>No restaurants found</p>
             <button onClick={() => {
-                setSearchQuery('');
-                setSelectedType('all');
-                setMinRating(1.0);
+              setSearchQuery('');
+              setSelectedType('all');
+              setMinRating(1.0);
             }}>
-                Clear Filters
+              Clear Filters
             </button>
-            </div>
+          </div>
         )}
 
         {/* Businesses */}
         <div className={styles.businessesGrid}>
-            {filteredBusinesses.map((business) => (
-            <div
-                key={business.id}
-                onClick={() => handleBusinessClick(business)}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleBusinessClick(business);
-                    }
-                }}
-                role="button"
-                tabIndex={0}
-                style={{ cursor: 'pointer' }}
-                className={styles.businessCard}
-            >
-                <div className={styles.cardHeader}>
+          {filteredBusinesses.map((business) => (
+            <div className={styles.businessCard} key={business.id}>
+              <div className={styles.cardHeader}>
                 <h4>{business.name}</h4>
-                </div>
-                <div className={styles.ratingSection}>
+              </div>
+
+              <div className={styles.ratingSection}>
                 <span className={styles.ratingValue}>
-                    {business.rating || 'N/A'} ({business.total_reviews || 0} reviews)
+                  {business.rating} ({business.total_reviews} reviews)
                 </span>
                 <span className={styles.typeBadge}>{business.type}</span>
-                </div>
-                <div className={styles.cardInfo}>
-                {business.phone && (
-                    <div className={styles.infoItem}>
-                    <a href={`tel:${business.phone}`}>{business.phone}</a>
-                    </div>
-                )}
+              </div>
 
-                {business.website && (
-                    <div className={styles.infoItem}>
-                    <a href={business.website} target="_blank" rel="noopener noreferrer">
-                        Website
-                    </a>
-                    </div>
-                )}
-                {business.opening_hours && (
-                    <div className={styles.infoItem}>
-                    <span>
-                        {business.opening_hours.open_now ? 'Open Now' : 'Closed'}
-                    </span>
-                    </div>
-                )}
-                </div>
+              <div
+                className={styles.openButton}
+                onClick={() => handleBusinessClick(business)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleBusinessClick(business);
+                  }
+                }}
+                tabIndex={0}
+                style={{ cursor: 'pointer' }}
+              >
+                Open
+              </div>
             </div>
-            ))}
+          ))}
         </div>
-        </div>
+      </div>
     </div>
   );
 };

@@ -5,8 +5,11 @@ import CartFooter from './CartFooter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../context/CartContext'; 
+import { useParams,useNavigate } from 'react-router-dom';
 
-const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
+const BusinessDetailPage = ({ user }) => {
+  const { businessId } = useParams();
+  const navigate = useNavigate();
   const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const [business, setBusiness] = useState(null);
@@ -135,7 +138,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
     return (
       <div className={`${styles.detailPage} ${styles.errorPage}`}>
         <h2>{error || 'Restaurant not found'}</h2>
-        <button onClick={() => onNavigate('browse')}>← Back to Browse</button>
+        <button onClick={() => navigate('/browse')}>← Back</button>
       </div>
     );
   }
@@ -156,11 +159,11 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
 
   return (
     <div>
-      <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={handleLogoClick} />
 
       <div className={`${styles.detailPage} ${styles.detailPage}`}>
         <div className={styles.detailHeader}>
-          <button className={styles.backBtn} onClick={() => onNavigate('browse')}>← Back</button>
+          <button className={styles.backBtn} onClick={() => navigate('/browse')}>← Back</button>
         </div>
 
         <div className={styles.businessHeader}>
@@ -356,7 +359,7 @@ const BusinessDetailPage = ({ businessId, user, onNavigate }) => {
           )}
         </div>
       </div>
-      <CartFooter onNavigate={onNavigate} businessId={businessId} businessName={business.name} />
+      <CartFooter businessId={businessId} businessName={business.name} />
     </div>
   );
 };

@@ -165,12 +165,7 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(160, 160, 160, 0.4);
-}
-
-.submitButton:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 .submitButton:disabled {

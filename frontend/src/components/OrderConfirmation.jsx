@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import NavBar from './NavBar';
 import OrderQRCode from './OrderQRCode';
 import styles from '../styles/OrderConfirmation.module.css';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const OrderConfirmation = ({ orderId, user, onNavigate }) => {
+const OrderConfirmation = ({ user }) => {
+  const { orderId } = useParams();
+  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -37,7 +40,7 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
   if (loading) {
     return (
       <div className={styles.confirmationPage}>
-        <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+        <NavBar user={user} onLogoClick={() => navigate('/home')} />
         <div className={styles.confirmationContainer}>
           <p>Loading order details...</p>
         </div>
@@ -48,12 +51,12 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
   if (error || !order) {
     return (
       <div className={styles.confirmationPage}>
-        <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+        <NavBar user={user} onLogoClick={() => navigate('/home')} />
         <div className={styles.confirmationContainer}>
           <div className={styles.errorBox}>
             <h2>Something went wrong</h2>
             <p>{error || 'Order not found'}</p>
-            <button onClick={() => onNavigate('home')} className={styles.homeBtn}>
+            <button onClick={() => navigate('/home')} className={styles.homeBtn}>
               Back to Home
             </button>
           </div>
@@ -64,7 +67,7 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
 
   return (
     <div className={styles.confirmationPage}>
-      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={() => navigate('/home')} />
 
       <div className={styles.confirmationContainer}>
         <div className={styles.confirmationContent}>
@@ -153,7 +156,7 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
 
           <div className={styles.confirmationActions}>
             <button 
-              onClick={() => onNavigate('orderHistory')}
+              onClick={() => navigate('/order-history')}
               className={`${styles.actionBtn} ${styles.secondary}`}
             >
               View Orders

@@ -1,27 +1,29 @@
 import { useCart } from '../context/CartContext';
 import NavBar from './NavBar';
 import styles from '../styles/CartPage.module.css';
+import { useNavigate } from 'react-router-dom';
 
-const CartPage = ({ user, onNavigate }) => {
+const CartPage = ({ user }) => {
+  const navigate = useNavigate();
   const { cart, removeFromCart, updateQuantity, clearCart, calculateTotals } = useCart();
   const totals = calculateTotals();
 
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
-    onNavigate('home');
+    navigate('/home');
   };
 
   if (cart.items.length === 0) {
     return (
       <div className={styles.cartPage}>
-        <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+        <NavBar user={user} onClick={() => navigate('/home')} />
         <div className={styles.cartContainer}>
           <div className={styles.emptyCart}>
             <h2>Your cart is empty</h2>
             <p>Add items from restaurants to get started</p>
             <button
               className={styles.continueShoppingBtn}
-              onClick={() => onNavigate('map')}
+              onClick={() => navigate('/map')}
             >
               Continue Shopping
             </button>
@@ -33,8 +35,7 @@ const CartPage = ({ user, onNavigate }) => {
 
   return (
     <div className={styles.cartPage}>
-      <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
-
+      <NavBar user={user} onLogoClick={handleLogoClick} />
       <div className={styles.cartContainer}>
         <div className={styles.cartHeader}>
           <h1>Order from {cart.businessName}</h1>
@@ -165,7 +166,7 @@ const CartPage = ({ user, onNavigate }) => {
 
             <button 
               className={styles.checkoutBtn}
-              onClick={() => onNavigate('payment')}
+              onClick={() => navigate('/payment')}
               disabled={cart.items.length === 0}
             >
               Proceed to Checkout
@@ -173,7 +174,7 @@ const CartPage = ({ user, onNavigate }) => {
 
             <button
               className={styles.continueShoppingBtn}
-              onClick={() => onNavigate('businessDetail', cart.businessId)}
+              onClick={() => navigate(`/businessDetail/${cart.businessId}`)}
             >
               Continue Shopping
             </button>

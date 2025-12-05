@@ -50,7 +50,6 @@
 
 .orderItem:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
 }
 
 @keyframes slideUp {
@@ -132,27 +131,9 @@
   color: white;
 }
 
-.orderActions button:nth-child(1):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(81, 207, 102, 0.3);
-}
-
-.orderActions button:nth-child(1):active {
-  transform: translateY(0);
-}
-
 .orderActions button:nth-child(2) {
   background: linear-gradient(90deg, hsla(208, 33%, 21%, 1) 0%, hsla(211, 36%, 46%, 1) 100%);
   color: white;
-}
-
-.orderActions button:nth-child(2):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
-}
-
-.orderActions button:nth-child(2):active {
-  transform: translateY(0);
 }
 
 .orderActions button:nth-child(3) {
@@ -160,13 +141,14 @@
   color: white;
 }
 
-.orderActions button:nth-child(3):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(81, 121, 172, 0.3);
+.orderActions button:nth-child(4) {
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
 }
 
-.orderActions button:nth-child(3):active {
-  transform: translateY(0);
+.orderActions button:nth-child(5) {
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
 }
 
 .ownerOrdersPage > p {
@@ -176,6 +158,11 @@
   font-weight: 500;
   padding: 40px 20px;
   margin: 0;
+}
+
+button:disabled {
+  background: rgb(184, 184, 184) !important;
+  color: white;
 }
 
 .error {

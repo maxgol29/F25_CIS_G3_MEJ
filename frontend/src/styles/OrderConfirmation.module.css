@@ -238,7 +238,6 @@
 
 .actionBtn.secondary:hover {
   background: #f8f9ff;
-  transform: translateY(1px);
 }
 
 .errorBox {
@@ -271,7 +270,6 @@
 }
 
 .homeBtn:hover {
-  transform: translateY(1px);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 

@@ -1,14 +1,18 @@
 import styles from '../styles/OwnerPage.module.css';
 import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
 
-const OwnerPage = ({ user, onLogout, onNavigate }) => {
+const OwnerPage = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
+    navigate('/home');
   };
 
   return (
     <div className={styles.ownerPage}>
-      <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={handleLogoClick} />
 
       <div className={styles.ownerContainer}>
         <div className={styles.ownerCard}>

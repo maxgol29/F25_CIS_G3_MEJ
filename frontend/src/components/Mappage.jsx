@@ -2,10 +2,12 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { GoogleMap, LoadScriptNext, Marker, Circle, InfoWindow } from '@react-google-maps/api';
 import NavBar from './NavBar';
 import styles from  '../styles/Mappage.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const GOOGLE_LIBS = ['places'];
 
-const MapPage = ({ user, onNavigate }) => {
+const MapPage = ({ user }) => {
+  const navigate = useNavigate();
   const [mapCenter, setMapCenter] = useState({ lat: 40.7128, lng: -74.0060 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -193,7 +195,7 @@ const MapPage = ({ user, onNavigate }) => {
     const dbBusiness = findDatabaseBusinessByName(googleBusiness.name);
 
     if (dbBusiness && dbBusiness.id) {
-      onNavigate('businessDetail', dbBusiness.id);
+      navigate(`/business/${dbBusiness.id}`);
     } else {
       setError(`Business "${googleBusiness.name}" not found in database. Please try again.`);
     }
@@ -234,7 +236,7 @@ const MapPage = ({ user, onNavigate }) => {
   if (loading) {
     return (
       <div className={styles.mapPage}>
-        <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+        <NavBar user={user} onLogoClick={handleLogoClick} />
         <div className={styles.mapContainer}>
           <div className={styles.loading}>Loading map...</div>
         </div>
@@ -253,16 +255,11 @@ const MapPage = ({ user, onNavigate }) => {
 
   return (
     <div className={styles.mapPageFullscreen}>
-      <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={handleLogoClick} />
 
       {error && <div className={styles.errorMessageFloating}>{error}</div>}
 
       <div className={styles.fullscreenMapSection}>
-        {!GOOGLE_MAPS_API_KEY ? (
-          <div className={styles.apiKeyError}>
-            <h3>Google Maps API Key Missing</h3>
-          </div>
-        ) : (
           <LoadScriptNext
             googleMapsApiKey={GOOGLE_MAPS_API_KEY}
             libraries={GOOGLE_LIBS}
@@ -343,20 +340,18 @@ const MapPage = ({ user, onNavigate }) => {
               )}
             </GoogleMap>
           </LoadScriptNext>
-        )}
       </div>
 
       {businesses.length > 0 && (
         <div className={styles.fullscreenBusinessesSection}>
           <div className={styles.businessesHeader} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{ margin: 0 }}> Businesses ({businesses.length})</h2>
             <div style={{ width: 300 }}>
               <input
                 type="text"
                 placeholder="Search businesses..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: '100%', padding: '6px 8px', borderRadius: 6, border: '1px solid #ddd'}}
+                style={{ width: '100%', padding: '12px 16px', borderRadius: 6, border: '1px solid #ddd'}}
               />
             </div>
           </div>
@@ -387,14 +382,8 @@ const MapPage = ({ user, onNavigate }) => {
                       </div>
                       <div className={styles.businessesName}>{business.name}</div>
                       <div className={styles.businessesRating}>
-                        {business.rating ? (
-                          <>
-                            <span className={styles.stars}>{business.rating}</span>
-                            <span className={styles.reviews}>({business.user_ratings_total})</span>
-                          </>
-                        ) : (
-                          <span className={styles.noRating}>No ratings yet</span>
-                        )}
+                        <span className={styles.stars}>{business.rating}</span>
+                        <span className={styles.reviews}>({business.user_ratings_total})</span>
                       </div>
                       <div className={styles.businessesStatus}>
                         {getOpenStatus(business) === true ? (
@@ -406,7 +395,7 @@ const MapPage = ({ user, onNavigate }) => {
                         )}
                       </div>
                     </div>
-                  ))}
+                  ))} 
               </div>
             </>
           )}
