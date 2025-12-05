@@ -199,12 +199,14 @@
   z-index: 10; 
   will-change: transform;
   max-height: 200px;
+  transition: transform 0.5s ease-out;
 }
 
 .itemCard:hover .itemDetailsOverlay {
-  transform: translateY(-1%);
   opacity: 0.95;
+  transform: translateY(-1px);
 }
+
 
 .itemDetails {
   display: flex;
@@ -684,9 +686,6 @@
   box-shadow: 0 2px 8px rgba(255, 139, 66, 0.1);
 }
 
-.promoCodeItem:hover {
-  transform: translateY(1px);
-}
 
 .promoCodeBadge {
   background: #60696b;
@@ -765,8 +764,4 @@
 .promoCopyBtn:hover {
   background: #60696b;
   color: white;
-}
-
-.promoCopyBtn:active {
-  transform: scale(0.98);
 }

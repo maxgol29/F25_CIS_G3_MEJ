@@ -202,7 +202,6 @@
 
 .viewDetailsBtn:hover {
   background: #60696b;
-  transform: translateY(1px);
   box-shadow: 0 4px 12px rgba(96, 105, 107, 0.3);
 }
 
@@ -237,7 +236,6 @@
 
 .actionBtn:hover {
   background: #60696b;
-  transform: translateY(1px);
 }
 
 .errorBox {

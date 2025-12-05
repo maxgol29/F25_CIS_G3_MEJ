@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart, Treemap, AreaChart, Area } from 'recharts';
 import styles from '../styles/Dashboard.module.css';
 import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
 
 const COLORS = [
   '#ff8b42',
@@ -80,8 +81,8 @@ const CustomTreemapContent = (props) => {
   );
 };
 
-const Dashboard = ({ user, onNavigate }) => {
-
+const Dashboard = ({ user }) => {
+  const navigate = useNavigate();
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [businessPromoUsage, setBusinessPromoUsage] = useState(null);
   const [popularItems, setPopularItems] = useState(null);
@@ -334,7 +335,7 @@ const Dashboard = ({ user, onNavigate }) => {
 
   return (
     <div className={styles.chartsContainer}>
-      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={() => navigate('/home')} />
 
       <h1>Analytics</h1>
 

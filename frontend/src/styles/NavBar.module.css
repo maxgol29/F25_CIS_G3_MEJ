@@ -29,7 +29,6 @@
 }
 
 .navbarLogo:hover {
-  transform: scale(1.01);
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
@@ -40,6 +39,14 @@
   margin: 0;
   padding: 0;
   flex: 1;
+}
+
+.navbarUser {
+  background-color: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
 }
 
 .navItem {
@@ -73,13 +80,8 @@
 .navLink:hover,
 .navButton:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
 }
 
-.navLink:active,
-.navButton:active {
-  transform: translateY(0);
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -143,5 +145,4 @@
 .activeOrderLink:hover {
   color: rgb(27, 27, 27);
   background-color: white;
-  transform: translateY(1px);
 }

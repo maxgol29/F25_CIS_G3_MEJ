@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import NavBar from './NavBar';
 import styles from '../styles/ProfilePage.module.css';
+import { useNavigate } from 'react-router-dom';
 
-const ProfilePage = ({ user, onLogout, onNavigate }) => {
+const ProfilePage = ({ user, onLogout }) => {
+  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState(null);
   const [savings, setSavings] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -56,12 +58,13 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
 
   const handleLogoClick = () => {
     window.scrollTo(0, 0);
+    navigate('/home');
   };
 
   if (loading) {
     return (
       <div className={styles.profilePage}>
-        <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+        <NavBar user={user} onLogoClick={handleLogoClick} />
         <div className={styles.profileContainer}>
           <div className={styles.loading}>Loading profile...</div>
         </div>
@@ -71,12 +74,9 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
 
   return (
     <div className={styles.profilePage}>
-      <NavBar user={user} onLogoClick={handleLogoClick} onNavigate={onNavigate} />
+    <NavBar user={user} onLogoClick={handleLogoClick} />
 
       <div className={styles.profileContainer}>
-        <div className={styles.profileHeader}>
-          <h1>Profile</h1>
-        </div>
 
         {error && <div className={styles.errorMessage}>{error}</div>}
 
@@ -133,11 +133,6 @@ const ProfilePage = ({ user, onLogout, onNavigate }) => {
                 </p>
               </div>
             </div>
-          </section>
-          
-          {/* Account Actions */}
-          <section className={styles.profileSection}>
-            <h2>Account</h2>
             <div className={styles.actions}>
               <button className={`${styles.actionButton} ${styles.secondary}`}>Edit Profile</button>
               <button className={`${styles.actionButton} ${styles.secondary}`}>Change Password</button>

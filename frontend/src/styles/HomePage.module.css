@@ -49,12 +49,9 @@
 }
 
 .logoutButton:hover {
-  transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(206, 206, 206, 0.5);
 }
-.logoutButton:active {
-  transform: translateY(0);
-}
+
 
 @media (max-width: 768px) {
   .homeContent {

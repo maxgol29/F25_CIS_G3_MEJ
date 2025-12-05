@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from  '../styles/PromoManager.module.css';
 import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
 
 const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-const PromoManager = ({ user, onNavigate }) => {
+const PromoManager = ({ user }) => {
+  const navigate = useNavigate();
   const [promos, setPromos] = useState([]);
   const [promoTypes, setPromoTypes] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -123,7 +125,7 @@ const PromoManager = ({ user, onNavigate }) => {
 
   return (
     <div className={styles.promoManagerPage}>
-      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={() => navigate('/home')} />
       
       <div className={styles.promoContainer}>
         <div className={styles.promoListSection}>

@@ -44,7 +44,6 @@
 }
 
 .continueShoppingBtn:hover {
-  transform: translateY(1px);
   box-shadow: 0 4px 15px rgba(34, 34, 35, 0.3);
 }
 
@@ -76,7 +75,6 @@
 
 .clearCartBtn:hover {
   background: #ff5252;
-  transform: translateY(-2px);
 }
 
 .cartContent {
@@ -292,13 +290,9 @@
 }
 
 .checkoutBtn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.checkoutBtn:active {
-  transform: translateY(0);
-}
 
 .orderSummary .continueShoppingBtn {
   width: 100%;

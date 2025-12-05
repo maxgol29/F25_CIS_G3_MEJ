@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import NavBar from './NavBar';
 import styles from '../styles/PaymentPage.module.css';
+import { useNavigate } from 'react-router-dom';
 
-const PaymentPage = ({ user, onNavigate }) => {
+const PaymentPage = ({ user }) => {
+  const navigate = useNavigate();
   const { cart, calculateTotals, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -27,12 +29,12 @@ const PaymentPage = ({ user, onNavigate }) => {
   if (!cart.items || cart.items.length === 0) {
     return (
       <div className={styles.paymentPage}>
-        <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+        <NavBar user={user} onLogoClick={() => navigate('/home')} />
         <div className={styles.paymentContainer}>
           <div className={styles.emptyPayment}>
             <h2>Your cart is empty</h2>
             <p>Please add items before checkout</p>
-            <button onClick={() => onNavigate('map')} className={styles.backBtn}>
+            <button onClick={() => navigate('/map')} className={styles.backBtn}>
               Continue Shopping
             </button>
           </div>
@@ -172,7 +174,7 @@ const PaymentPage = ({ user, onNavigate }) => {
       clearCart();
       setSuccess(true);
       setTimeout(() => {
-        onNavigate('orderConfirmation', result.order.id);
+        navigate(`/order/${result.order.id}`);
       }, 2000);
 
     } catch (err) {
@@ -188,7 +190,7 @@ const PaymentPage = ({ user, onNavigate }) => {
   if (success) {
     return (
       <div className={styles.paymentPage}>
-        <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+        <NavBar user={user} onLogoClick={() => navigate('/home')} />
         <div className={styles.paymentContainer}>
           <div className={styles.successMessage}>
             <h2>Payment Successful!</h2>
@@ -202,7 +204,7 @@ const PaymentPage = ({ user, onNavigate }) => {
 
   return (
     <div className={styles.paymentPage}>
-      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={() => navigate('/home')} />
 
       <div className={styles.paymentContainer}>
         <div className={styles.paymentContent}>
