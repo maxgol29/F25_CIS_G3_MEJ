@@ -26,11 +26,6 @@
   flex-shrink: 0;
 }
 
-.googleMapWrapper {
-  width: 100%;
-  height: 100%;
-}
-
 .apiKeyError {
   width: 100%;
   height: 100vh;
@@ -68,12 +63,6 @@
   font-size: 24px;
   margin: 0 0 5px 0;
   font-weight: 700;
-}
-
-.scrollHint {
-  color: #999;
-  font-size: 12px;
-  margin: 0;
 }
 
 .businessesGrid {

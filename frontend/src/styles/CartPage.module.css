@@ -18,10 +18,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.emptyCartIcon {
-  font-size: 80px;
-  margin-bottom: 20px;
-}
 
 .emptyCart h2 {
   color: #333;
@@ -366,10 +362,6 @@
 
   .emptyCart {
     padding: 60px 20px;
-  }
-
-  .emptyCartIcon {
-    font-size: 60px;
   }
 
   .cartItem {

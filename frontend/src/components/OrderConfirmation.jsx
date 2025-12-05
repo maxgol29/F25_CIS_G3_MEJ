@@ -36,9 +36,9 @@ const OrderConfirmation = ({ orderId, user, onNavigate }) => {
 
   if (loading) {
     return (
-      <div className="confirmation-page">
+      <div className={styles.confirmationPage}>
         <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
-        <div className="confirmation-container">
+        <div className={styles.confirmationContainer}>
           <p>Loading order details...</p>
         </div>
       </div>

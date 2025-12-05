@@ -81,17 +81,6 @@
   transform: translateY(0);
 }
 
-.navbarUser {
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  white-space: nowrap;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 10px 16px;
-  border-radius: 8px;
-  letter-spacing: 0.5px;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .navbarContainer {
@@ -110,11 +99,6 @@
   .navLink {
     font-size: 14px;
     padding: 6px 10px;
-  }
-
-  .navbarUser {
-    font-size: 14px;
-    padding: 8px 12px;
   }
 }
 
@@ -138,12 +122,6 @@
   .navLink {
     font-size: 13px;
     padding: 6px 8px;
-  }
-
-  .navbarUser {
-    width: 100%;
-    text-align: center;
-    font-size: 13px;
   }
 }
 
