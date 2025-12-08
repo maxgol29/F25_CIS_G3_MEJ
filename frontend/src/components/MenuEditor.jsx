@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/MenuEditor.module.css';
 import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
 
 const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-const MenuEditor = ({ user, onNavigate }) => {
+const MenuEditor = ({ user }) => {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -92,7 +94,7 @@ const MenuEditor = ({ user, onNavigate }) => {
 
   return (
     <div className={styles.menuEditorPage}>
-      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={() => navigate('/home')} />
       <h2>Menu Editor</h2>
       <div className={styles.menuContent}>
         <div className={styles.menuList}>

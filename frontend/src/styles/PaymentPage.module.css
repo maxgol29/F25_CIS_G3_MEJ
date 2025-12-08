@@ -42,7 +42,6 @@
 }
 
 .emptyPayment .backBtn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
@@ -225,7 +224,6 @@
 
 .applyPromoBtn:hover:not(:disabled) {
   background: #60696b;
-  transform: translateY(-2px);
 }
 
 .applyPromoBtn:disabled {
@@ -240,7 +238,6 @@
 
 .removePromoBtn:hover {
   background: #ff5252;
-  transform: translateY(-2px);
 }
 
 .promoSuccess {
@@ -248,16 +245,6 @@
   font-size: 14px;
   margin-top: 10px;
   font-weight: 500;
-}
-
-.addressDisplay {
-  background: #f9f9f9;
-  padding: 15px 20px;
-  border-radius: 8px;
-  color: #666;
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
 }
 
 .submitPaymentBtn {
@@ -275,7 +262,6 @@
 }
 
 .submitPaymentBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 

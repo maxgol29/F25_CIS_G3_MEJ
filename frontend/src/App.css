@@ -1,6 +1,6 @@
 /* App.css - Global styling */
 
-@import './variables.css';
+@import './styles/variables.css';
 
 * {
   margin: 0;

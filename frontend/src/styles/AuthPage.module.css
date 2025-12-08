@@ -165,12 +165,7 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(160, 160, 160, 0.4);
-}
-
-.submitButton:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 .submitButton:disabled {
@@ -289,12 +284,6 @@
 
 .userTypeButton.owner:hover {
   border-color: #ff9800;
-}
-
-.userTypeIcon {
-  font-size: 40px;
-  min-width: 50px;
-  text-align: center;
 }
 
 .userTypeText {
@@ -466,10 +455,6 @@
     text-align: center;
   }
 
-  .userTypeIcon {
-    font-size: 35px;
-  }
-
   .userTypeText strong {
     font-size: 16px;
   }
@@ -506,10 +491,6 @@
   .userTypeButton {
     padding: 12px 15px;
     gap: 15px;
-  }
-
-  .userTypeIcon {
-    font-size: 30px;
   }
 
   .userTypeText strong {

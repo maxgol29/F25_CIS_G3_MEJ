@@ -215,14 +215,6 @@
   margin-top: 10px;
 }
 
-.btnCreate:hover:not(:disabled) {
-  transform: translateY(1px);
-}
-
-.btnCreate:active:not(:disabled) {
-  transform: translateY(0);
-}
-
 .btnCreate:disabled {
   background: #ddd;
   color: #999;

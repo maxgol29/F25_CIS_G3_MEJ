@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/OwnerOrders.module.css';
 import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
 
-const OwnerOrders = ({ user, onNavigate }) => {
+const OwnerOrders = ({ user }) => {
+  const navigate = useNavigate();
   const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -107,7 +109,7 @@ const OwnerOrders = ({ user, onNavigate }) => {
 
   return (
     <div className={styles.ownerOrdersPage}>
-      <NavBar user={user} onLogoClick={() => onNavigate('home')} onNavigate={onNavigate} />
+      <NavBar user={user} onLogoClick={() => navigate('/home')} />
       <h2>Orders</h2>
       {loading ? <p>Loading...</p> : null}
       {error && <div className={styles.error}>{error}</div>}

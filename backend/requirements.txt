@@ -11,3 +11,5 @@ gunicorn==21.2.0
 Werkzeug
 qrcode
 pillow
+Flask-JWT-Extended
+flask-bcrypt

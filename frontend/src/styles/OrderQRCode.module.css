@@ -41,12 +41,6 @@
   image-rendering: pixelated;
 }
 
-.qrCodeUrl {
-  background: #f5f5f5;
-  padding: 15px;
-  border-radius: 8px;
-}
-
 .qrCodeLoading {
   text-align: center;
   padding: 40px 20px;

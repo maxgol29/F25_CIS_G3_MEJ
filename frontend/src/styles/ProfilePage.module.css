@@ -3,33 +3,14 @@
   flex-direction: column;
   min-height: 100vh;
   background: #f5f5f5;
-  
 }
 
 .profileContainer {
   flex: 1;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: auto;
   width: 100%;
   padding: 40px 20px;
-}
-
-.profileHeader {
-  margin-bottom: 40px;
-  text-align: center;
-}
-
-.profileHeader h1 {
-  color: #333;
-  font-size: 36px;
-  margin: 0 0 10px 0;
-  font-weight: 700;
-}
-
-.profileSubtitle {
-  color: #666;
-  font-size: 16px;
-  margin: 0;
 }
 
 .errorMessage {
@@ -66,23 +47,6 @@
   transition: all 0.3s ease;
 }
 
-.profileSection:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-}
-
-.sectionHeader {
-  margin-bottom: 25px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #f0f0f0;
-}
-
-.sectionHeader h2 {
-  color: #333;
-  font-size: 22px;
-  margin: 0;
-  font-weight: 600;
-}
-
 h2 {
   margin: auto;
 }
@@ -101,7 +65,7 @@ h2 {
 
 .infoItem label {
   font-weight: 600;
-  color: #667eea;
+  color: #60696b;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -116,12 +80,7 @@ h2 {
   padding: 12px;
   background: #f9f9f9;
   border-radius: 8px;
-  border-left: 3px solid #858e96;
-}
-
-.addressContent {
-  display: flex;
-  gap: 20px;
+  border: 1px solid #60696b;
 }
 
 .addressBlock {
@@ -143,10 +102,6 @@ h2 {
   font-weight: 600;
   font-size: 16px;
   color: #333;
-}
-
-.addressBlock p.city-state {
-  color: #666;
 }
 
 .addressBlock p.country {
@@ -176,16 +131,14 @@ h2 {
 }
 
 .actionButton:hover {
-  transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 .actionButton.secondary {
-  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  background: #60696b;
   color: white;
 }
 
 .actionButton.secondary:hover {
-  transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(133, 142, 150, 0.3);
 }
 
@@ -196,12 +149,7 @@ h2 {
 
 .actionButton.danger:hover {
   background: #ff5252;
-  transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
-}
-
-.actionButton:active {
-  transform: translateY(0);
 }
 
 .actionButton:disabled {
@@ -212,10 +160,6 @@ h2 {
 @media (max-width: 768px) {
   .profileContainer {
     padding: 30px 15px;
-  }
-
-  .profileHeader h1 {
-    font-size: 28px;
   }
 
   .profileSection {
@@ -257,20 +201,8 @@ h2 {
     padding: 20px 10px;
   }
 
-  .profileHeader h1 {
-    font-size: 24px;
-  }
-
-  .profileHeader {
-    margin-bottom: 25px;
-  }
-
   .profileSection {
     padding: 15px;
-  }
-
-  .sectionHeader h2 {
-    font-size: 18px;
   }
 
   .infoItem p {
