@@ -13,7 +13,7 @@ class BusinessService:
 
         return db.save_businesses_from_places(businesses)
     
-    def get_all_businesses_service(self, limit=None): 
+    def get_all_businesses_service(self, limit=None):
         businesses = db.get_all_businesses(limit)
         return businesses
 
@@ -43,12 +43,29 @@ class BusinessService:
         return business
     
     def get_business_items_by_popularity(self, business_id):
-        return db.get_business_items_by_popularity(business_id)
+        cache_key = f"business:{business_id}:items_by_popularity"
+        cached = redis_client.get(cache_key)
+        if cached:
+            return json.loads(cached)
+        result = db.get_business_items_by_popularity(business_id)
+        redis_client.setex(cache_key, 1800, json.dumps(result))
+        return result
     
     def get_business_orders_daily(self, business_id):
-        return db.get_business_orders_daily(business_id)
+        cache_key = f"business:{business_id}:orders_daily"
+        cached = redis_client.get(cache_key)
+        if cached:
+            return json.loads(cached)
+        result = db.get_business_orders_daily(business_id)
+        redis_client.setex(cache_key, 300, json.dumps(result))
+        return result
 
     def get_business_income(self, business_id):
-        return db.get_business_income(business_id)
+        cache_key = f"business:{business_id}:income"
+        cached = redis_client.get(cache_key)
+        if cached:
+            return json.loads(cached)
+        result = db.get_business_income(business_id)
+        return result
     
 business_service = BusinessService()

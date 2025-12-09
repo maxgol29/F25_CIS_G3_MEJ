@@ -264,6 +264,7 @@ def save_business_from_places():
 def get_all_businesses():
     try:
         limit = request.args.get('limit', default=None, type=int)
+        
         businesses = business_service.get_all_businesses_service(limit)
         
         return jsonify({
@@ -271,8 +272,6 @@ def get_all_businesses():
             'businesses': businesses
         }), 200
     except Exception as e:
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'error': 'Failed to fetch businesses',
             'details': str(e)

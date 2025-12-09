@@ -3,6 +3,8 @@ from db.models import db
 import qrcode
 import io
 import base64
+import json
+from db.redis_client import redis_client
 
 class OrderService:
     
@@ -25,10 +27,26 @@ class OrderService:
         return db.get_order(order_id)
 
     def get_user_orders(self, user_id, limit=50):
-        return db.get_user_orders(user_id, limit)
+        cache_key = f"user_orders:{user_id}:{limit}"
+        cached = redis_client.get(cache_key)
+
+        if cached:
+            return json.loads(cached)
+        
+        result = db.get_user_orders(user_id, limit)
+
+        redis_client.setex(cache_key, 300, json.dumps(result))
+
+        return result
     
     def get_business_orders(self, business_id, limit=50):
-        return db.get_business_orders(business_id, limit)
+        cache_key = f"business_orders:{business_id}:{limit}"
+        cached = redis_client.get(cache_key)
+        if cached:
+            return json.loads(cached)
+        result = db.get_business_orders(business_id, limit)
+        redis_client.setex(cache_key, 300, json.dumps(result))
+        return result
     
     def update_order_status(self, order_id, new_status):
         return db.update_order_status(order_id, new_status)
