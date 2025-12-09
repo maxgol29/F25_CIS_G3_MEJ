@@ -112,7 +112,7 @@ const OrderHistory = ({ user }) => {
           </div>
           <div className={styles.filterButtons}>
             <button
-              className={`${styles.filterBtn} ${filter === 'all' ? 'active' : ''}`}
+              className={`${styles.filterBtn} ${filter === `${styles.all}` ? `${styles.active}` : ''}`}
               onClick={() => setFilter('all')}
             >
               All Orders
