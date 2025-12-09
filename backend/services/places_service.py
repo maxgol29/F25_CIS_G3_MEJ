@@ -1,6 +1,8 @@
 import requests
 from config import config
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import json
+from db.redis_client import redis_client
 
 class PlacesService:
     BASE_URL_NEARBY = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
@@ -52,6 +54,10 @@ class PlacesService:
     @staticmethod
     def get_nearby_businesses(latitude, longitude, radius=3200, place_type="restaurant"):
         try:
+            cache_key = f"places:{latitude}:{longitude}:{radius}:{place_type}"
+            cached = redis_client.get(cache_key)
+            if cached:
+                return json.loads(cached)
             api_key = config.GOOGLE_PLACES_API_KEY
             
             response = requests.get(
@@ -80,9 +86,10 @@ class PlacesService:
                     result = future.result()
                     if result:
                         detailed_places.append(result)
-            
-            return {'success': True, 'places': detailed_places}
-        
+
+            result = {'success': True, 'places': detailed_places}
+            redis_client.setex(cache_key, 900, json.dumps(result))
+            return result
         except Exception as e:
             return {'error': str(e)}
 places_service = PlacesService()

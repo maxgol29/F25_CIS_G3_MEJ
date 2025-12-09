@@ -741,8 +741,14 @@ class Database:
             cursor.execute(query, (business_id,))
             items = cursor.fetchall()
             
-            result = [dict(item) for item in items] if items else []
-            return result
+            results = []
+            for item in items:
+                row = dict(item)
+                row["created_at"] = row["created_at"].isoformat() if row["created_at"] else None
+                row["updated_at"] = row["updated_at"].isoformat() if row["updated_at"] else None
+                results.append(row)
+
+            return results
         except Exception as e:
             raise e
         finally:
