@@ -137,6 +137,31 @@ def get_items_by_popularity(business_id):
             'error': 'Failed to fetch items',
             'details': str(e)
         }), 500
+    
+@api_bp.route('/users/<int:user_id>/request', methods=['POST'])
+def request_address_change(user_id):
+    try:
+
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        auth_user_service.request_address_change(user_id, data)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Address change request submitted successfully'
+        }), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.error(f"Failed to submit address change request for user {user_id}", exc_info=True)
+        return jsonify({
+            'error': 'Failed to submit address change request',
+            'details': str(e)
+        }), 500
+
 
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
@@ -193,7 +218,7 @@ def login():
 @jwt_required()
 def get_user(user_id):
     try:
-        requester_id = get_jwt_identity()
+        requester_id = int(get_jwt_identity())
 
         if requester_id != user_id:
             return jsonify({'error': 'Unauthorized'}), 403

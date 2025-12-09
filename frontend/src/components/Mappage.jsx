@@ -3,6 +3,7 @@ import { GoogleMap, LoadScriptNext, Marker, Circle, InfoWindow } from '@react-go
 import NavBar from './NavBar';
 import styles from  '../styles/Mappage.module.css';
 import { useNavigate } from 'react-router-dom';
+import {authFetch} from '../utils/authFetch';
 
 const GOOGLE_LIBS = ['places'];
 
@@ -135,7 +136,7 @@ const MapPage = ({ user }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/auth/users/${user.id}`, {
+      const response = await authFetch(`${REACT_APP_API_BASE_URL}/auth/users/${user.id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
