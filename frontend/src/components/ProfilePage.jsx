@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import NavBar from './NavBar';
+import AddressModalChange from '../context/AddressModalChange';
 import styles from '../styles/ProfilePage.module.css';
 import { useNavigate } from 'react-router-dom';
+import {authFetch} from '../utils/authFetch';
 
 const ProfilePage = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -9,21 +11,21 @@ const ProfilePage = ({ user, onLogout }) => {
   const [savings, setSavings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showAddressModal, setShowAddressModal] = useState(false);
 
   const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const fetchUserDetails = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${REACT_APP_API_BASE_URL}/auth/users/${user.id}`, {
+      const response = await authFetch(`${REACT_APP_API_BASE_URL}/auth/users/${user.id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
 
       if (!response.ok) throw new Error('Failed to fetch user details');
-
       const data = await response.json();
-      setUserDetails(data);
+      setUserDetails(data.user);
       setError('');
     } catch (err) {
       setError(err.message || 'Failed to load user information');
@@ -61,6 +63,10 @@ const ProfilePage = ({ user, onLogout }) => {
     navigate('/home');
   };
 
+  const handleAddressUpdate = async () => {
+    await fetchUserDetails();
+  };
+
   if (loading) {
     return (
       <div className={styles.profilePage}>
@@ -74,7 +80,7 @@ const ProfilePage = ({ user, onLogout }) => {
 
   return (
     <div className={styles.profilePage}>
-    <NavBar user={user} onLogoClick={handleLogoClick} />
+      <NavBar user={user} onLogoClick={handleLogoClick} />
 
       <div className={styles.profileContainer}>
 
@@ -107,7 +113,7 @@ const ProfilePage = ({ user, onLogout }) => {
           {/* Address Information */}
           {userDetails?.street && (
             <section className={styles.profileSection}>
-              <h2>Address</h2>
+                <h2>Address</h2>
               <div className={styles.addressBlock}>
                 <p className={styles.street}>
                   {userDetails.street}
@@ -134,15 +140,34 @@ const ProfilePage = ({ user, onLogout }) => {
               </div>
             </div>
             <div className={styles.actions}>
-              <button className={`${styles.actionButton} ${styles.secondary}`}>Edit Profile</button>
-              <button className={`${styles.actionButton} ${styles.secondary}`}>Change Password</button>
-              <button className={`${styles.actionButton} ${styles.danger}`} onClick={onLogout}>
+              <button 
+                className={`${styles.actionButton} ${styles.secondary}`}
+                onClick={() => setShowAddressModal(true)}
+              >
+                Edit Address
+              </button>
+              <button className={`${styles.actionButton} ${styles.secondary}`}>
+                Change Password
+              </button>
+              <button 
+                className={`${styles.actionButton} ${styles.danger}`} 
+                onClick={onLogout}
+              >
                 Log Out
               </button>
             </div>
           </section>
         </div>
       </div>
+
+      {showAddressModal && (
+        <AddressModalChange
+          user={user}
+          userDetails={userDetails}
+          onClose={() => setShowAddressModal(false)}
+          onSuccess={handleAddressUpdate}
+        />
+      )}
     </div>
   );
 };

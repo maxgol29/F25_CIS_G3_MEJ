@@ -3,6 +3,7 @@ from psycopg2.extras import RealDictCursor, Json
 from psycopg2.pool import SimpleConnectionPool
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import config
+import json
 
 class Database:
     def __init__(self):
@@ -1673,5 +1674,47 @@ class Database:
                 cursor.close()
             if conn:
                 self.return_conn(conn)
+
+    def request_address_change(self, user_id, textRequest):
+        conn = None
+        cursor = None
+
+        try:
+            conn = self.get_conn()
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+            cursor.execute('''
+                INSERT INTO "Request_Log"
+                (userID, "typeRequest", "textRequest", created_at, updated_at)
+                VALUES
+                (%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                RETURNING id, userID, "typeRequest", "textRequest", created_at, updated_at;
+            ''', (
+                user_id, 'address_change', json.dumps(textRequest)
+            ))
+            
+            request_log = cursor.fetchone()
+            conn.commit()
+            
+            return {
+                'id': request_log['id'],
+                'userID': request_log['userid'],
+                'typeRequest': request_log['typeRequest'],
+                'textRequest': request_log['textRequest'],
+                'created_at': str(request_log['created_at']),
+                'updated_at': str(request_log['updated_at'])
+            }
+            
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            raise e
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                self.return_conn(conn)
+
+
 
 db = Database()

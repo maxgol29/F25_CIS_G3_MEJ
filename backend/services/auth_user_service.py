@@ -23,5 +23,8 @@ class AuthUserService:
 
     def get_user_details(self, user_id):
         return db.get_user_details(user_id)
+    
+    def request_address_change(self, user_id, textRequest):
+        return db.request_address_change(user_id, textRequest)
 
 auth_user_service = AuthUserService()
