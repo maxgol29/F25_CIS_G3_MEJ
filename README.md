@@ -91,7 +91,7 @@
 - **Database**
   1. PostgresSQL
   2. Constrains, FK, Indexes 
-- **Deployment
+- **Deployment**
   1. Docker
   2. Frontend Vercel
   3. Backend on Railway
