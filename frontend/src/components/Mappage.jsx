@@ -23,9 +23,7 @@ const MapPage = ({ user }) => {
   const mapRef = useRef(null);
 
   const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  console.log('API Base URL:', REACT_APP_API_BASE_URL);
-  const REACT_APP_GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY || 'AIzaSyCP9chla4T2apPPq7cLEDiBGqM0DiXsC5Y';
-  console.log('Google Maps API Key:', REACT_APP_GOOGLE_PLACES_API_KEY);
+  const REACT_APP_GOOGLE_PLACES_API_KEY = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
   const RADIUS_METERS = 3200;
 
   const mapStyles = [
