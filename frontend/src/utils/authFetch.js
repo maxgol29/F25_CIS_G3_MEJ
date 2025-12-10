@@ -9,10 +9,10 @@ export async function authFetch(url, options = {}) {
   };
   const response = await fetch(url, finalOptions);
   if (response.status === 401 || response.status === 403) {
-    localStorage.removeItem("user");
-    window.location.href = "/login";
+    localStorage.removeItem("currentUser");
+    window.location.href = "/";
     return;
   }
-
+  
   return response;
 }
