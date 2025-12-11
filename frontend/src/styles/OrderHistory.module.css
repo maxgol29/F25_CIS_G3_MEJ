@@ -1,0 +1,308 @@
+.orderHistoryPage {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.historyContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.historyContent {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.historyHeader {
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);  padding: 20px;
+  color: white;
+  text-align: center;
+}
+
+.historyHeader h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.historyHeader p {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  padding: 10px 20px;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.filterBtn:hover {
+  color: #60696b;
+}
+
+.filterBtn.active {
+  background: #60696b;
+  color: white;
+}
+
+.ordersList {
+  padding: 20px;
+}
+
+.orderCard {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.orderCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #60696b;
+}
+
+.orderCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.orderInfo h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.orderDate {
+  margin: 0;
+  font-size: 13px;
+  color: #999;
+}
+
+.orderStatus {
+  text-align: right;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.businessSection {
+  margin-bottom: 15px;
+}
+
+.businessSection h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.itemsSection {
+  margin-bottom: 15px;
+  padding: 10px 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.itemsDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.itemLine {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itemQty {
+  margin-left: 10px;
+  font-size: 12px;
+  color: #999;
+  font-weight: 600;
+}
+
+.itemsCount {
+  margin: 0;
+  font-size: 13px;
+  color: #999;
+}
+
+.orderCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.total {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.total .label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.total .amount {
+  font-size: 18px;
+  color: #60696b;
+  font-weight: 700;
+}
+
+.viewDetailsBtn {
+  padding: 10px 20px;
+  background: #60696b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.viewDetailsBtn:hover {
+  background: #60696b;
+  box-shadow: 0 4px 12px rgba(96, 105, 107, 0.3);
+}
+
+.emptyOrders {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.emptyOrders h2 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.emptyOrders p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  color: #999;
+}
+
+.actionBtn {
+  padding: 12px 30px;
+  background: #60696b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.actionBtn:hover {
+  background: #60696b;
+}
+
+.errorBox {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.errorBox h2 {
+  margin: 0 0 10px 0;
+  color: #d32f2f;
+}
+
+.errorBox p {
+  margin: 0 0 20px 0;
+  color: #666;
+}
+
+.backBtn {
+  padding: 10px 20px;
+  background: #60696b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .historyHeader h1 {
+    font-size: 24px;
+  }
+
+  .orderCardHeader {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .orderCardFooter {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .total {
+    width: 100%;
+  }
+
+  .viewDetailsBtn {
+    width: 100%;
+  }
+
+  .filterButtons {
+    gap: 8px;
+  }
+
+  .filterBtn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .itemLine {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .itemQty {
+    margin-left: 0;
+    margin-top: 3px;
+  }
+}

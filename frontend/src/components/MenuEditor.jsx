@@ -1,0 +1,153 @@
+import React, { useEffect, useState } from 'react';
+import styles from '../styles/MenuEditor.module.css';
+import NavBar from './NavBar';
+import { useNavigate } from 'react-router-dom';
+
+const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+const MenuEditor = ({ user }) => {
+  const navigate = useNavigate();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    dish_name: '',
+    image_url: '',
+    food_type: '',
+    ingredients: '',
+    portion_size: '',
+    nutritional_profile: '',
+    cooking_method: ''
+  });
+  const [error, setError] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
+
+  const businessId = user?.business_id || null;
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      setLoading(true);
+      try {
+        const url = `${REACT_APP_API_BASE_URL}/businesses/${businessId}/items`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch items');
+        const data = await res.json();
+        setItems(data.items || []);
+      } catch (err) {
+        console.error(err);
+        setError('Could not load items');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, [businessId]);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccessMsg(null);
+    if (!form.dish_name) {
+      setError('Dish name is required');
+      return;
+    }
+
+    const payload = {
+      ...form
+    };
+
+    try {
+      const res = await fetch(`${REACT_APP_API_BASE_URL}/items`, { // OUTDATED (maxgol29 will fix)
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || 'Failed to add item');
+      }
+
+      setSuccessMsg('Item added');
+      setForm({
+        dish_name: '',
+        image_url: '',
+        food_type: '',
+        ingredients: '',
+        portion_size: '',
+        nutritional_profile: '',
+        cooking_method: ''
+      });
+
+      const refreshRes = await fetch(`${REACT_APP_API_BASE_URL}/businesses/${businessId}/items`);
+      const refreshData = await refreshRes.json();
+      setItems(refreshData.items || []);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Add failed');
+    }
+  };
+
+  return (
+    <div className={styles.menuEditorPage}>
+      <NavBar user={user} onLogoClick={() => navigate('/home')} />
+      <h2>Menu Editor</h2>
+      <div className={styles.menuContent}>
+        <div className={styles.menuList}>
+          <h3>Your Items</h3>
+          {loading ? <p>Loading...</p> : (
+            items.length === 0 ? <p>No items found.</p> : (
+              <ul>
+                {items.map((it) => (
+                  <li key={it.id} className={styles.menuItem}>
+                    <div className={styles.menuItemLeft}>
+                      <strong>{it.dish_name}</strong>
+                      <div className={styles.menuItemMeta}>{it.food_type || ''} {it.portion_size ? `· ${it.portion_size}` : ''}</div>
+                    </div>
+                    <div className={styles.menuItemRight}>{it.image_url ? <img src={it.image_url} alt={it.dish_name} /> : null}</div>
+                  </li>
+                ))}
+              </ul>
+            )
+          )}
+        </div>
+
+        <div className={styles.menuForm}>
+          <h3>Add Item</h3>
+          {error && <div className={styles.formError}>{error}</div>}
+          {successMsg && <div className={styles.formSuccess}>{successMsg}</div>}
+          <form onSubmit={handleAdd}>
+            <label>Dish name *</label>
+            <input name="dish_name" value={form.dish_name} onChange={handleChange} />
+
+            <label>Image URL</label>
+            <input name="image_url" value={form.image_url} onChange={handleChange} />
+
+            <label>Food type</label>
+            <input name="food_type" value={form.food_type} onChange={handleChange} />
+
+            <label>Ingredients (comma-separated)</label>
+            <input name="ingredients" value={form.ingredients} onChange={handleChange} />
+
+            <label>Portion size</label>
+            <input name="portion_size" value={form.portion_size} onChange={handleChange} />
+
+            <label>Nutritional profile</label>
+            <input name="nutritional_profile" value={form.nutritional_profile} onChange={handleChange} />
+
+            <label>Cooking method</label>
+            <input name="cooking_method" value={form.cooking_method} onChange={handleChange} />
+
+            <button type="submit">Add Item</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MenuEditor;

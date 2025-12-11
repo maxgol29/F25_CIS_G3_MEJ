@@ -1,0 +1,322 @@
+.promoManagerPage {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 40px;
+}
+
+.promoContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.promoContainer h1 {
+  text-align: center;
+  color: #333;
+  font-size: 36px;
+  margin: 0 0 40px 0;
+  font-weight: 600;
+}
+
+.promoListSection {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.promoListSection h2 {
+  color: #333;
+  font-size: 20px;
+  margin: 0 0 25px 0;
+  font-weight: 600;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #60696b;
+}
+
+.promosTable {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+}
+
+.promosTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.promosTable thead {
+  background: #f9f9f9;
+}
+
+.promosTable th {
+  padding: 15px;
+  text-align: left;
+  color: #333;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  border-bottom: 2px solid #eee;
+}
+
+.promosTable td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #666;
+}
+
+.promosTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.promosTable td strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.promosTable td:nth-child(1) strong {
+  color: #28a745;
+}
+
+.noPromos {
+  text-align: center;
+  padding: 60px 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 40px;
+  color: #858e96;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.promoFormSection {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.promoFormSection h2 {
+  color: #333;
+  font-size: 20px;
+  margin: 0 0 30px 0;
+  font-weight: 600;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #333;
+}
+
+.errorMessage {
+  background: #fff3cd;
+  color: #cc0000;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #cc0000;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.successMessage {
+  background: #d4edda;
+  color: #28a745;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #28a745;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.promoForm {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup label {
+  color: #333;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.formGroup small {
+  color: #999;
+  font-size: 12px;
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+.formGroup:nth-child(n + 5) {
+  grid-column: 1 / -1;
+}
+
+.btnCreate {
+  grid-column: 1 / -1;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.btnCreate:disabled {
+  background: #ddd;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.loadingSmall {
+  color: #60696b;
+  font-size: 12px;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+.errorSmall {
+  color: #cc0000;
+  font-size: 12px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+@media (max-width: 768px) {
+  .promoContainer {
+    padding: 20px;
+  }
+
+  .promoContainer h1 {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  .promoListSection,
+  .promoFormSection {
+    padding: 25px;
+    margin-bottom: 25px;
+  }
+
+  .promoListSection h2,
+  .promoFormSection h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .promoForm {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .formGroup:nth-child(n + 5) {
+    grid-column: auto;
+  }
+
+  .promosTable th {
+    font-size: 12px;
+    padding: 12px;
+  }
+
+  .promosTable td {
+    padding: 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .promoContainer {
+    padding: 15px;
+  }
+
+  .promoContainer h1 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .promoListSection,
+  .promoFormSection {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .promoListSection h2,
+  .promoFormSection h2 {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+
+  .promosTable th {
+    font-size: 11px;
+    padding: 10px;
+  }
+
+  .promosTable td {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .btnCreate {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .errorMessage,
+  .successMessage {
+    font-size: 13px;
+    padding: 12px 15px;
+  }
+}

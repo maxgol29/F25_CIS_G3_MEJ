@@ -1,0 +1,278 @@
+.profilePage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.profileContainer {
+  flex: 1;
+  max-width: 1200px;
+  margin: auto;
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.errorMessage {
+  background-color: #fee;
+  color: #c33;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  font-size: 14px;
+  border-left: 4px solid #c33;
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+  padding: 60px 20px;
+}
+
+.profileContent {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.profileSection {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+h2 {
+  margin: auto;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoItem label {
+  font-weight: 600;
+  color: #60696b;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.infoItem p {
+  width: 100%;
+  text-align: center;
+  color: #333;
+  font-size: 16px;
+  margin: 0;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #60696b;
+}
+
+.addressBlock {
+  flex: 1;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border-left: 3px solid #858e96;
+}
+
+.addressBlock p {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.addressBlock p.street {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+.addressBlock p.country {
+  color: #999;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.actionButton {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
+}
+
+.actionButton:hover {
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+.actionButton.secondary {
+  background: #60696b;
+  color: white;
+}
+
+.actionButton.secondary:hover {
+  box-shadow: 0 10px 25px rgba(133, 142, 150, 0.3);
+}
+
+.actionButton.danger {
+  background: #ff6b6b;
+  color: white;
+}
+
+.actionButton.danger:hover {
+  background: #ff5252;
+  box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+}
+
+.actionButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .profileContainer {
+    padding: 30px 15px;
+  }
+
+  .profileSection {
+    padding: 20px;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actionButton {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .savingsBox {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .savingsAmount {
+    font-size: 2.5rem;
+  }
+
+  .savingsContent h2 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profileContainer {
+    padding: 20px 10px;
+  }
+
+  .profileSection {
+    padding: 15px;
+  }
+
+  .infoItem p {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .addressBlock {
+    padding: 15px;
+  }
+
+  .addressBlock p {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .actionButton {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .savingsBox {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .savingsAmount {
+    font-size: 2rem;
+  }
+
+  .savingsContent h2 {
+    font-size: 0.9rem;
+  }
+}
+
+.savingsSection {
+  margin-bottom: 2rem;
+}
+
+.savingsBox {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  border-radius: 12px;
+  color: #60696b;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+}
+
+.savingsContent {
+  flex: 1;
+  z-index: 1;
+}
+
+.savingsContent h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  opacity: 0.95;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.savingsAmount {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  line-height: 1;
+}
+
+

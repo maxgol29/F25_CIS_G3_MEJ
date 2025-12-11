@@ -1,0 +1,517 @@
+.authContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 20px;
+}
+
+.authBox {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.authTitle {
+  text-align: center;
+  color: #333;
+  margin: 0 0 30px 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.errorMessage {
+  background-color: #fee;
+  color: #c33;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border-left: 4px solid #c33;
+  animation: slideDown 0.3s ease-out;
+}
+
+.successMessage {
+  background-color: #efe;
+  color: #3c3;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border-left: 4px solid #3c3;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.formRow .formGroup {
+  gap: 6px;
+}
+
+.formDivider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0 10px 0;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.formDivider::before,
+.formDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.formGroup input {
+  padding: 12px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #858e96;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.formGroup input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.formGroup input::placeholder {
+  color: #999;
+}
+
+.submitButton {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  letter-spacing: 0.5px;
+}
+
+.submitButton:hover:not(:disabled) {
+  box-shadow: 0 10px 25px rgba(160, 160, 160, 0.4);
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.toggleMode {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.toggleMode p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0;
+  margin-left: 4px;
+  font-size: 14px;
+}
+
+.toggleButton:hover {
+  color: #60696b;
+  text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .authBox {
+    padding: 25px 20px;
+    max-width: 100%;
+  }
+
+  .authTitle {
+    font-size: 24px;
+    margin-bottom: 25px;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .authForm {
+    gap: 15px;
+  }
+
+  .submitButton {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+
+  .formDivider {
+    margin: 15px 0 8px 0;
+    font-size: 11px;
+  }
+}
+
+.authSubtitle {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+.userTypeSelection {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+  flex-direction: column;
+}
+
+.userTypeButton {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  padding: 20px 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  text-align: left;
+}
+
+.userTypeButton:hover {
+  border-color: #858e96;
+  background: #f8f9ff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.userTypeButton.customer {
+  border-color: #e0e0e0;
+}
+
+.userTypeButton.customer:hover {
+  border-color: #666;
+}
+
+.userTypeButton.owner {
+  border-color: #e0e0e0;
+}
+
+.userTypeButton.owner:hover {
+  border-color: #ff9800;
+}
+
+.userTypeText {
+  flex: 1;
+}
+
+.userTypeText strong {
+  display: block;
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.userTypeText p {
+  margin: 0;
+  color: #999;
+  font-size: 14px;
+}
+
+/* Business Selection */
+.businessSelection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.businessCard {
+  background: white;
+  border: 2px solid #e0e0e0;
+  padding: 18px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-size: 16px;
+}
+
+.businessCard:hover {
+  border-color: #667eea;
+  background: #f8f9ff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  transform: translateX(5px);
+}
+
+.businessCardHeader {
+  margin-bottom: 10px;
+}
+
+.businessCardHeader h3 {
+  margin: 0;
+  color: #333;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.businessCardInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.businessCardInfo p {
+  margin: 0;
+  font-size: 14px;
+  color: #999;
+}
+
+.businessCardInfo .type {
+  background: #f0f0f0;
+  padding: 4px 10px;
+  border-radius: 5px;
+  color: #666;
+  font-weight: 500;
+}
+
+.businessCardInfo .phone {
+  color: #60696b;
+  font-weight: 500;
+}
+
+/* Selected Business Info */
+.selectedBusiness {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.selectedBusiness strong {
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.changeButton {
+  background: rgba(21, 87, 36, 0.2);
+  border: none;
+  color: #155724;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.changeButton:hover {
+  background: rgba(21, 87, 36, 0.3);
+}
+
+/* Back Button */
+.backButton {
+  background: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.backButton:hover {
+  background: #e0e0e0;
+  transform: translateX(-3px);
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+  font-size: 16px;
+}
+
+.noResults {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.noResults p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .userTypeSelection {
+    gap: 15px;
+  }
+
+  .userTypeButton {
+    padding: 15px 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .userTypeText strong {
+    font-size: 16px;
+  }
+
+  .userTypeText p {
+    font-size: 13px;
+  }
+
+  .businessSelection {
+    max-height: 350px;
+  }
+
+  .businessCard {
+    padding: 15px 18px;
+  }
+
+  .businessCardHeader h3 {
+    font-size: 16px;
+  }
+
+  .selectedBusiness {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    align-items: flex-start;
+  }
+
+  .changeButton {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .userTypeButton {
+    padding: 12px 15px;
+    gap: 15px;
+  }
+
+  .userTypeText strong {
+    font-size: 15px;
+  }
+
+  .businessCard {
+    padding: 12px 15px;
+  }
+
+  .businessCardHeader h3 {
+    font-size: 15px;
+  }
+
+  .businessCardInfo {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .backButton {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,80 @@
+.qrCodeContainer {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.qrCodeCard {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.qrCodeCard h3 {
+  color: #333;
+  font-size: 20px;
+  margin: 0;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #60696b;
+}
+
+
+.qrCodeImage {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 2px solid #eee;
+}
+
+.qrCodeImage img {
+  max-width: 100%;
+  height: auto;
+  width: 250px;
+  height: 250px;
+  image-rendering: pixelated;
+}
+
+.qrCodeLoading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #5179ac;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.qrCodeError {
+  text-align: center;
+  padding: 20px;
+  background: #fff3cd;
+  color: #cc0000;
+  border-radius: 8px;
+  font-size: 14px;
+  border-left: 4px solid #cc0000;
+}
+
+@media (max-width: 480px) {
+  .qrCodeContainer {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .qrCodeCard {
+    gap: 15px;
+  }
+
+  .qrCodeCard h3 {
+    font-size: 18px;
+  }
+
+  .qrCodeImage img {
+    width: 200px;
+    height: 200px;
+  }
+}

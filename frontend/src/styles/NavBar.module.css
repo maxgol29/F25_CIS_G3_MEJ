@@ -1,0 +1,148 @@
+.navbar {
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  padding: 15px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbarContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  gap: 40px;
+}
+
+.navbarLogo {
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.navbarLogo:hover {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.navMenu {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.navbarUser {
+  background-color: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+.navItem {
+  margin: 0;
+}
+
+.navLink {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.navLink:hover,
+.navButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbarContainer {
+    padding: 0 15px;
+    gap: 20px;
+  }
+
+  .navbarLogo {
+    font-size: 20px;
+  }
+
+  .navMenu {
+    gap: 15px;
+  }
+
+  .navLink {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbarContainer {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 15px;
+  }
+
+  .navbarLogo {
+    font-size: 18px;
+  }
+
+  .navMenu {
+    width: 100%;
+    gap: 10px;
+    justify-content: space-around;
+  }
+
+  .navLink {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+}
+
+.cartItemNav {
+  position: relative;
+  padding: 0px !important;
+}
+
+
+.activeOrderLink {
+  background-color: white;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #60696b;
+}
+
+.activeOrderLink:hover {
+  color: rgb(27, 27, 27);
+  background-color: white;
+}

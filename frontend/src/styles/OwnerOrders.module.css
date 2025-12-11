@@ -1,0 +1,346 @@
+.ownerOrdersPage {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 40px;
+}
+
+.ownerOrdersPage h2 {
+  text-align: center;
+  color: #333;
+  font-size: 36px;
+  margin: 40px 0 40px 0;
+  font-weight: 600;
+}
+
+.ordersList {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px 40px 20px;
+}
+
+.ordersList p {
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+  padding: 60px 20px;
+  margin: 0;
+}
+
+.ordersList ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.orderItem {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+  animation: slideUp 0.5s ease-out;
+}
+
+.orderItem:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.orderItem > div:first-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.orderItem strong {
+  color: #60696b;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.orderItem > div:first-child > div:first-of-type {
+  color: #333;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.orderItems {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.orderLine {
+  color: #666;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  font-weight: 500;
+}
+
+.orderLine:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.orderActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.orderActions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  min-width: 110px;
+}
+
+.orderActions button:nth-child(1) {
+  background: linear-gradient(90deg, hsla(132, 79%, 68%, 1) 0%, hsla(101, 62%, 48%, 1) 100%);
+  color: white;
+}
+
+.orderActions button:nth-child(2) {
+  background: linear-gradient(90deg, hsla(208, 33%, 21%, 1) 0%, hsla(211, 36%, 46%, 1) 100%);
+  color: white;
+}
+
+.orderActions button:nth-child(3) {
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
+}
+
+.orderActions button:nth-child(4) {
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
+}
+
+.orderActions button:nth-child(5) {
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
+}
+
+.ownerOrdersPage > p {
+  text-align: center;
+  color: #5179ac;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 40px 20px;
+  margin: 0;
+}
+
+button:disabled {
+  background: rgb(184, 184, 184) !important;
+  color: white;
+}
+
+.error {
+  background: #fff3cd;
+  color: #cc0000;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin: 20px;
+  border-left: 4px solid #cc0000;
+  font-weight: 500;
+  font-size: 14px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .ownerOrdersPage h2 {
+    font-size: 28px;
+  }
+
+  .orderItem {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .orderActions {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .orderActions button {
+    flex: 1;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .ownerOrdersPage {
+    padding-bottom: 30px;
+  }
+
+  .ownerOrdersPage h2 {
+    font-size: 24px;
+    margin: 30px 0 30px 0;
+  }
+
+  .ordersList {
+    padding: 0 15px 30px 15px;
+  }
+
+  .ordersList ul {
+    gap: 15px;
+  }
+
+  .orderItem {
+    padding: 20px;
+    gap: 15px;
+    flex-direction: column;
+    border-radius: 12px;
+  }
+
+  .orderItem strong {
+    font-size: 15px;
+  }
+
+  .orderItem > div:first-child > div:first-of-type {
+    font-size: 14px;
+  }
+
+  .orderItems {
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .orderLine {
+    font-size: 12px;
+    padding: 5px 0;
+  }
+
+  .orderActions {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .orderActions button {
+    flex: 1;
+    padding: 10px 15px;
+    font-size: 12px;
+    min-width: auto;
+  }
+
+  .error {
+    margin: 15px;
+    padding: 12px 15px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ownerOrdersPage {
+    padding-bottom: 20px;
+  }
+
+  .ownerOrdersPage h2 {
+    font-size: 20px;
+    margin: 20px 0 20px 0;
+  }
+
+  .ordersList {
+    padding: 0 12px 20px 12px;
+  }
+
+  .ordersList p {
+    padding: 40px 15px;
+    font-size: 14px;
+  }
+
+  .ordersList ul {
+    gap: 12px;
+  }
+
+  .orderItem {
+    padding: 15px;
+    gap: 12px;
+    border-radius: 10px;
+  }
+
+  .orderItem strong {
+    font-size: 14px;
+  }
+
+  .orderItem > div:first-child > div:first-of-type {
+    font-size: 13px;
+  }
+
+  .orderItems {
+    padding: 10px;
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .orderLine {
+    font-size: 11px;
+    padding: 4px 0;
+  }
+
+  .orderActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .orderActions button {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 11px;
+    min-width: auto;
+  }
+
+  .error {
+    margin: 12px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .ownerOrdersPage > p {
+    font-size: 14px;
+    padding: 30px 15px;
+  }
+}
+

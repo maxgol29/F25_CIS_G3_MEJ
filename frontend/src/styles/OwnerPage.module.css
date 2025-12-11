@@ -1,0 +1,158 @@
+.ownerPage {
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ownerContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 40px;
+}
+
+.ownerCard {
+  background: white;
+  border-radius: 20px;
+  padding: 50px 40px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ownerCard h1 {
+  color: #333;
+  font-size: 28px;
+  margin: 20px 0 30px 0;
+  font-weight: 700;
+}
+
+.ownerInfo {
+  background: #f9f9f9;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.infoItem {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.infoItem:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.infoItem label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.infoItem p {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+  font-weight: 500;
+}
+
+.ownerActions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.logoutBtn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ownerCard {
+    padding: 40px 30px;
+  }
+
+  .ownerCard h1 {
+    font-size: 24px;
+  }
+
+  .ownerInfo {
+    padding: 20px;
+  }
+
+  .infoItem label {
+    font-size: 11px;
+  }
+
+  .infoItem p {
+    font-size: 15px;
+  }
+
+  .logoutBtn {
+    padding: 12px 30px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ownerContainer {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .ownerCard {
+    padding: 30px 20px;
+  }
+
+  .ownerCard h1 {
+    font-size: 20px;
+    margin: 15px 0 20px 0;
+  }
+
+  .ownerInfo {
+    padding: 15px;
+  }
+
+  .infoItem {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+  }
+
+  .logoutBtn {
+    width: 100%;
+  }
+}

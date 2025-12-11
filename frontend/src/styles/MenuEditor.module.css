@@ -1,0 +1,402 @@
+.menuEditorPage {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 40px;
+}
+
+.menuEditorPage h2 {
+  text-align: center;
+  color: #333;
+  font-size: 36px;
+  margin: 40px 0 40px 0;
+  font-weight: 600;
+}
+
+.menuContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.menuList {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.menuList h3 {
+  color: #333;
+  font-size: 20px;
+  margin: 0 0 25px 0;
+  font-weight: 600;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #60696b;
+}
+
+.menuList p {
+  text-align: center;
+  color: #999;
+  font-size: 15px;
+  padding: 40px 20px;
+  margin: 0;
+}
+
+.menuList ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  transition: all 0.2s ease;
+}
+
+.menuItem:last-child {
+  border-bottom: none;
+}
+
+.menuItem:hover {
+  background: #f9f9f9;
+  padding-left: 2px;
+  padding-right: 2px;
+  border-radius: 2px;
+}
+
+.menuItemLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.menuItemLeft strong {
+  color: #333;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.menuItemMeta {
+  color: #999;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.menuItemRight {
+  margin-left: 20px;
+}
+
+.menuItemRight img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.menuForm {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.menuForm h3 {
+  color: #333;
+  font-size: 20px;
+  margin: 0 0 25px 0;
+  font-weight: 600;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #60696b;
+}
+
+.menuForm form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menuForm label {
+  color: #333;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.menuForm input {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  transition: all 0.3s ease;
+  background: white;
+  margin-top: 6px;
+}
+
+.menuForm input::placeholder {
+  color: #bbb;
+}
+
+.menuForm input:focus {
+  outline: none;
+  border-color: #60696b;
+  box-shadow: 0 0 0 3px rgba(96, 105, 107, 0.1);
+}
+
+
+.formError,
+.formSuccess {
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.formError {
+  background: #fff3cd;
+  color: #cc0000;
+  border-left: 4px solid #cc0000;
+}
+
+.formSuccess {
+  background: #d4edda;
+  color: #28a745;
+  border-left: 4px solid #28a745;
+}
+
+
+.menuForm button {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #858e96 0%, #60696b 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.menuForm button:hover {
+  transform: translateY(1px);
+}
+
+.menuForm button:active {
+  transform: translateY(0);
+}
+
+.menuList p {
+  color: #28a745;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .menuContent {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .menuList,
+  .menuForm {
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .menuEditorPage {
+    padding-bottom: 30px;
+  }
+
+  .menuEditorPage h2 {
+    font-size: 28px;
+    margin: 30px 0 30px 0;
+  }
+
+  .menuContent {
+    padding: 0 15px;
+    gap: 20px;
+  }
+
+  .menuList,
+  .menuForm {
+    padding: 25px;
+    border-radius: 12px;
+  }
+
+  .menuList h3,
+  .menuForm h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .menuItem {
+    padding: 15px 0;
+  }
+
+  .menuItemLeft strong {
+    font-size: 14px;
+  }
+
+  .menuItemRight img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .menuForm input {
+    font-size: 16px;
+  }
+
+  .menuForm button {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  .formError,
+  .formSuccess {
+    font-size: 13px;
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menuEditorPage {
+    padding-bottom: 20px;
+  }
+
+  .menuEditorPage h2 {
+    font-size: 22px;
+    margin: 20px 0 20px 0;
+  }
+
+  .menuContent {
+    padding: 0 12px;
+    gap: 15px;
+  }
+
+  .menuList,
+  .menuForm {
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .menuList h3,
+  .menuForm h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+  }
+
+  .menuList p {
+    font-size: 14px;
+    padding: 30px 15px;
+  }
+
+  .menuItem {
+    padding: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .menuItemLeft {
+    flex: 1 0 100%;
+    margin-bottom: 10px;
+  }
+
+  .menuItemLeft strong {
+    font-size: 13px;
+  }
+
+  .menuItemMeta {
+    font-size: 11px;
+  }
+
+  .menuItemRight {
+    margin-left: 0;
+    flex: 0 0 100%;
+  }
+
+  .menuItemRight img {
+    width: 100%;
+    height: 150px;
+  }
+
+  .menuItem:hover {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .menuForm label {
+    font-size: 11px;
+    margin-top: 3px;
+  }
+
+  .menuForm input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .menuForm button {
+    padding: 12px 20px;
+    font-size: 13px;
+  }
+
+  .formError,
+  .formSuccess {
+    font-size: 12px;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+  }
+}
+
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menuList,
+.menuForm {
+  animation: slideUp 0.5s ease-out;
+}
+
+
+.menuForm input:focus-visible,
+.menuForm button:focus-visible {
+  outline: 2px solid #ff8b42;
+  outline-offset: 2px;
+}
