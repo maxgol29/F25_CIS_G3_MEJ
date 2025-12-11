@@ -56,7 +56,7 @@ class OrderService:
 
     def generate_order_qr_code(self, order_id):
         try:
-            order_url = f"{os.getenv('API_BASE_URL')}/api/orders/{order_id}"
+            order_url = f"{os.getenv('BACKEND_URL')}/api/orders/{order_id}"
 
             qr = qrcode.QRCode(
                 version=1, 

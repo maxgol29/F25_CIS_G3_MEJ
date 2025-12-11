@@ -9,3 +9,4 @@ backend/**/*.pyc
 backend/__pycache__/
 backend/*.pyc
 backend/.pytest_cache/
+frontend/.env.production

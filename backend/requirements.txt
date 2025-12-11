@@ -14,3 +14,4 @@ pillow
 Flask-JWT-Extended
 flask-bcrypt
 redis
+cloud-sql-python-connector

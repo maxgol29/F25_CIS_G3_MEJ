@@ -721,7 +721,7 @@ def get_order_qr_code(order_id):
 
         qr_code_base64 = order_service.generate_order_qr_code(order_id)
 
-        order_url = f"{os.getenv('API_BASE_URL')}/orders/{order_id}"
+        order_url = f"{os.getenv('BACKEND_URL')}/orders/{order_id}"
         
         return jsonify({
             'success': True,

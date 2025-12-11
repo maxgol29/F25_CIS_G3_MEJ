@@ -11,9 +11,6 @@ class Config:
     DB_PORT = int(os.getenv('DB_PORT', 5432))
     GOOGLE_PLACES_API_KEY = os.getenv('GOOGLE_PLACES_API_KEY', '')
     ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
-
-    @property
-    def DATABASE_URL(self):
-        return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    DATABASE_URL = os.getenv("DATABASE_URL")
 
 config = Config()
