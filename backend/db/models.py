@@ -1,3 +1,4 @@
+import os
 import psycopg2
 from psycopg2.extras import RealDictCursor, Json
 from psycopg2.pool import SimpleConnectionPool
@@ -11,18 +12,9 @@ class Database:
         self.init_pool()
 
     def init_pool(self):
-        local_hosts = {'localhost', '127.0.0.1', '::1', '0.0.0.0'}
-        ssl_mode = 'disable' if config.DB_HOST in local_hosts else 'require'
-
         self.pool = SimpleConnectionPool(
-            1,      
-            10,    
-            host=config.DB_HOST,
-            user=config.DB_USER,
-            password=config.DB_PASSWORD,
-            database=config.DB_NAME,
-            port=config.DB_PORT,
-            sslmode=ssl_mode
+            1, 10,
+            dsn=os.environ["DATABASE_URL"]
         )
         print("Connection pool initialized")
 

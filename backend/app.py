@@ -15,19 +15,21 @@ def create_app():
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
     app.config["JWT_COOKIE_SECURE"] = os.getenv("JWT_COOKIE_SECURE")
-    app.config["JWT_COOKIE_SAMESITE"] = os.getenv("JWT_COOKIE_SAMESITE", "Lax")
+    app.config["JWT_COOKIE_SAMESITE"] = os.getenv("JWT_COOKIE_SAMESITE")
 
     jwt = JWTManager(app)
 
+    FRONTEND_URL = os.environ.get("FRONTEND_URL")
+
     CORS(app, resources={
     r"/": {
-        "origins": ["http://localhost:3000", "http://localhost:5000"],
+        "origins": ["http://localhost:3000", "http://localhost:5000", FRONTEND_URL],
         "methods": ["GET", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
     },
     r"/api/*": {
-        "origins": ["http://localhost:3000", "http://localhost:5000"],
+        "origins": ["http://localhost:3000", "http://localhost:5000", FRONTEND_URL],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
@@ -49,12 +51,13 @@ def create_app():
 def shutdown_pool():
     db.close_pool()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import os
     app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 8080))
+
     app.run(
-        debug=os.getenv('FLASK_DEBUG', 'False').lower() == 'true',
-        host=os.getenv('FLASK_HOST', '127.0.0.1'),
-        port=int(os.getenv('FLASK_PORT', '5000'))
+        host="0.0.0.0", 
+        port=port,
+        debug=False
     )
