@@ -75,6 +75,12 @@
 
 </div>
 
+<h2 align="center">Deploy Architecture</h2>
+
+<p align="center">
+       <img width="931" height="762" alt="Service Architecture" src="https://github.com/user-attachments/assets/c79285ef-3025-4760-860e-541c1bd714eb" />
+</p>
+
 ---
 
 <h2 align="center">Technology Stack</h2>
@@ -284,7 +290,9 @@ F25_CIS_G3_MEJ
 </p>
 
 
+
 ## User Stories
+
 
 | Issue | Description | Area | Status |
 |------:|-------------|------|--------|
