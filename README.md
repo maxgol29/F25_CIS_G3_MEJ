@@ -52,8 +52,7 @@
   2. Constrains, FK, Indexes 
 - **Deployment**
   1. Docker
-  2. Frontend Vercel
-  3. Backend on Railway
+  2. Cloud Run with Containarization
 
 ##Installation & Setup Steps
 
