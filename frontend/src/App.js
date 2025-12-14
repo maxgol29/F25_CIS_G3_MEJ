@@ -42,7 +42,7 @@ function App() {
         localStorage.removeItem('currentUser');
       }
     }
-  }, []);
+  }, [navigate]);
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);

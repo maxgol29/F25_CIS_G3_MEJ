@@ -9,7 +9,6 @@ const OwnerOrders = ({ user }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const [updatingOrderId, setUpdatingOrderId] = useState(null);
 
   useEffect(() => {
@@ -35,37 +34,11 @@ const OwnerOrders = ({ user }) => {
     };
 
     fetchOrders();
-  }, [user]);
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        if (!user || !user.id) {
-          setError('No user available');
-          return;
-        }
-
-        const res = await fetch(`${REACT_APP_API_BASE_URL}/orders/business/${user.business_id}`);
-        if (!res.ok) throw new Error('Failed to fetch orders');
-        const data = await res.json();
-        setOrders(data.orders || []);
-      } catch (err) {
-        console.error(err);
-        setError('Could not load orders');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, [user]);
+  }, [user, REACT_APP_API_BASE_URL]);
 
   const handleStatusClick = async (orderId, newStatus) => {
     setUpdatingOrderId(orderId);
     setError(null);
-    setSuccess(null);
 
     try {
       const res = await fetch(`${REACT_APP_API_BASE_URL}/orders/${orderId}/status`, {
@@ -83,9 +56,6 @@ const OwnerOrders = ({ user }) => {
           ? { ...order, status: newStatus }
           : order
       ));
-
-      setSuccess(`Order #${orderId} marked as ${newStatus}`);
-      setTimeout(() => setSuccess(null), 3000);
 
     } catch (err) {
       console.error('Status update error:', err);

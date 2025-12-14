@@ -107,7 +107,7 @@ const MapPage = ({ user }) => {
     } finally {
       setLoadingBusinesses(false);
     }
-  }, [RADIUS_METERS, saveBusinessesToDatabase]);
+  }, [RADIUS_METERS, REACT_APP_API_BASE_URL, saveBusinessesToDatabase]);
 
   const geocodeAddress = useCallback((userData) => {
     if (!window.google?.maps) return;

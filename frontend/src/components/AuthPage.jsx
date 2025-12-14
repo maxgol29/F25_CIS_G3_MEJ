@@ -27,13 +27,8 @@ const AuthPage = ({ onLoginSuccess }) => {
   const [success, setSuccess] = useState('');
 
   const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  useEffect(() => {
-    if (isSignUp && userType === 'owner') {
-      fetchBusinesses();
-    }
-  }, [isSignUp, userType]);
-
-  const fetchBusinesses = async () => {
+  
+  const fetchBusinesses = React.useCallback(async () => {
     setLoadingBusinesses(true);
     try {
       const response = await fetch(`${REACT_APP_API_BASE_URL}/businesses/get-all`);
@@ -46,7 +41,13 @@ const AuthPage = ({ onLoginSuccess }) => {
     } finally {
       setLoadingBusinesses(false);
     }
-  };
+  }, [REACT_APP_API_BASE_URL]);
+
+  useEffect(() => {
+    if (isSignUp && userType === 'owner') {
+      fetchBusinesses();
+    }
+  }, [isSignUp, userType, fetchBusinesses]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

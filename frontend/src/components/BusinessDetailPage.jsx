@@ -22,7 +22,7 @@ const BusinessDetailPage = ({ user }) => {
   const [promos, setPromos] = useState([]);
   const [promosLoading, setPromosLoading] = useState(false);
   
-  const { addToCart, cart } = useCart(); 
+  const { addToCart } = useCart(); 
   useEffect(() => {
     const fetchPromos = async () => {
       setPromosLoading(true);

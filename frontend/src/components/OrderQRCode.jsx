@@ -3,7 +3,6 @@ import styles from '../styles/OrderQRCode.module.css';
 
 const OrderQRCode = ({ orderId }) => {
   const [qrCode, setQrCode] = useState(null);
-  const [orderUrl, setOrderUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -21,7 +20,6 @@ const OrderQRCode = ({ orderId }) => {
 
         const data = await response.json();
         setQrCode(data.qr_code);
-        setOrderUrl(data.order_url);
       } catch (err) {
         console.error('Error fetching QR code:', err);
         setError(err.message);
