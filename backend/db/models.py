@@ -80,6 +80,7 @@ class Database:
             )
             if not cursor.fetchone():
                 raise ValueError("Item not found for this business")
+
             allowed_fields = {
                 'dish_name': 'dish_name',
                 'description': 'description',
@@ -91,41 +92,42 @@ class Database:
                 'available_quantity': 'available_quantity',
                 'is_available': 'is_available'
             }
-            
-            update_fields = []
+
+            set_clauses = []
             update_values = []
-            
+
             for field_name, db_column in allowed_fields.items():
                 if field_name in data:
                     value = data[field_name]
                     if db_column == 'price' and value is not None and value <= 0:
                         raise ValueError("Price must be greater than 0")
-                    
                     if db_column == 'discount_percentage' and value is not None:
                         if value < 0 or value > 100:
                             raise ValueError("Discount percentage must be between 0 and 100")
-                    
-                    update_fields.append(f'"{db_column}" = %s')
+
+                    set_clauses.append(sql.SQL("{} = %s").format(sql.Identifier(db_column)))
                     update_values.append(value)
-            
-            if not update_fields:
+
+            if not set_clauses:
                 raise ValueError("No valid fields to update")
-            update_fields.append('"updated_at" = CURRENT_TIMESTAMP')
-            query = f'''
+
+            set_clauses.append(sql.SQL('"updated_at" = CURRENT_TIMESTAMP'))
+
+            query = sql.SQL('''
                 UPDATE "Item"
-                SET {", ".join(update_fields)}
+                SET {set_clause}
                 WHERE id = %s AND businessID = %s
-                RETURNING id, businessID, dish_name, description, category, price, 
-                        discount_percentage, image_url, portion_size, available_quantity, 
+                RETURNING id, businessID, dish_name, description, category, price,
+                        discount_percentage, image_url, portion_size, available_quantity,
                         is_available, created_at, updated_at;
-            '''
-            
+            ''').format(set_clause=sql.SQL(", ").join(set_clauses))
+
             update_values.extend([item_id, business_id])
             cursor.execute(query, update_values)
-            
+
             updated_item = cursor.fetchone()
             conn.commit()
-            
+
             return {
                 'id': updated_item['id'],
                 'businessID': updated_item['businessid'],
@@ -141,7 +143,7 @@ class Database:
                 'created_at': str(updated_item['created_at']),
                 'updated_at': str(updated_item['updated_at'])
             }
-            
+
         except Exception as e:
             if conn:
                 conn.rollback()
